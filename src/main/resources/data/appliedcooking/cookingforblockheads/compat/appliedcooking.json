@@ -1,0 +1,8 @@
+{
+  "modid": "appliedcooking",
+  "kitchenConnectors": [
+  ],
+  "kitchenItemProviders": [
+    "appliedcooking:kitchen_station"
+  ]
+}
