@@ -1,0 +1,170 @@
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net' }
+        maven { url = "https://repo.spongepowered.org/maven" }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+    }
+}
+
+plugins {
+    id 'eclipse'
+    id 'maven-publish'
+}
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: "org.spongepowered.mixin"
+apply from: 'https://raw.githubusercontent.com/SizableShrimp/ForgeUpdatesRemapper/main/remapper.gradle'
+
+repositories {
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+
+    maven {
+        url "https://maven.pkg.github.com/ModdingForBlockheads/Balm"
+        credentials {
+            username project.findProperty("gpr.user") ?: System.getenv("GPR_USERNAME")
+            password project.findProperty("gpr.key") ?: System.getenv("GPR_TOKEN")
+        }
+    }
+    maven {
+        url "https://maven.pkg.github.com/AppliedEnergistics/Applied-Energistics-2"
+        credentials {
+            username project.findProperty("gpr.user") ?: System.getenv("GPR_USERNAME")
+            password project.findProperty("gpr.key") ?: System.getenv("GPR_TOKEN")
+        }
+    }
+}
+
+version = '2.0.0'
+def env = System.getenv()
+if (env.BUILD_NUMBER) {
+    version = version + "+" + "${env.BUILD_NUMBER}"
+}
+group = 'dev.smolinacadena'
+archivesBaseName = 'appliedcooking'
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+minecraft {
+    mappings channel: 'official', version: '1.19.2'
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            property "mixin.env.disableRefMap", "true"
+            property "mixin.debug.export", "true"
+            property "mixin.debug.export.decompile", "false"
+            property "mixin.debug.verbose", "true"
+            property "mixin.debug.dumpTargetOnFailure", "true"
+            property "mixin.checks", "true"
+            property "mixin.hotSwap", "true"
+
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+			property 'forge.enabledGameTestNamespaces', 'appliedcooking'
+            mods {
+                appliedcooking {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+			property 'forge.enabledGameTestNamespaces', 'appliedcooking'
+            mods {
+                appliedcooking {
+                    source sourceSets.main
+                }
+            }
+        }
+        
+        gameTestServer {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            property 'forge.enabledGameTestNamespaces', 'appliedcooking'
+            mods {
+                appliedcooking {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            args '--mod', 'appliedcooking', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            mods {
+                appliedcooking {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.19.2-43.1.25'
+    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+
+    implementation fg.deobf("net.blay09.mods:balm:4.5.3+307")
+    implementation fg.deobf("appeng:appliedenergistics2:12.7.0")
+    implementation fg.deobf('curse.maven:cooking-for-blockheads-231484:4019981')
+
+    runtimeOnly fg.deobf('curse.maven:jei-238222:4030307')
+    runtimeOnly fg.deobf('curse.maven:jade-324717:4010505')
+    runtimeOnly fg.deobf('curse.maven:nbt-tool-451553:3879898')
+
+    implementation "org.jetbrains:annotations:23.0.0"
+}
+
+// Example for how to get properties into the manifest for reading at runtime.
+jar {
+    manifest {
+        attributes([
+                "Specification-Title"     : "appliedcooking",
+                "Specification-Vendor"    : "smolinacadena",
+                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : "${version}",
+                "Implementation-Vendor"   : "smolinacadena",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+jar.finalizedBy('reobfJar')
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = project.group
+            artifactId = project.archivesBaseName
+            version = project.version
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/mcmodsrepo"
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}

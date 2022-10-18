@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[43,)"
+license="MIT"
+[[mods]]
+modId="appliedcooking"
+version="${file.jarVersion}"
+displayName="Applied Cooking"
+logoFile="logo.png"
+authors="ItsSebastrn"
+description='''
+A mod to bridge Cooking For Blockheads with Applied Energistics 2
+'''
+[[dependencies.appliedcooking]]
+    modId="ae2"
+    mandatory=true
+    versionRange="[12.7.0,)"
+    ordering="BEFORE"
+    side="BOTH"
+[[dependencies.appliedcooking]]
+    modId="cookingforblockheads"
+    mandatory=true
+    versionRange="[13.2.3,)"
+    ordering="BEFORE"
+    side="BOTH"
