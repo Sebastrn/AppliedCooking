@@ -13,7 +13,7 @@ A mod to bridge Cooking For Blockheads with Applied Energistics 2
 [[dependencies.appliedcooking]]
     modId="ae2"
     mandatory=true
-    versionRange="[1.5.0,)"
+    versionRange="[11.5.0,)"
     ordering="BEFORE"
     side="BOTH"
 [[dependencies.appliedcooking]]
