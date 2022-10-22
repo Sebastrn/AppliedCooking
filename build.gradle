@@ -127,6 +127,10 @@ dependencies {
     runtimeOnly fg.deobf('curse.maven:jei-238222:3940240')
     runtimeOnly fg.deobf('curse.maven:jade-324717:3970956')
     runtimeOnly fg.deobf('curse.maven:nbt-tool-451553:3748971')
+    runtimeOnly fg.deobf('curse.maven:pams-harvestcraft-2-food-core-372534:3951938')
+    runtimeOnly fg.deobf('curse.maven:pams-harvestcraft-2-crops-361385:3952167')
+    runtimeOnly fg.deobf('curse.maven:pams-harvestcraft-2-food-extended-402231:3998848')
+    runtimeOnly fg.deobf('curse.maven:pams-harvestcraft-2-trees-365460:3951942')
 
     implementation "org.jetbrains:annotations:23.0.0"
 }
