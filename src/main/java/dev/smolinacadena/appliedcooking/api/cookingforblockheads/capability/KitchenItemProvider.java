@@ -50,8 +50,8 @@ public class KitchenItemProvider implements IKitchenItemProvider {
     public void useItemStack(ItemStack itemStack, int amount, boolean simulate, List<IKitchenItemProvider> inventories, boolean requireBucket) {
         String itemRegistryName = itemStack.getItem().getRegistryName().toString();
         if (itemStack.getCount() - (simulate ? usedStackSizes.getOrDefault(itemRegistryName, 0) : 0) >= amount) {
-            var result = getNetworkStorage().extract(AEItemKey.of(itemStack), amount, simulate ? Actionable.SIMULATE : Actionable.MODULATE, new MachineSource(blockEntity.getActionHost()));
-            if (simulate && result > 1) {
+             var result = getNetworkStorage().extract(AEItemKey.of(itemStack), amount, simulate ? Actionable.SIMULATE : Actionable.MODULATE, new MachineSource(blockEntity.getActionHost()));
+            if (simulate && result > 0) {
                 usedStackSizes.put(itemRegistryName, usedStackSizes.getOrDefault(itemRegistryName, 0) + (int)result);
             }
         }
@@ -59,7 +59,10 @@ public class KitchenItemProvider implements IKitchenItemProvider {
 
     @Override
     public ItemStack returnItemStack(ItemStack itemStack, SourceItem sourceItem) {
-        getNetworkStorage().insert(AEItemKey.of(itemStack), itemStack.getCount(), Actionable.MODULATE, new MachineSource(blockEntity.getActionHost()));
+        var insertResult = getNetworkStorage().insert(AEItemKey.of(itemStack), itemStack.getCount(), Actionable.MODULATE, new MachineSource(blockEntity.getActionHost()));
+        if (insertResult > 0 ) {
+            itemStack.setCount(itemStack.getCount() - (int)insertResult);
+        }
         return itemStack;
     }
 
