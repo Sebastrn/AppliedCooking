@@ -5,6 +5,7 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.storage.MEStorage;
 import appeng.me.helpers.MachineSource;
 import dev.smolinacadena.appliedcooking.blockentity.KitchenStationBlockEntity;
+import net.blay09.mods.cookingforblockheads.api.IngredientPredicateWithCache;
 import net.blay09.mods.cookingforblockheads.api.SourceItem;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IngredientPredicate;
@@ -25,7 +26,7 @@ public class KitchenItemProvider implements IKitchenItemProvider {
         this.usedStackSizes = new HashMap<>();
     }
 
-    public MEStorage getNetworkStorage(){
+    public MEStorage getNetworkStorage() {
         return this.blockEntity.getNetworkStorage();
     }
 
@@ -51,9 +52,9 @@ public class KitchenItemProvider implements IKitchenItemProvider {
     public void useItemStack(ItemStack itemStack, int amount, boolean simulate, List<IKitchenItemProvider> inventories, boolean requireBucket) {
         String itemRegistryName = ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString();
         if (itemStack.getCount() - (simulate ? usedStackSizes.getOrDefault(itemRegistryName, 0) : 0) >= amount) {
-             var result = getNetworkStorage().extract(AEItemKey.of(itemStack), amount, simulate ? Actionable.SIMULATE : Actionable.MODULATE, new MachineSource(blockEntity.getActionHost()));
+            var result = getNetworkStorage().extract(AEItemKey.of(itemStack), amount, simulate ? Actionable.SIMULATE : Actionable.MODULATE, new MachineSource(blockEntity.getActionHost()));
             if (simulate && result > 0) {
-                usedStackSizes.put(itemRegistryName, usedStackSizes.getOrDefault(itemRegistryName, 0) + (int)result);
+                usedStackSizes.put(itemRegistryName, usedStackSizes.getOrDefault(itemRegistryName, 0) + (int) result);
             }
         }
     }
@@ -61,8 +62,8 @@ public class KitchenItemProvider implements IKitchenItemProvider {
     @Override
     public ItemStack returnItemStack(ItemStack itemStack, SourceItem sourceItem) {
         var insertResult = getNetworkStorage().insert(AEItemKey.of(itemStack), itemStack.getCount(), Actionable.MODULATE, new MachineSource(blockEntity.getActionHost()));
-        if (insertResult > 0 ) {
-            itemStack.setCount(itemStack.getCount() - (int)insertResult);
+        if (insertResult > 0) {
+            itemStack.setCount(itemStack.getCount() - (int) insertResult);
         }
         return itemStack;
     }
@@ -85,13 +86,13 @@ public class KitchenItemProvider implements IKitchenItemProvider {
     @Nullable
     @Override
     public SourceItem findSource(IngredientPredicate predicate, int maxAmount, List<IKitchenItemProvider> inventories, boolean requireBucket, boolean simulate) {
-        if(getNetworkStorage() != null) {
-            var availableStacks = getNetworkStorage().getAvailableStacks();
-            for (var entry : availableStacks) {
-                if(entry.getKey() instanceof AEItemKey itemKey) {
-                    String registryName = ForgeRegistries.ITEMS.getKey(itemKey.getItem()).toString();
-                    if (entry.getLongValue() > 0 && predicate.test(itemKey.toStack((int)entry.getLongValue()), (int)entry.getLongValue() - getSimulatedUseCount(registryName))) {
-                        return new SourceItem(this, 0, itemKey.toStack((int)entry.getLongValue()).copy());
+        if (getNetworkStorage() != null) {
+            if (predicate instanceof IngredientPredicateWithCache predicateWithItems) {
+                for (var ingredient : predicateWithItems.getItems()) {
+                    var ingredientKey = AEItemKey.of(ingredient);
+                    var ingredientAmount = getNetworkStorage().getAvailableStacks().get(ingredientKey);
+                    if (ingredientAmount > 0 && predicate.test(ingredientKey.toStack((int) ingredientAmount), (int) ingredientAmount - getSimulatedUseCount(ingredient.getDescriptionId()))) {
+                        return new SourceItem(this, 0, ingredientKey.toStack((int) ingredientAmount).copy());
                     }
                 }
             }

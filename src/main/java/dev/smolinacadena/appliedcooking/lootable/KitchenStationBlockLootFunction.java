@@ -21,8 +21,8 @@ public class KitchenStationBlockLootFunction extends LootItemConditionalFunction
     protected ItemStack run(ItemStack stack, LootContext lootContext) {
         BlockEntity blockEntity = lootContext.getParamOrNull(LootContextParams.BLOCK_ENTITY);
 
-        if (blockEntity instanceof KitchenStationBlockEntity){
-            ((KitchenStationBlockEntity)blockEntity).applyDataFromBlockEntityToItem(stack);
+        if (blockEntity instanceof KitchenStationBlockEntity) {
+            ((KitchenStationBlockEntity) blockEntity).applyDataFromBlockEntityToItem(stack);
         }
 
         return stack;
