@@ -41,7 +41,7 @@ repositories {
     }
 }
 
-version = '1.0.1'
+version = '1.0.2'
 def env = System.getenv()
 if (env.BUILD_NUMBER) {
     version = version + "+" + "${env.BUILD_NUMBER}"
@@ -68,7 +68,7 @@ minecraft {
 
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
-			property 'forge.enabledGameTestNamespaces', 'appliedcooking'
+            property 'forge.enabledGameTestNamespaces', 'appliedcooking'
             mods {
                 appliedcooking {
                     source sourceSets.main
@@ -80,14 +80,14 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
-			property 'forge.enabledGameTestNamespaces', 'appliedcooking'
+            property 'forge.enabledGameTestNamespaces', 'appliedcooking'
             mods {
                 appliedcooking {
                     source sourceSets.main
                 }
             }
         }
-        
+
         gameTestServer {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES'
@@ -122,15 +122,21 @@ dependencies {
 
     implementation fg.deobf("net.blay09.mods:balm:3.2.0+305")
     implementation fg.deobf("appeng:appliedenergistics2:11.5.0")
-    implementation fg.deobf('curse.maven:cooking-for-blockheads-231484:4019015')
+    implementation fg.deobf('curse.maven:cooking-for-blockheads-231484:4065856')
+
+    implementation fg.deobf('curse.maven:jade-324717:3970956')
+    implementation fg.deobf("curse.maven:the-one-probe-245211:3965688")
 
     runtimeOnly fg.deobf('curse.maven:jei-238222:3940240')
-    runtimeOnly fg.deobf('curse.maven:jade-324717:3970956')
     runtimeOnly fg.deobf('curse.maven:nbt-tool-451553:3748971')
+
     runtimeOnly fg.deobf('curse.maven:pams-harvestcraft-2-food-core-372534:3951938')
     runtimeOnly fg.deobf('curse.maven:pams-harvestcraft-2-crops-361385:3952167')
     runtimeOnly fg.deobf('curse.maven:pams-harvestcraft-2-food-extended-402231:3998848')
     runtimeOnly fg.deobf('curse.maven:pams-harvestcraft-2-trees-365460:3951942')
+    runtimeOnly fg.deobf("curse.maven:aquaculture-60028:3948611")
+    runtimeOnly fg.deobf("curse.maven:farmers-delight-398521:3999153")
+    runtimeOnly fg.deobf("curse.maven:croptopia-415438:3947782")
 
     implementation "org.jetbrains:annotations:23.0.0"
 }

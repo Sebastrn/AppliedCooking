@@ -46,16 +46,16 @@ public class KitchenStationBlock extends BlockKitchen {
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         switch (state.getValue(FACING)) {
-            case UP :
-            case DOWN :
-            case SOUTH :
-            default :
+            case UP:
+            case DOWN:
+            case SOUTH:
+            default:
                 return SHAPE_SOUTH;
-            case NORTH :
+            case NORTH:
                 return SHAPE_NORTH;
-            case WEST :
+            case WEST:
                 return SHAPE_WEST;
-            case EAST :
+            case EAST:
                 return SHAPE_EAST;
         }
     }

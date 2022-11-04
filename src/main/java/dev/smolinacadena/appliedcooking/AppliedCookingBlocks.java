@@ -17,7 +17,7 @@ public final class AppliedCookingBlocks {
         KITCHEN_STATION = BLOCKS.register("kitchen_station", KitchenStationBlock::new);
     }
 
-    private AppliedCookingBlocks(){
+    private AppliedCookingBlocks() {
     }
 
     public static void register() {

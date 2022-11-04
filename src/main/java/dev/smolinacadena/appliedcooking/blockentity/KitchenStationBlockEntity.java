@@ -3,6 +3,7 @@ package dev.smolinacadena.appliedcooking.blockentity;
 import appeng.api.features.Locatables;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.storage.MEStorage;
+import appeng.me.InWorldGridNode;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Table;
@@ -171,6 +172,14 @@ public class KitchenStationBlockEntity extends BlockEntity implements BalmBlockE
         return null;
     }
 
+    public String getSecurityStationPos() {
+        if (getActionHost() != null) {
+            InWorldGridNode securityStation = (InWorldGridNode) getActionHost().getActionableNode();
+            return securityStation.getLocation().getX() + ", " + securityStation.getLocation().getY() + ", " + securityStation.getLocation().getZ();
+        }
+        return "";
+    }
+
     public IActionHost getActionHost() {
         if (gridKey != null) {
             return Locatables.securityStations().get(this.level, gridKey.longValue());
@@ -185,8 +194,7 @@ public class KitchenStationBlockEntity extends BlockEntity implements BalmBlockE
     public void serverTick() {
         if (getActionHost() != null) {
             setConnected(true);
-        }
-        else {
+        } else {
             setConnected(false);
         }
     }
