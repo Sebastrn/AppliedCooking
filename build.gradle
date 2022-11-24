@@ -1,12 +1,10 @@
 buildscript {
     repositories {
         maven { url = 'https://maven.minecraftforge.net' }
-        maven { url = "https://repo.spongepowered.org/maven" }
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
 
@@ -15,8 +13,6 @@ plugins {
     id 'maven-publish'
 }
 apply plugin: 'net.minecraftforge.gradle'
-apply plugin: "org.spongepowered.mixin"
-apply from: 'https://raw.githubusercontent.com/SizableShrimp/ForgeUpdatesRemapper/main/remapper.gradle'
 
 repositories {
     maven {
@@ -27,12 +23,9 @@ repositories {
     }
 
     maven {
-        url "https://maven.pkg.github.com/ModdingForBlockheads/Balm"
-        credentials {
-            username project.findProperty("gpr.user") ?: System.getenv("GPR_USERNAME")
-            password project.findProperty("gpr.key") ?: System.getenv("GPR_TOKEN")
-        }
+        url 'https://maven.blamejared.com'
     }
+
     maven {
         url "https://maven.pkg.github.com/AppliedEnergistics/Applied-Energistics-2"
         credentials {
@@ -42,7 +35,7 @@ repositories {
     }
 }
 
-version = '2.0.2'
+version = '2.0.3'
 def env = System.getenv()
 if (env.BUILD_NUMBER) {
     version = version + "+" + "${env.BUILD_NUMBER}"
@@ -59,13 +52,8 @@ minecraft {
         client {
             workingDirectory project.file('run')
 
-            property "mixin.env.disableRefMap", "true"
-            property "mixin.debug.export", "true"
-            property "mixin.debug.export.decompile", "false"
-            property "mixin.debug.verbose", "true"
-            property "mixin.debug.dumpTargetOnFailure", "true"
-            property "mixin.checks", "true"
-            property "mixin.hotSwap", "true"
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
@@ -119,9 +107,8 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.19.2-43.1.25'
-    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 
-    implementation fg.deobf("net.blay09.mods:balm:4.5.3+307")
+    implementation fg.deobf("curse.maven:balm-531761:3914527")
     implementation fg.deobf("appeng:appliedenergistics2:12.7.0")
     implementation fg.deobf('curse.maven:cooking-for-blockheads-231484:4055331')
 
@@ -135,10 +122,10 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:farmers-delight-398521:3999157")
     runtimeOnly fg.deobf("curse.maven:croptopia-415438:3947784")
 
-    implementation "org.jetbrains:annotations:23.0.0"
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.19.2-77")
+    runtimeOnly fg.deobf('curse.maven:sebastrnlib-709936:4105906')
 }
 
-// Example for how to get properties into the manifest for reading at runtime.
 jar {
     manifest {
         attributes([

@@ -22,3 +22,9 @@ mandatory = true
 versionRange = "[13.3.0,)"
 ordering = "BEFORE"
 side = "BOTH"
+[[dependencies.appliedcooking]]
+modId = "sebastrnlib"
+mandatory = true
+versionRange = "[2.0.0,)"
+ordering = "AFTER"
+side = "BOTH"

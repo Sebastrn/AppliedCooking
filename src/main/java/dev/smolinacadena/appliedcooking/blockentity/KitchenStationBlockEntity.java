@@ -19,7 +19,6 @@ import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.fluid.FluidTank;
 import net.blay09.mods.balm.api.provider.BalmProvider;
 import net.blay09.mods.balm.api.provider.BalmProviderHolder;
-import net.blay09.mods.balm.forge.container.BalmInvWrapper;
 import net.blay09.mods.balm.forge.energy.ForgeEnergyStorage;
 import net.blay09.mods.balm.forge.fluid.ForgeFluidTank;
 import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
@@ -37,6 +36,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public class KitchenStationBlockEntity extends BlockEntity implements BalmBlockE
         capabilities.put(capability, LazyOptional.of(provider::getInstance));
 
         if (provider.getProviderClass() == Container.class) {
-            capabilities.put(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, LazyOptional.of(() -> new BalmInvWrapper((Container) provider.getInstance())));
+            capabilities.put(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, LazyOptional.of(() -> new InvWrapper((Container) provider.getInstance())));
         } else if (provider.getProviderClass() == FluidTank.class) {
             capabilities.put(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, LazyOptional.of(() -> new ForgeFluidTank((FluidTank) provider.getInstance())));
         } else if (provider.getProviderClass() == EnergyStorage.class) {
