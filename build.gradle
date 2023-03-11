@@ -25,17 +25,9 @@ repositories {
     maven {
         url 'https://maven.blamejared.com'
     }
-
-    maven {
-        url "https://maven.pkg.github.com/AppliedEnergistics/Applied-Energistics-2"
-        credentials {
-            username project.findProperty("gpr.user") ?: System.getenv("GPR_USERNAME")
-            password project.findProperty("gpr.key") ?: System.getenv("GPR_TOKEN")
-        }
-    }
 }
 
-version = '2.0.3'
+version = '3.0.0'
 def env = System.getenv()
 if (env.BUILD_NUMBER) {
     version = version + "+" + "${env.BUILD_NUMBER}"
@@ -46,7 +38,7 @@ archivesBaseName = 'appliedcooking'
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    mappings channel: 'official', version: '1.19.2'
+    mappings channel: 'official', version: '1.19.3'
 
     runs {
         client {
@@ -106,24 +98,24 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.19.2-43.1.25'
+    minecraft 'net.minecraftforge:forge:1.19.3-44.1.21'
 
-    implementation fg.deobf("curse.maven:balm-531761:3914527")
-    implementation fg.deobf("appeng:appliedenergistics2:12.7.0")
-    implementation fg.deobf('curse.maven:cooking-for-blockheads-231484:4055331')
+    implementation fg.deobf("curse.maven:balm-531761:4414508")
+    implementation fg.deobf("curse.maven:applied-energistics-2-223794:4410619")
+    implementation fg.deobf('curse.maven:cooking-for-blockheads-231484:4414156')
 
-    implementation fg.deobf("curse.maven:jade-324717:4010505")
-    implementation fg.deobf("curse.maven:the-one-probe-245211:3927520")
+    implementation fg.deobf("curse.maven:jade-324717:4330163")
+    implementation fg.deobf("curse.maven:the-one-probe-245211:4159743")
 
-    runtimeOnly fg.deobf('curse.maven:jei-238222:4030307')
-    runtimeOnly fg.deobf('curse.maven:nbt-tool-451553:3879898')
+    runtimeOnly fg.deobf('curse.maven:jei-238222:4413695')
+    //runtimeOnly fg.deobf('curse.maven:nbt-tool-451553:3879898')
 
-    runtimeOnly fg.deobf("curse.maven:aquaculture-60028:3990680")
-    runtimeOnly fg.deobf("curse.maven:farmers-delight-398521:3999157")
-    runtimeOnly fg.deobf("curse.maven:croptopia-415438:3947784")
+    runtimeOnly fg.deobf("curse.maven:aquaculture-60028:4307997")
+    //runtimeOnly fg.deobf("curse.maven:farmers-delight-398521:3999157")
+    runtimeOnly fg.deobf("curse.maven:croptopia-415438:4344754")
 
-    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.19.2-77")
-    runtimeOnly fg.deobf('curse.maven:sebastrnlib-709936:4105906')
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.19.3-78")
+    runtimeOnly fg.deobf('curse.maven:sebastrnlib-709936:4431476')
 }
 
 jar {

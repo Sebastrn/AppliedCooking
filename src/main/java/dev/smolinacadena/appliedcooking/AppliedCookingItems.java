@@ -12,7 +12,7 @@ public final class AppliedCookingItems {
     public static final RegistryObject<KitchenStationBlockItem> KITCHEN_STATION;
 
     static {
-        KITCHEN_STATION = ITEMS.register("kitchen_station", () -> new KitchenStationBlockItem(AppliedCookingBlocks.KITCHEN_STATION.get(), new Item.Properties().tab(AppliedCooking.CREATIVE_MODE_TAB).stacksTo(1)));
+        KITCHEN_STATION = ITEMS.register("kitchen_station", () -> new KitchenStationBlockItem(AppliedCookingBlocks.KITCHEN_STATION.get(), new Item.Properties()));
     }
 
     private AppliedCookingItems() {
