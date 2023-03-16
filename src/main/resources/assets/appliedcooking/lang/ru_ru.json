@@ -1,0 +1,9 @@
+{
+  "itemGroup.appliedcooking": "Applied Cooking",
+  "block.appliedcooking.kitchen_station": "ME Кухонная станция",
+  "tooltip.appliedcooking:kitchen_station.description": "Узел станции присоединяется к сеткам Applied Energistics 2",
+  "config.jade.plugin_appliedcooking.kitchen_station": "ME Кухонная станция",
+  "jade.appliedcooking:kitchen_station": "Присоединёна к %s в %s",
+  "jade.appliedcooking:online": "Устройство онлайн",
+  "jade.appliedcooking:offline": "Устройство вне сети"
+}
