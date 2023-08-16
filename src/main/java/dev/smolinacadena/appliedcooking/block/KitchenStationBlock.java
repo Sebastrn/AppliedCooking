@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -33,7 +33,7 @@ public class KitchenStationBlock extends BlockKitchen {
     public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
 
     public KitchenStationBlock() {
-        super(BlockBehaviour.Properties.of(Material.METAL).sound(SoundType.METAL).strength(2.5f), AppliedCookingBlocks.KITCHEN_STATION.getId());
+        super(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).sound(SoundType.METAL).strength(2.5f), AppliedCookingBlocks.KITCHEN_STATION.getId());
         registerDefaultState(getStateDefinition().any().setValue(CONNECTED, false));
     }
 

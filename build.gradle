@@ -1,145 +1,145 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-    }
-}
-
 plugins {
     id 'eclipse'
+    id 'idea'
     id 'maven-publish'
-}
-apply plugin: 'net.minecraftforge.gradle'
-
-repositories {
-    maven {
-        url "https://cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
-    }
-
-    maven {
-        url 'https://maven.blamejared.com'
-    }
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
 }
 
-version = '3.0.0'
-def env = System.getenv()
-if (env.BUILD_NUMBER) {
-    version = version + "+" + "${env.BUILD_NUMBER}"
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
 }
-group = 'dev.smolinacadena'
-archivesBaseName = 'appliedcooking'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    mappings channel: 'official', version: '1.19.3'
+    mappings channel: mapping_channel, version: mapping_version
+    copyIdeResources = true
 
     runs {
-        client {
+        configureEach {
             workingDirectory project.file('run')
-
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', 'appliedcooking'
+
             mods {
-                appliedcooking {
+                "${mod_id}" {
                     source sourceSets.main
                 }
             }
+        }
+
+        client {
+            property 'forge.enabledGameTestNamespaces', mod_id
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
         }
 
         server {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', 'appliedcooking'
-            mods {
-                appliedcooking {
-                    source sourceSets.main
-                }
-            }
+            property 'forge.enabledGameTestNamespaces', mod_id
+            args '--nogui'
         }
 
         gameTestServer {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', 'appliedcooking'
-            mods {
-                appliedcooking {
-                    source sourceSets.main
-                }
-            }
+            property 'forge.enabledGameTestNamespaces', mod_id
         }
 
         data {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            args '--mod', 'appliedcooking', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-            mods {
-                appliedcooking {
-                    source sourceSets.main
-                }
-            }
+            workingDirectory project.file('run-data')
+
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
         }
     }
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
-dependencies {
-    minecraft 'net.minecraftforge:forge:1.19.3-44.1.21'
-
-    implementation fg.deobf("curse.maven:balm-531761:4414508")
-    implementation fg.deobf("curse.maven:applied-energistics-2-223794:4410619")
-    implementation fg.deobf('curse.maven:cooking-for-blockheads-231484:4414156')
-
-    implementation fg.deobf("curse.maven:jade-324717:4330163")
-    implementation fg.deobf("curse.maven:the-one-probe-245211:4159743")
-
-    runtimeOnly fg.deobf('curse.maven:jei-238222:4413695')
-    //runtimeOnly fg.deobf('curse.maven:nbt-tool-451553:3879898')
-
-    runtimeOnly fg.deobf("curse.maven:aquaculture-60028:4307997")
-    //runtimeOnly fg.deobf("curse.maven:farmers-delight-398521:3999157")
-    runtimeOnly fg.deobf("curse.maven:croptopia-415438:4344754")
-
-    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.19.3-78")
-    runtimeOnly fg.deobf('curse.maven:sebastrnlib-709936:4431476')
-}
-
-jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : "appliedcooking",
-                "Specification-Vendor"    : "smolinacadena",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : "${version}",
-                "Implementation-Vendor"   : "smolinacadena",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
+repositories {
+    maven {
+        url 'https://maven.blamejared.com'
+    }
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
     }
 }
 
-jar.finalizedBy('reobfJar')
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+    implementation fg.deobf("curse.maven:balm-531761:4670591")
+    implementation fg.deobf("curse.maven:applied-energistics-2-223794:4684757")
+    implementation fg.deobf('curse.maven:cooking-for-blockheads-231484:4583999')
+
+    implementation fg.deobf("curse.maven:jade-324717:4681833")
+    implementation fg.deobf("curse.maven:the-one-probe-245211:4629624")
+    runtimeOnly fg.deobf('curse.maven:jei-238222:4690097')
+
+    runtimeOnly fg.deobf("curse.maven:aquaculture-60028:4608454")
+    runtimeOnly fg.deobf("curse.maven:farmers-delight-398521:4679319")
+    runtimeOnly fg.deobf("curse.maven:croptopia-415438:4636036")
+
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.20.1-81-FORGE")
+    runtimeOnly fg.deobf("curse.maven:sebastrnlib-709936:4706669")
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+            minecraft_version   : minecraft_version, minecraft_version_range: minecraft_version_range,
+            forge_version       : forge_version, forge_version_range: forge_version_range,
+            loader_version_range: loader_version_range,
+            mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_authors         : mod_authors, mod_description: mod_description,
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_id,
+                'Specification-Vendor'    : mod_authors,
+                'Specification-Version'   : '1', // We are version 1 of ourselves
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : mod_authors,
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+
+    // This is the preferred method to reobfuscate your jar file
+    finalizedBy 'reobfJar'
+}
+
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_id,
+                'Specification-Vendor'    : mod_authors,
+                'Specification-Version'   : '1', // We are version 1 of ourselves
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : mod_authors,
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+
+    // This is the preferred method to reobfuscate your jar file
+    finalizedBy 'reobfJar'
+}
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
-            groupId = project.group
-            artifactId = project.archivesBaseName
-            version = project.version
+        register('mavenJava', MavenPublication) {
             artifact jar
         }
     }

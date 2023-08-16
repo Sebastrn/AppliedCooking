@@ -14,7 +14,7 @@ import snownee.jade.api.IServerDataProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 
-public class KitchenStationComponentProvider implements IBlockComponentProvider, IServerDataProvider<BlockEntity> {
+public class KitchenStationComponentProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
 
     public static final ResourceLocation KITCHEN_STATION_UID = new ResourceLocation(AppliedCooking.ID, "kitchen_station");
 
@@ -29,8 +29,8 @@ public class KitchenStationComponentProvider implements IBlockComponentProvider,
     }
 
     @Override
-    public void appendServerData(CompoundTag data, ServerPlayer player, Level world, BlockEntity blockEntity, boolean showDetails) {
-        KitchenStationBlockEntity kitchenStation = (KitchenStationBlockEntity) blockEntity;
+    public void appendServerData(CompoundTag data, BlockAccessor accessor) {
+        KitchenStationBlockEntity kitchenStation = (KitchenStationBlockEntity) accessor.getBlockEntity();
         data.putString("securityStationPos", kitchenStation.getSecurityStationPos());
     }
 
