@@ -68,9 +68,11 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
     }
 
     public void applyDataFromBlockEntityToItem(ItemStack stack) {
-        GlobalPos.CODEC.encodeStart(NbtOps.INSTANCE, accessPointPos)
-                .result()
-                .ifPresent(tagValue -> stack.getOrCreateTag().put(KitchenStationBlockItem.TAG_ACCESS_POINT_POS, tagValue));
+        if(accessPointPos != null) {
+            GlobalPos.CODEC.encodeStart(NbtOps.INSTANCE, accessPointPos)
+                    .result()
+                    .ifPresent(tagValue -> stack.getOrCreateTag().put(KitchenStationBlockItem.TAG_ACCESS_POINT_POS, tagValue));
+        }
     }
 
     @Override
@@ -121,6 +123,10 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
             return;
         }
 
+        if(accessPointPos == null) {
+            return;
+        }
+
         var linkedLevel = serverLevel.getServer().getLevel(accessPointPos.dimension());
         if (linkedLevel == null) {
             return;
@@ -132,7 +138,7 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
         }
 
         actionHost = accessPoint;
-        if (actionHost != null) {
+        if (accessPoint.isActive()) {
             grid = accessPoint.getGrid();
             if (grid != null) {
                 meStorage = grid.getStorageService().getInventory();
