@@ -5,9 +5,6 @@ import dev.smolinacadena.appliedcooking.blockentity.KitchenStationBlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.IServerDataProvider;
@@ -20,9 +17,9 @@ public class KitchenStationComponentProvider implements IBlockComponentProvider,
 
     @Override
     public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-        if (accessor.getServerData().contains("securityStationPos") && accessor.getServerData().getString("securityStationPos") != "") {
+        if (accessor.getServerData().contains("accessPointPos") && accessor.getServerData().getString("accessPointPos") != "") {
             tooltip.add(Component.translatable("jade.appliedcooking:online"));
-            tooltip.add(Component.translatable("jade.appliedcooking:kitchen_station", Component.translatable("block.ae2.security_station"), accessor.getServerData().getString("securityStationPos")));
+            tooltip.add(Component.translatable("jade.appliedcooking:kitchen_station", Component.translatable("block.ae2.wireless_access_point"), accessor.getServerData().getString("securityStationPos")));
         } else {
             tooltip.add(Component.translatable("jade.appliedcooking:offline"));
         }
@@ -31,7 +28,7 @@ public class KitchenStationComponentProvider implements IBlockComponentProvider,
     @Override
     public void appendServerData(CompoundTag data, BlockAccessor accessor) {
         KitchenStationBlockEntity kitchenStation = (KitchenStationBlockEntity) accessor.getBlockEntity();
-        data.putString("securityStationPos", kitchenStation.getSecurityStationPos());
+        data.putString("accessPointPos", kitchenStation.getAccessPointPos());
     }
 
     @Override

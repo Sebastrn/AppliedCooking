@@ -1,10 +1,12 @@
 package dev.smolinacadena.appliedcooking.blockentity;
 
-import appeng.api.features.Locatables;
+import appeng.api.implementations.blockentities.IWirelessAccessPoint;
+import appeng.api.networking.IGrid;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.storage.MEStorage;
-import appeng.me.InWorldGridNode;
+import appeng.util.Platform;
 import com.google.common.collect.Lists;
+import com.mojang.datafixers.util.Pair;
 import dev.smolinacadena.appliedcooking.AppliedCookingBlockEntities;
 import dev.smolinacadena.appliedcooking.AppliedCookingBlocks;
 import dev.smolinacadena.appliedcooking.api.cookingforblockheads.capability.KitchenItemProvider;
@@ -14,16 +16,24 @@ import net.blay09.mods.balm.api.provider.BalmProvider;
 import net.blay09.mods.balm.common.BalmBlockEntity;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class KitchenStationBlockEntity extends BalmBlockEntity {
     private final KitchenItemProvider itemProvider = new KitchenItemProvider(this);
-    private Long gridKey;
+    private GlobalPos accessPointPos = null;
+    private IActionHost actionHost = null;
+    private IGrid grid = null;
+    private MEStorage meStorage = null;
 
     public KitchenStationBlockEntity(BlockPos pos, BlockState state) {
         super(AppliedCookingBlockEntities.KITCHEN_STATION.get(), pos, state);
@@ -43,33 +53,34 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
     }
 
     public void applyDataFromItemToBlockEntity(ItemStack stack) {
-        if (stack.hasTag()) {
-            if (stack.getTag().contains(KitchenStationBlockItem.TAG_GRID_KEY)) {
-                gridKey = stack.getTag().getLong(KitchenStationBlockItem.TAG_GRID_KEY);
-
-                if (getActionHost() != null) {
-                    setConnected(true);
-                }
-            }
+        var tag = stack.getTag();
+        if (tag != null && tag.contains(KitchenStationBlockItem.TAG_ACCESS_POINT_POS, Tag.TAG_COMPOUND)) {
+            accessPointPos = GlobalPos.CODEC.decode(NbtOps.INSTANCE, tag.get(KitchenStationBlockItem.TAG_ACCESS_POINT_POS))
+                    .result()
+                    .map(Pair::getFirst)
+                    .orElse(null);
+            setNetworkProperties();
+        } else {
+            accessPointPos = null;
         }
 
         setChanged();
     }
 
     public void applyDataFromBlockEntityToItem(ItemStack stack) {
-        stack.setTag(new CompoundTag());
-
-        if (stack.getTag().contains(KitchenStationBlockItem.TAG_GRID_KEY)) {
-            stack.getTag().putLong(KitchenStationBlockItem.TAG_GRID_KEY, gridKey);
-        }
+        GlobalPos.CODEC.encodeStart(NbtOps.INSTANCE, accessPointPos)
+                .result()
+                .ifPresent(tagValue -> stack.getOrCreateTag().put(KitchenStationBlockItem.TAG_ACCESS_POINT_POS, tagValue));
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
 
-        if (gridKey != null) {
-            tag.putLong(KitchenStationBlockItem.TAG_GRID_KEY, gridKey.longValue());
+        if (accessPointPos != null) {
+            GlobalPos.CODEC.encodeStart(NbtOps.INSTANCE, accessPointPos)
+                    .result()
+                    .ifPresent(tagValue -> tag.put(KitchenStationBlockItem.TAG_ACCESS_POINT_POS, tagValue));
         }
     }
 
@@ -77,34 +88,57 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
     public void load(CompoundTag tag) {
         super.load(tag);
 
-        if (tag.contains(KitchenStationBlockItem.TAG_GRID_KEY)) {
-            gridKey = tag.getLong(KitchenStationBlockItem.TAG_GRID_KEY);
+        if (tag.contains(KitchenStationBlockItem.TAG_ACCESS_POINT_POS)) {
+            accessPointPos = GlobalPos.CODEC.decode(NbtOps.INSTANCE, tag.get(KitchenStationBlockItem.TAG_ACCESS_POINT_POS))
+                    .result()
+                    .map(Pair::getFirst)
+                    .orElse(null);
         }
     }
 
     public MEStorage getNetworkStorage() {
-        if (getActionHost() != null) {
-            var n = getActionHost().getActionableNode();
-            if (n != null) {
-                return n.getGrid().getStorageService().getInventory();
-            }
-        }
-        return null;
+        return meStorage;
     }
 
-    public String getSecurityStationPos() {
-        if (getActionHost() != null) {
-            InWorldGridNode securityStation = (InWorldGridNode) getActionHost().getActionableNode();
-            return securityStation.getLocation().getX() + ", " + securityStation.getLocation().getY() + ", " + securityStation.getLocation().getZ();
+    public String getAccessPointPos() {
+        if (actionHost != null) {
+            return accessPointPos.pos().getX() + ", " + accessPointPos.pos().getY() + ", " + accessPointPos.pos().getZ();
         }
         return "";
     }
 
     public IActionHost getActionHost() {
-        if (gridKey != null) {
-            return Locatables.securityStations().get(this.level, gridKey.longValue());
+        return actionHost;
+    }
+
+    @Nullable
+    public void setNetworkProperties() {
+        actionHost = null;
+        grid = null;
+        meStorage = null;
+
+        if (!(level instanceof ServerLevel serverLevel)) {
+            return;
         }
-        return null;
+
+        var linkedLevel = serverLevel.getServer().getLevel(accessPointPos.dimension());
+        if (linkedLevel == null) {
+            return;
+        }
+
+        var accessPointBlockEntity = Platform.getTickingBlockEntity(linkedLevel, accessPointPos.pos());
+        if (!(accessPointBlockEntity instanceof IWirelessAccessPoint accessPoint)) {
+            return;
+        }
+
+        actionHost = accessPoint;
+        if (actionHost != null) {
+            grid = accessPoint.getGrid();
+            if (grid != null) {
+                meStorage = grid.getStorageService().getInventory();
+            }
+        }
+
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, KitchenStationBlockEntity blockEntity) {
@@ -112,10 +146,7 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
     }
 
     public void serverTick() {
-        if (getActionHost() != null) {
-            setConnected(true);
-        } else {
-            setConnected(false);
-        }
+        setNetworkProperties();
+        setConnected(grid != null);
     }
 }
