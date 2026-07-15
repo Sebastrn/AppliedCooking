@@ -36,3 +36,10 @@ type = "required"
 versionRange = "[18,)"
 ordering = "AFTER"
 side = "BOTH"
+
+[[dependencies.appliedcooking]]
+modId = "patchouli"
+type = "optional"
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"

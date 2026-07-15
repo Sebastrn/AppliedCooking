@@ -38,6 +38,10 @@ repositories {
         url = 'https://api.modrinth.com/maven'
         content { includeGroup 'maven.modrinth' }
     }
+    maven {
+        name = 'BlameJared (Patchouli)'
+        url = 'https://maven.blamejared.com'
+    }
 }
 
 neoForge {
@@ -71,6 +75,10 @@ dependencies {
     // Optional HUD integrations (compile only; loaded if present at runtime)
     compileOnly "mcjty.theoneprobe:theoneprobe:${top_version}"
     compileOnly "maven.modrinth:jade:${jade_version}"
+
+    // Patchouli — optional, powers the in-game guide book. Resources only (no code dependency),
+    // so it is only needed at runtime; pulled into the dev client here.
+    runtimeOnly "vazkii.patchouli:Patchouli:${patchouli_version}"
 }
 
 tasks.named('processResources', ProcessResources).configure {

@@ -5,5 +5,17 @@
   "config.jade.plugin_appliedcooking.kitchen_station": "ME Kitchen Station",
   "jade.appliedcooking:kitchen_station": "Connected to %s at %s",
   "jade.appliedcooking:online": "Device Online",
-  "jade.appliedcooking:offline": "Device Offline"
+  "jade.appliedcooking:offline": "Device Offline",
+
+  "item.appliedcooking.guide": "Applied Cooking Guide",
+  "appliedcooking.guide.landing": "Welcome!$(br2)$(2)Applied Cooking$() connects your $(6)Cooking for Blockheads$() kitchen with $(5)Applied Energistics 2$(), letting you cook straight from your ME network inventory.",
+  "category.appliedcooking.name": "Applied Cooking",
+  "category.appliedcooking.description": "A mod that allows you to use items from your $(5)Applied Energistics 2$() network inventory directly in your $(6)Cooking for Blockheads$() kitchen multi-block!$(br2)One new block is added to Minecraft.",
+  "entry.appliedcooking.kitchenstation.name": "ME Kitchen Station",
+  "entry.appliedcooking.kitchenstation.page0": "The ME Kitchen Station is all you need to connect $(6)CFB$() with $(5)Applied Energistics 2$().$(br2)Once you have it, you'll need to configure it in an $(5)AE2$() ME Security Terminal as if it were a Wireless Terminal. Then, place it as a part of your $(6)CFB$() kitchen multi-block and that's all. You can craft items in your cooking table using your $(5)AE2$() network inventory!",
+  "entry.appliedcooking.kitchenstation.page1": "$(br2)You can check the following page for images on how the ME Kitchen Station looks when connected (purple screen) and disconnected (black screen).",
+  "entry.appliedcooking.kitchenstation.page2.title": "Disconnected",
+  "entry.appliedcooking.kitchenstation.page2": "When not connected, the screen will be black.",
+  "entry.appliedcooking.kitchenstation.page3.title": "Connected",
+  "entry.appliedcooking.kitchenstation.page3": "When connected, the screen will be purple."
 }

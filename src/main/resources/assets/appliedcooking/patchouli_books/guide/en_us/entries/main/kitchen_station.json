@@ -1,0 +1,36 @@
+{
+  "name": "entry.appliedcooking.kitchenstation.name",
+  "icon": "appliedcooking:kitchen_station",
+  "category": "appliedcooking:main",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "entry.appliedcooking.kitchenstation.page0"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "appliedcooking:kitchen_station",
+      "text": "entry.appliedcooking.kitchenstation.page1"
+    },
+    {
+      "type": "patchouli:image",
+      "title": "entry.appliedcooking.kitchenstation.page2.title",
+      "images": [
+        "appliedcooking:textures/gui/entries/kitchenstation-disconnected.png"
+      ],
+      "text": "entry.appliedcooking.kitchenstation.page2"
+    },
+    {
+      "type": "patchouli:image",
+      "title": "entry.appliedcooking.kitchenstation.page3.title",
+      "images": [
+        "appliedcooking:textures/gui/entries/kitchenstation-connected.png"
+      ],
+      "text": "entry.appliedcooking.kitchenstation.page3"
+    }
+  ],
+  "extra_recipe_mappings": {
+    "appliedcooking:kitchen_station": 0
+  },
+  "sortnum": 0
+}

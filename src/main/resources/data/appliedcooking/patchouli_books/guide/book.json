@@ -1,0 +1,12 @@
+{
+  "name": "item.appliedcooking.guide",
+  "landing_text": "appliedcooking.guide.landing",
+  "show_progress": false,
+  "version": 1,
+  "book_texture": "appliedcooking:textures/gui/book_maroon.png",
+  "model": "appliedcooking:guidebook",
+  "i18n": true,
+  "index_icon": "appliedcooking:kitchen_station",
+  "creative_tab": "minecraft:tools_and_utilities",
+  "use_resource_pack": true
+}
