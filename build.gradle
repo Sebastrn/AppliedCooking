@@ -94,6 +94,13 @@ dependencies {
     // compiled against. FTB Library pulls Architectury (11.1.17) transitively via its POM.
     runtimeOnly "mezz.jei:jei-1.20.4-neoforge:${jei_version}"
     runtimeOnly "dev.ftb.mods:ftb-library-neoforge:${ftb_library_version}"
+
+    // Pam's HarvestCraft 2 — piles of extra food recipes to exercise the kitchen. Food Core is the
+    // base; Crops/Trees/Food Extended build on it. (Croptopia has no NeoForge 1.20.4 build, so it's omitted.)
+    runtimeOnly "maven.modrinth:pams-harvestcraft-2-food-core:${harvestcraft_foodcore_version}"
+    runtimeOnly "maven.modrinth:pams-harvestcraft-2-crops:${harvestcraft_crops_version}"
+    runtimeOnly "maven.modrinth:pams-harvestcraft-2-trees:${harvestcraft_trees_version}"
+    runtimeOnly "maven.modrinth:pams-harvestcraft-2-food-extended:${harvestcraft_foodextended_version}"
 }
 
 tasks.named('processResources', ProcessResources).configure {
