@@ -1,9 +1,7 @@
 package sebastrn.appliedcooking.lootable;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import sebastrn.appliedcooking.AppliedCookingLootFunctions;
-import sebastrn.appliedcooking.blockentity.KitchenStationBlockEntity;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -11,9 +9,17 @@ import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunct
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import sebastrn.appliedcooking.AppliedCookingLootFunctions;
+import sebastrn.appliedcooking.blockentity.KitchenStationBlockEntity;
+
+import java.util.List;
 
 public class KitchenStationBlockLootFunction extends LootItemConditionalFunction {
-    public KitchenStationBlockLootFunction(LootItemCondition[] conditions) {
+
+    public static final Codec<KitchenStationBlockLootFunction> CODEC = RecordCodecBuilder.create(
+            instance -> commonFields(instance).apply(instance, KitchenStationBlockLootFunction::new));
+
+    protected KitchenStationBlockLootFunction(List<LootItemCondition> conditions) {
         super(conditions);
     }
 
@@ -21,8 +27,8 @@ public class KitchenStationBlockLootFunction extends LootItemConditionalFunction
     protected ItemStack run(ItemStack stack, LootContext lootContext) {
         BlockEntity blockEntity = lootContext.getParamOrNull(LootContextParams.BLOCK_ENTITY);
 
-        if (blockEntity instanceof KitchenStationBlockEntity) {
-            ((KitchenStationBlockEntity) blockEntity).applyDataFromBlockEntityToItem(stack);
+        if (blockEntity instanceof KitchenStationBlockEntity kitchenStation) {
+            kitchenStation.applyDataFromBlockEntityToItem(stack);
         }
 
         return stack;
@@ -31,13 +37,5 @@ public class KitchenStationBlockLootFunction extends LootItemConditionalFunction
     @Override
     public LootItemFunctionType getType() {
         return AppliedCookingLootFunctions.KITCHEN_STATION.get();
-    }
-
-    public static class Serializer extends LootItemConditionalFunction.Serializer<KitchenStationBlockLootFunction> {
-
-        @Override
-        public KitchenStationBlockLootFunction deserialize(JsonObject object, JsonDeserializationContext deserializationContext, LootItemCondition[] conditions) {
-            return new KitchenStationBlockLootFunction(conditions);
-        }
     }
 }

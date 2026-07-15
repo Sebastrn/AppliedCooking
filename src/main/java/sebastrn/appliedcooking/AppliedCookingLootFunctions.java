@@ -1,26 +1,23 @@
 package sebastrn.appliedcooking;
 
-import sebastrn.appliedcooking.lootable.KitchenStationBlockLootFunction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import sebastrn.appliedcooking.lootable.KitchenStationBlockLootFunction;
 
-public class AppliedCookingLootFunctions {
-
-    public static final RegistryObject<LootItemFunctionType> KITCHEN_STATION;
+public final class AppliedCookingLootFunctions {
 
     private static final DeferredRegister<LootItemFunctionType> LOOT_ITEM_FUNCTIONS = DeferredRegister.create(Registries.LOOT_FUNCTION_TYPE, AppliedCooking.ID);
 
-    static {
-        KITCHEN_STATION = LOOT_ITEM_FUNCTIONS.register("kitchen_station", () -> new LootItemFunctionType(new KitchenStationBlockLootFunction.Serializer()));
-    }
+    public static final DeferredHolder<LootItemFunctionType, LootItemFunctionType> KITCHEN_STATION =
+            LOOT_ITEM_FUNCTIONS.register("kitchen_station", () -> new LootItemFunctionType(KitchenStationBlockLootFunction.CODEC));
 
     private AppliedCookingLootFunctions() {
     }
 
-    public static void register() {
-        LOOT_ITEM_FUNCTIONS.register(FMLJavaModLoadingContext.get().getModEventBus());
+    public static void register(IEventBus modEventBus) {
+        LOOT_ITEM_FUNCTIONS.register(modEventBus);
     }
 }

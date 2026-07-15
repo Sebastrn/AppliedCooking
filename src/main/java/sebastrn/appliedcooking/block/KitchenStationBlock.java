@@ -1,30 +1,29 @@
 package sebastrn.appliedcooking.block;
 
-import sebastrn.appliedcooking.AppliedCookingBlockEntities;
-import sebastrn.appliedcooking.AppliedCookingBlocks;
-import sebastrn.appliedcooking.blockentity.KitchenStationBlockEntity;
-import net.blay09.mods.cookingforblockheads.block.BlockKitchen;
+import com.mojang.serialization.MapCodec;
+import net.blay09.mods.cookingforblockheads.block.BaseKitchenBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
+import sebastrn.appliedcooking.AppliedCookingBlockEntities;
+import sebastrn.appliedcooking.blockentity.KitchenStationBlockEntity;
 
-import javax.annotation.Nullable;
+public class KitchenStationBlock extends BaseKitchenBlock {
 
-public class KitchenStationBlock extends BlockKitchen {
+    public static final MapCodec<KitchenStationBlock> CODEC = simpleCodec(KitchenStationBlock::new);
 
     private static final VoxelShape SHAPE_NORTH = Block.box(3, -1, 6, 13, 7.5, 13);
     private static final VoxelShape SHAPE_SOUTH = Block.box(3, -1, 3, 13, 7.5, 10);
@@ -32,9 +31,14 @@ public class KitchenStationBlock extends BlockKitchen {
     private static final VoxelShape SHAPE_WEST = Block.box(6, -1, 3, 13, 7.5, 13);
     public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
 
-    public KitchenStationBlock() {
-        super(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).sound(SoundType.METAL).strength(2.5f), AppliedCookingBlocks.KITCHEN_STATION.getId());
+    public KitchenStationBlock(Properties properties) {
+        super(properties);
         registerDefaultState(getStateDefinition().any().setValue(CONNECTED, false));
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @Override
@@ -46,17 +50,15 @@ public class KitchenStationBlock extends BlockKitchen {
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         switch (state.getValue(FACING)) {
-            case UP:
-            case DOWN:
-            case SOUTH:
-            default:
-                return SHAPE_SOUTH;
             case NORTH:
                 return SHAPE_NORTH;
             case WEST:
                 return SHAPE_WEST;
             case EAST:
                 return SHAPE_EAST;
+            case SOUTH:
+            default:
+                return SHAPE_SOUTH;
         }
     }
 

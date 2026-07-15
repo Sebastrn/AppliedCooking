@@ -7,14 +7,9 @@ import appeng.api.storage.MEStorage;
 import appeng.util.Platform;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
-import sebastrn.appliedcooking.AppliedCookingBlockEntities;
-import sebastrn.appliedcooking.AppliedCookingBlocks;
-import sebastrn.appliedcooking.api.cookingforblockheads.capability.KitchenItemProvider;
-import sebastrn.appliedcooking.block.KitchenStationBlock;
-import sebastrn.appliedcooking.item.KitchenStationBlockItem;
 import net.blay09.mods.balm.api.provider.BalmProvider;
 import net.blay09.mods.balm.common.BalmBlockEntity;
-import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.nbt.CompoundTag;
@@ -25,11 +20,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import sebastrn.appliedcooking.AppliedCookingBlockEntities;
+import sebastrn.appliedcooking.AppliedCookingBlocks;
+import sebastrn.appliedcooking.api.cookingforblockheads.capability.MEKitchenItemProvider;
+import sebastrn.appliedcooking.block.KitchenStationBlock;
+import sebastrn.appliedcooking.item.KitchenStationBlockItem;
 
 import java.util.List;
 
 public class KitchenStationBlockEntity extends BalmBlockEntity {
-    private final KitchenItemProvider itemProvider = new KitchenItemProvider(this);
+    private final MEKitchenItemProvider itemProvider = new MEKitchenItemProvider(this);
     private GlobalPos accessPointPos = null;
     private IActionHost actionHost = null;
     private IGrid grid = null;
@@ -41,7 +41,7 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
 
     @Override
     public List<BalmProvider<?>> getProviders() {
-        return Lists.newArrayList(new BalmProvider<>(IKitchenItemProvider.class, itemProvider));
+        return Lists.newArrayList(new BalmProvider<>(KitchenItemProvider.class, itemProvider));
     }
 
     public void setConnected(boolean connected) {
@@ -68,7 +68,7 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
     }
 
     public void applyDataFromBlockEntityToItem(ItemStack stack) {
-        if(accessPointPos != null) {
+        if (accessPointPos != null) {
             GlobalPos.CODEC.encodeStart(NbtOps.INSTANCE, accessPointPos)
                     .result()
                     .ifPresent(tagValue -> stack.getOrCreateTag().put(KitchenStationBlockItem.TAG_ACCESS_POINT_POS, tagValue));
@@ -113,7 +113,6 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
         return actionHost;
     }
 
-    @Nullable
     public void setNetworkProperties() {
         actionHost = null;
         grid = null;
@@ -123,7 +122,7 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
             return;
         }
 
-        if(accessPointPos == null) {
+        if (accessPointPos == null) {
             return;
         }
 
@@ -144,7 +143,6 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
                 meStorage = grid.getStorageService().getInventory();
             }
         }
-
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, KitchenStationBlockEntity blockEntity) {

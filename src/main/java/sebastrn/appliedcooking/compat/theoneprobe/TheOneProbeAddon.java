@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fml.InterModComms;
+import net.neoforged.fml.InterModComms;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
@@ -46,7 +46,7 @@ public class TheOneProbeAddon {
             if (state.getBlock() instanceof KitchenStationBlock) {
                 var kitchenStationBlockEntity = tryGetTileEntity(level, data.getPos(), KitchenStationBlockEntity.class);
                 if (kitchenStationBlockEntity != null) {
-                    if (kitchenStationBlockEntity.getAccessPointPos() != "") {
+                    if (!kitchenStationBlockEntity.getAccessPointPos().isEmpty()) {
                         info.mcText(Component.translatable("jade.appliedcooking:online").withStyle(ChatFormatting.GRAY));
                         info.mcText(Component.translatable("jade.appliedcooking:kitchen_station", Component.translatable("block.ae2.wireless_access_point"), kitchenStationBlockEntity.getAccessPointPos()).withStyle(ChatFormatting.GRAY));
                     } else {

@@ -17,9 +17,9 @@ public class KitchenStationComponentProvider implements IBlockComponentProvider,
 
     @Override
     public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-        if (accessor.getServerData().contains("accessPointPos") && accessor.getServerData().getString("accessPointPos") != "") {
+        if (accessor.getServerData().contains("accessPointPos") && !accessor.getServerData().getString("accessPointPos").isEmpty()) {
             tooltip.add(Component.translatable("jade.appliedcooking:online"));
-            tooltip.add(Component.translatable("jade.appliedcooking:kitchen_station", Component.translatable("block.ae2.wireless_access_point"), accessor.getServerData().getString("securityStationPos")));
+            tooltip.add(Component.translatable("jade.appliedcooking:kitchen_station", Component.translatable("block.ae2.wireless_access_point"), accessor.getServerData().getString("accessPointPos")));
         } else {
             tooltip.add(Component.translatable("jade.appliedcooking:offline"));
         }
