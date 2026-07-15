@@ -39,8 +39,16 @@ repositories {
         content { includeGroup 'maven.modrinth' }
     }
     maven {
-        name = 'BlameJared (Patchouli)'
+        name = 'BlameJared (Patchouli, JEI)'
         url = 'https://maven.blamejared.com'
+    }
+    maven {
+        name = 'FTB (dev test mods)'
+        url = 'https://maven.ftb.dev/releases'
+    }
+    maven {
+        name = 'Architectury (transitive dep of FTB Library)'
+        url = 'https://maven.architectury.dev/'
     }
 }
 
@@ -72,13 +80,20 @@ dependencies {
     implementation "net.blay09.mods:balm-neoforge:${balm_version}"
     implementation "net.blay09.mods:cookingforblockheads-neoforge:${cfb_version}"
 
-    // Optional HUD integrations (compile only; loaded if present at runtime)
-    compileOnly "mcjty.theoneprobe:theoneprobe:${top_version}"
-    compileOnly "maven.modrinth:jade:${jade_version}"
+    // Optional HUD integrations — compiled against and loaded in the dev client so the integrations
+    // can be tested. The mod still runs without them: the TOP addon is guarded by Balm.isModLoaded,
+    // and the Jade plugin classes are only loaded by Jade's @WailaPlugin scan when Jade is present.
+    implementation "mcjty.theoneprobe:theoneprobe:${top_version}"
+    implementation "maven.modrinth:jade:${jade_version}"
 
     // Patchouli — optional, powers the in-game guide book. Resources only (no code dependency),
     // so it is only needed at runtime; pulled into the dev client here.
     runtimeOnly "vazkii.patchouli:Patchouli:${patchouli_version}"
+
+    // Dev-only test mods — loaded in the dev client to make debugging easier. Not shipped and not
+    // compiled against. FTB Library pulls Architectury (11.1.17) transitively via its POM.
+    runtimeOnly "mezz.jei:jei-1.20.4-neoforge:${jei_version}"
+    runtimeOnly "dev.ftb.mods:ftb-library-neoforge:${ftb_library_version}"
 }
 
 tasks.named('processResources', ProcessResources).configure {
