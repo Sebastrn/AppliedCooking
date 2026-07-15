@@ -10,22 +10,29 @@ authors = "${mod_authors}"
 description = '''${mod_description}'''
 
 [[dependencies.appliedcooking]]
+modId = "neoforge"
+type = "required"
+versionRange = "${neo_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.appliedcooking]]
+modId = "minecraft"
+type = "required"
+versionRange = "${minecraft_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.appliedcooking]]
 modId = "ae2"
-mandatory = true
-versionRange = "[15.0.4-beta,)"
-ordering = "BEFORE"
+type = "required"
+versionRange = "[17,)"
+ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.appliedcooking]]
 modId = "cookingforblockheads"
-mandatory = true
-versionRange = "[16.0.0,)"
-ordering = "BEFORE"
-side = "BOTH"
-
-[[dependencies.appliedcooking]]
-modId = "sebastrnlib"
-mandatory = true
-versionRange = "[4.0.0,)"
+type = "required"
+versionRange = "[18,)"
 ordering = "AFTER"
 side = "BOTH"

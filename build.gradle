@@ -1,8 +1,9 @@
 plugins {
+    id 'java'
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'net.neoforged.moddev' version '2.0.141'
 }
 
 version = mod_version
@@ -14,84 +15,68 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-minecraft {
-    mappings channel: mapping_channel, version: mapping_version
-    copyIdeResources = true
-
-    runs {
-        configureEach {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        client {
-            property 'forge.enabledGameTestNamespaces', mod_id
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-        }
-
-        server {
-            property 'forge.enabledGameTestNamespaces', mod_id
-            args '--nogui'
-        }
-
-        gameTestServer {
-            property 'forge.enabledGameTestNamespaces', mod_id
-        }
-
-        data {
-            workingDirectory project.file('run-data')
-
-            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-        }
+repositories {
+    mavenCentral()
+    maven {
+        name = 'NeoForged'
+        url = 'https://maven.neoforged.net/releases'
+    }
+    maven {
+        name = 'modmaven (Applied Energistics 2)'
+        url = 'https://modmaven.dev'
+    }
+    maven {
+        name = 'TwelveIterations (Balm, Cooking for Blockheads)'
+        url = 'https://maven.twelveiterations.com/repository/maven-public/'
+    }
+    maven {
+        name = 'k-4u (The One Probe)'
+        url = 'https://maven.k-4u.nl'
+    }
+    maven {
+        name = 'Modrinth (Jade)'
+        url = 'https://api.modrinth.com/maven'
+        content { includeGroup 'maven.modrinth' }
     }
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+neoForge {
+    version = project.neo_version
 
-repositories {
-    maven {
-        url 'https://maven.blamejared.com'
+    runs {
+        client {
+            client()
+        }
+        server {
+            server()
+        }
+        data {
+            data()
+        }
     }
-    maven {
-        url "https://cursemaven.com"
-        content {
-            includeGroup "curse.maven"
+
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
         }
     }
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    // Core integrations (compile + dev runtime)
+    implementation "appeng:appliedenergistics2-neoforge:${ae2_version}"
+    implementation "net.blay09.mods:balm-neoforge:${balm_version}"
+    implementation "net.blay09.mods:cookingforblockheads-neoforge:${cfb_version}"
 
-    implementation fg.deobf("curse.maven:balm-531761:4670591")
-    implementation fg.deobf("curse.maven:applied-energistics-2-223794:4684757")
-    implementation fg.deobf('curse.maven:cooking-for-blockheads-231484:4583999')
-
-    implementation fg.deobf("curse.maven:jade-324717:4681833")
-    implementation fg.deobf("curse.maven:the-one-probe-245211:4629624")
-    runtimeOnly fg.deobf('curse.maven:jei-238222:4690097')
-
-    runtimeOnly fg.deobf("curse.maven:aquaculture-60028:4608454")
-    runtimeOnly fg.deobf("curse.maven:farmers-delight-398521:4679319")
-    runtimeOnly fg.deobf("curse.maven:croptopia-415438:4636036")
-
-    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.20.1-81-FORGE")
-    runtimeOnly fg.deobf("curse.maven:sebastrnlib-709936:4706669")
+    // Optional HUD integrations (compile only; loaded if present at runtime)
+    compileOnly "mcjty.theoneprobe:theoneprobe:${top_version}"
+    compileOnly "maven.modrinth:jade:${jade_version}"
 }
 
 tasks.named('processResources', ProcessResources).configure {
     var replaceProperties = [
             minecraft_version   : minecraft_version, minecraft_version_range: minecraft_version_range,
-            forge_version       : forge_version, forge_version_range: forge_version_range,
+            neo_version         : neo_version, neo_version_range: neo_version_range,
             loader_version_range: loader_version_range,
             mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
             mod_authors         : mod_authors, mod_description: mod_description,
@@ -99,57 +84,10 @@ tasks.named('processResources', ProcessResources).configure {
     inputs.properties replaceProperties
 
     filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
-        expand replaceProperties + [project: project]
-    }
-}
-
-tasks.named('jar', Jar).configure {
-    manifest {
-        attributes([
-                'Specification-Title'     : mod_id,
-                'Specification-Vendor'    : mod_authors,
-                'Specification-Version'   : '1', // We are version 1 of ourselves
-                'Implementation-Title'    : project.name,
-                'Implementation-Version'  : project.jar.archiveVersion,
-                'Implementation-Vendor'   : mod_authors,
-                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-
-    // This is the preferred method to reobfuscate your jar file
-    finalizedBy 'reobfJar'
-}
-
-tasks.named('jar', Jar).configure {
-    manifest {
-        attributes([
-                'Specification-Title'     : mod_id,
-                'Specification-Vendor'    : mod_authors,
-                'Specification-Version'   : '1', // We are version 1 of ourselves
-                'Implementation-Title'    : project.name,
-                'Implementation-Version'  : project.jar.archiveVersion,
-                'Implementation-Vendor'   : mod_authors,
-                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-
-    // This is the preferred method to reobfuscate your jar file
-    finalizedBy 'reobfJar'
-}
-
-publishing {
-    publications {
-        register('mavenJava', MavenPublication) {
-            artifact jar
-        }
-    }
-    repositories {
-        maven {
-            url "file://${project.projectDir}/mcmodsrepo"
-        }
+        expand replaceProperties
     }
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+    options.encoding = 'UTF-8'
 }
