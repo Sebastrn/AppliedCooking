@@ -10,8 +10,13 @@ import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.cookingforblockheads.api.CacheHint;
 import net.blay09.mods.cookingforblockheads.api.IngredientToken;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.tag.ModItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import sebastrn.appliedcooking.blockentity.KitchenStationBlockEntity;
 
 import java.util.ArrayList;
@@ -23,18 +28,22 @@ import java.util.function.Predicate;
  * Supplies ingredients to Cooking for Blockheads from the Applied Energistics 2 network the Kitchen Station is
  * linked to. Implements CFB's {@link KitchenItemProvider} contract.
  * <p>
- * Two ways to satisfy a wanted ingredient:
+ * Three ways to satisfy a wanted ingredient, tried in order:
  * <ul>
  *     <li><b>Item</b> — the network holds the matching item directly (extract/insert as normal).</li>
- *     <li><b>Fluid</b> — network-driven: for each fluid actually stored in the network, we make its bucket item
- *     and ask the recipe whether that satisfies the ingredient. If so, we synthesize the bucket from the fluid,
- *     mirroring CFB's own Sink: since CFB's crafting handler produces no recipe remainders, the container is
- *     virtual — {@code consume()} spends 1000mB and hands back the bucket; {@code restore()} refunds it. This is
- *     fluid-agnostic (water, lava, and any modded fluid whose {@code getBucket()} the recipe accepts). Going
- *     fluid → bucket avoids relying on the requested item exposing a fluid handler (e.g. {@code minecraft:milk_bucket}
- *     is not a fluid container).</li>
+ *     <li><b>Water/milk fast-path</b> — these are the fluids CFB recipes actually request, and (mirroring CFB's
+ *     own Sink / Milk Jar) they're identified by item <em>tag</em> ({@link ModItemTags#WATER}/{@link ModItemTags#MILK}):
+ *     if a wanted item carries the tag and the network holds ≥1000mB of the fluid, we drain a bucket and yield the
+ *     requested item. Looking the fluid up by key fails fast when it isn't stored (the common case), satisfies
+ *     modded tagged variants — water bottles, {@code pamhc2foodcore:freshmilkitem}, … — that the bucket-only path
+ *     below can't, and makes <b>milk reliable</b> by never depending on the milk fluid's {@code getBucket()}.</li>
+ *     <li><b>Fluid (network-driven fallback)</b> — for any <em>other</em> fluid stored in the network (lava, modded
+ *     fluids) we make its bucket item and ask the recipe whether that satisfies the ingredient. If so we synthesize
+ *     the bucket from the fluid: since CFB's crafting handler produces no recipe remainders, the container is
+ *     virtual — {@code consume()} spends 1000mB and hands back the bucket; {@code restore()} refunds it. This keeps
+ *     the feature fluid-agnostic for any fluid whose {@code getBucket()} the recipe accepts.</li>
  * </ul>
- * The item path is always tried first, so real items are preferred over synthesized ones.
+ * The item path is always tried first, so real stored items are preferred over synthesized ones.
  * <p>
  * Performance: CFB calls {@link #findIngredient} once per (recipe × ingredient × provider) — thousands of times
  * per kitchen scan. To keep large networks from stalling, the network's available-stacks snapshot is built at
@@ -119,7 +128,8 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
         // Item path: look the recipe's accepted items up by key instead of scanning the whole network. This
         // matches by exact key, so an NBT-variant item stored under a different key wouldn't be found — a fine
         // trade-off for cooking ingredients (which are plain) in exchange for scaling to huge networks.
-        for (ItemStack accepted : ingredient.getItems()) {
+        ItemStack[] items = ingredient.getItems();
+        for (ItemStack accepted : items) {
             AEItemKey key = AEItemKey.of(accepted);
             if (key == null) {
                 continue;
@@ -130,7 +140,21 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
             }
         }
 
-        // Fluid path: satisfy the ingredient from a fluid stored in the network.
+        // Fluid fast-paths: water and milk are requested by item tag and satisfied by draining that fluid.
+        // Checked before the network-driven loop below because they're the fluids CFB recipes actually use —
+        // a cheap key lookup fails fast when the fluid isn't stored, they satisfy modded water/milk item
+        // variants (bottles, freshwateritem, …) that the bucket-only loop can't, and milk is reliable this way
+        // (we never depend on the milk fluid's getBucket()). Other fluids (lava, modded) fall through to the loop.
+        IngredientToken water = findTaggedFluidIngredient(stacks, items, ModItemTags.WATER, Fluids.WATER, ingredientTokens);
+        if (water != null) {
+            return water;
+        }
+        IngredientToken milk = findTaggedFluidIngredient(stacks, items, ModItemTags.MILK, Balm.getRegistries().getMilkFluid(), ingredientTokens);
+        if (milk != null) {
+            return milk;
+        }
+
+        // Fluid path: satisfy the ingredient from any other fluid stored in the network.
         return findFluidIngredient(stacks, ingredient::test, ingredientTokens);
     }
 
@@ -148,6 +172,17 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
             if (available > 0 && hasUsesLeft(wanted, available, ingredientTokens)) {
                 return new MEIngredientToken(wanted);
             }
+        }
+
+        // Fluid fast-paths (see the Ingredient overload): water/milk by tag before the network-driven loop.
+        ItemStack[] candidates = {itemStack};
+        IngredientToken water = findTaggedFluidIngredient(stacks, candidates, ModItemTags.WATER, Fluids.WATER, ingredientTokens);
+        if (water != null) {
+            return water;
+        }
+        IngredientToken milk = findTaggedFluidIngredient(stacks, candidates, ModItemTags.MILK, Balm.getRegistries().getMilkFluid(), ingredientTokens);
+        if (milk != null) {
+            return milk;
         }
 
         // Fluid fallback.
@@ -174,9 +209,35 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
     }
 
     /**
+     * Water/milk fast-path: these fluids are requested by item tag (mirroring CFB's Sink / Milk Jar). If the
+     * network holds at least a bucket of {@code fluid} (after fluid tokens already issued this operation) and one
+     * of {@code candidates} carries {@code tag}, return a token that drains a bucket and yields that requested
+     * item. Yielding the requested item — not the fluid's own bucket — is what lets a modded water/milk variant
+     * (a water bottle, {@code pamhc2foodcore:freshmilkitem}, …) be satisfied. Returns null (leaving the fluid to
+     * {@link #findFluidIngredient}) when the fluid is absent/unregistered or no candidate carries the tag.
+     */
+    private IngredientToken findTaggedFluidIngredient(KeyCounter stacks, ItemStack[] candidates, TagKey<Item> tag, Fluid fluid, Collection<IngredientToken> ingredientTokens) {
+        if (fluid == null || fluid == Fluids.EMPTY) {
+            return null;
+        }
+        AEFluidKey fluidKey = AEFluidKey.of(fluid);
+        long available = stacks.get(fluidKey);
+        if (available - reservedFluid(fluidKey, ingredientTokens) < AEFluidKey.AMOUNT_BUCKET) {
+            return null;
+        }
+        for (ItemStack candidate : candidates) {
+            if (candidate.is(tag)) {
+                return new MEFluidIngredientToken(fluidKey, AEFluidKey.AMOUNT_BUCKET, candidate.copyWithCount(1));
+            }
+        }
+        return null;
+    }
+
+    /**
      * For each fluid stored in the network, build its bucket item and ask {@code matches} whether that satisfies
      * the ingredient. If it does and the network holds at least a bucket (accounting for fluid tokens already
-     * issued), return a token that synthesizes the bucket from the network fluid.
+     * issued), return a token that synthesizes the bucket from the network fluid. This is the fluid-agnostic
+     * fallback for lava and modded fluids; water and milk are handled first by {@link #findTaggedFluidIngredient}.
      */
     private IngredientToken findFluidIngredient(KeyCounter stacks, Predicate<ItemStack> matches, Collection<IngredientToken> ingredientTokens) {
         for (AEFluidKey fluidKey : fluidKeys(stacks)) {
@@ -188,18 +249,22 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
             if (bucket.isEmpty() || !matches.test(bucket)) {
                 continue;
             }
-
-            long reserved = 0;
-            for (IngredientToken token : ingredientTokens) {
-                if (token instanceof MEFluidIngredientToken fluidToken && fluidKey.equals(fluidToken.fluidKey)) {
-                    reserved += fluidToken.amountPerItem;
-                }
-            }
-            if (available - reserved >= AEFluidKey.AMOUNT_BUCKET) {
+            if (available - reservedFluid(fluidKey, ingredientTokens) >= AEFluidKey.AMOUNT_BUCKET) {
                 return new MEFluidIngredientToken(fluidKey, AEFluidKey.AMOUNT_BUCKET, bucket);
             }
         }
         return null;
+    }
+
+    /** Total fluid (mB) already reserved for {@code fluidKey} by the fluid tokens issued this operation. */
+    private long reservedFluid(AEFluidKey fluidKey, Collection<IngredientToken> ingredientTokens) {
+        long reserved = 0;
+        for (IngredientToken token : ingredientTokens) {
+            if (token instanceof MEFluidIngredientToken fluidToken && fluidKey.equals(fluidToken.fluidKey)) {
+                reserved += fluidToken.amountPerItem;
+            }
+        }
+        return reserved;
     }
 
     public class MEIngredientToken implements IngredientToken, CacheHint {
