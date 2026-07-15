@@ -21,7 +21,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import sebastrn.appliedcooking.AppliedCookingBlockEntities;
-import sebastrn.appliedcooking.AppliedCookingBlocks;
 import sebastrn.appliedcooking.api.cookingforblockheads.capability.MEKitchenItemProvider;
 import sebastrn.appliedcooking.block.KitchenStationBlock;
 import sebastrn.appliedcooking.item.KitchenStationBlockItem;
@@ -29,11 +28,17 @@ import sebastrn.appliedcooking.item.KitchenStationBlockItem;
 import java.util.List;
 
 public class KitchenStationBlockEntity extends BalmBlockEntity {
+
+    /** Re-resolve the AE2 link at most this often (ticks). The link is a live handle, so sub-second refresh is wasteful. */
+    private static final int NETWORK_REFRESH_INTERVAL = 20;
+
     private final MEKitchenItemProvider itemProvider = new MEKitchenItemProvider(this);
     private GlobalPos accessPointPos = null;
     private IActionHost actionHost = null;
     private IGrid grid = null;
     private MEStorage meStorage = null;
+    /** Ticks since the last {@link #setNetworkProperties()}; starts at the interval so the first tick after load resolves. */
+    private int ticksSinceNetworkRefresh = NETWORK_REFRESH_INTERVAL;
 
     public KitchenStationBlockEntity(BlockPos pos, BlockState state) {
         super(AppliedCookingBlockEntities.KITCHEN_STATION.get(), pos, state);
@@ -44,12 +49,13 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
         return Lists.newArrayList(new BalmProvider<>(KitchenItemProvider.class, itemProvider));
     }
 
-    public void setConnected(boolean connected) {
-        level.blockEvent(worldPosition, AppliedCookingBlocks.KITCHEN_STATION.get(), 0, 0);
-
+    /** CONNECTED drives the block model, so only rewrite the state (and re-save) when it actually flips. */
+    private void updateConnectedState(boolean connected) {
         BlockState state = level.getBlockState(worldPosition);
-        level.setBlockAndUpdate(worldPosition, state.setValue(KitchenStationBlock.CONNECTED, connected));
-        setChanged();
+        if (state.getValue(KitchenStationBlock.CONNECTED) != connected) {
+            level.setBlockAndUpdate(worldPosition, state.setValue(KitchenStationBlock.CONNECTED, connected));
+            setChanged();
+        }
     }
 
     public void applyDataFromItemToBlockEntity(ItemStack stack) {
@@ -102,8 +108,18 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
         return meStorage;
     }
 
+    /**
+     * True only while the station is linked to an access point that is currently active and on a network — i.e.
+     * items can actually flow. This is the signal both the CONNECTED block model and the Jade/TOP tooltips use;
+     * a linked-but-unpowered access point counts as disconnected (its block entity still exists, but {@code grid}
+     * is null). Not merely "the access point block exists".
+     */
+    public boolean isConnected() {
+        return grid != null;
+    }
+
     public String getAccessPointPos() {
-        if (actionHost != null) {
+        if (isConnected() && accessPointPos != null) {
             return accessPointPos.pos().getX() + ", " + accessPointPos.pos().getY() + ", " + accessPointPos.pos().getZ();
         }
         return "";
@@ -150,7 +166,11 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
     }
 
     public void serverTick() {
+        if (++ticksSinceNetworkRefresh < NETWORK_REFRESH_INTERVAL) {
+            return;
+        }
+        ticksSinceNetworkRefresh = 0;
         setNetworkProperties();
-        setConnected(grid != null);
+        updateConnectedState(isConnected());
     }
 }

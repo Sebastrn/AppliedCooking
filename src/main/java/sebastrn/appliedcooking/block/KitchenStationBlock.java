@@ -72,8 +72,8 @@ public class KitchenStationBlock extends BaseKitchenBlock {
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
 
-        if (!level.isClientSide) {
-            ((KitchenStationBlockEntity) level.getBlockEntity(pos)).applyDataFromItemToBlockEntity(stack);
+        if (!level.isClientSide && level.getBlockEntity(pos) instanceof KitchenStationBlockEntity kitchenStation) {
+            kitchenStation.applyDataFromItemToBlockEntity(stack);
         }
     }
 

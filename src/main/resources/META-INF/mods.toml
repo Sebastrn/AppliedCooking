@@ -38,6 +38,13 @@ ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.appliedcooking]]
+modId = "balm"
+type = "required"
+versionRange = "[9,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.appliedcooking]]
 modId = "patchouli"
 type = "optional"
 versionRange = "*"
