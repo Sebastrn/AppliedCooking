@@ -1,8 +1,8 @@
-package dev.smolinacadena.appliedcooking.compat.jade;
+package sebastrn.appliedcooking.compat.jade;
 
-import dev.smolinacadena.appliedcooking.AppliedCooking;
-import dev.smolinacadena.appliedcooking.block.KitchenStationBlock;
-import dev.smolinacadena.appliedcooking.blockentity.KitchenStationBlockEntity;
+import sebastrn.appliedcooking.AppliedCooking;
+import sebastrn.appliedcooking.block.KitchenStationBlock;
+import sebastrn.appliedcooking.blockentity.KitchenStationBlockEntity;
 import snownee.jade.api.IWailaClientRegistration;
 import snownee.jade.api.IWailaCommonRegistration;
 import snownee.jade.api.IWailaPlugin;

@@ -1,8 +1,8 @@
-package dev.smolinacadena.appliedcooking.setup;
+package sebastrn.appliedcooking.setup;
 
 import appeng.api.features.GridLinkables;
-import dev.smolinacadena.appliedcooking.AppliedCookingItems;
-import dev.smolinacadena.appliedcooking.item.KitchenStationBlockItem;
+import sebastrn.appliedcooking.AppliedCookingItems;
+import sebastrn.appliedcooking.item.KitchenStationBlockItem;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 

@@ -1,6 +1,6 @@
-package dev.smolinacadena.appliedcooking;
+package sebastrn.appliedcooking;
 
-import dev.smolinacadena.appliedcooking.item.KitchenStationBlockItem;
+import sebastrn.appliedcooking.item.KitchenStationBlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;

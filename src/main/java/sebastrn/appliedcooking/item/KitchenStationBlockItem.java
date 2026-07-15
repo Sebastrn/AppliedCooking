@@ -1,7 +1,7 @@
-package dev.smolinacadena.appliedcooking.item;
+package sebastrn.appliedcooking.item;
 
 import appeng.api.features.IGridLinkableHandler;
-import dev.smolinacadena.appliedcooking.block.KitchenStationBlock;
+import sebastrn.appliedcooking.block.KitchenStationBlock;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.item.BlockItem;

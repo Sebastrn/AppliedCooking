@@ -1,10 +1,10 @@
-package dev.smolinacadena.appliedcooking.api.cookingforblockheads.capability;
+package sebastrn.appliedcooking.api.cookingforblockheads.capability;
 
 import appeng.api.config.Actionable;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.storage.MEStorage;
 import appeng.me.helpers.MachineSource;
-import dev.smolinacadena.appliedcooking.blockentity.KitchenStationBlockEntity;
+import sebastrn.appliedcooking.blockentity.KitchenStationBlockEntity;
 import net.blay09.mods.cookingforblockheads.api.IngredientPredicateWithCache;
 import net.blay09.mods.cookingforblockheads.api.SourceItem;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;

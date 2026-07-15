@@ -1,4 +1,4 @@
-package dev.smolinacadena.appliedcooking.blockentity;
+package sebastrn.appliedcooking.blockentity;
 
 import appeng.api.implementations.blockentities.IWirelessAccessPoint;
 import appeng.api.networking.IGrid;
@@ -7,11 +7,11 @@ import appeng.api.storage.MEStorage;
 import appeng.util.Platform;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
-import dev.smolinacadena.appliedcooking.AppliedCookingBlockEntities;
-import dev.smolinacadena.appliedcooking.AppliedCookingBlocks;
-import dev.smolinacadena.appliedcooking.api.cookingforblockheads.capability.KitchenItemProvider;
-import dev.smolinacadena.appliedcooking.block.KitchenStationBlock;
-import dev.smolinacadena.appliedcooking.item.KitchenStationBlockItem;
+import sebastrn.appliedcooking.AppliedCookingBlockEntities;
+import sebastrn.appliedcooking.AppliedCookingBlocks;
+import sebastrn.appliedcooking.api.cookingforblockheads.capability.KitchenItemProvider;
+import sebastrn.appliedcooking.block.KitchenStationBlock;
+import sebastrn.appliedcooking.item.KitchenStationBlockItem;
 import net.blay09.mods.balm.api.provider.BalmProvider;
 import net.blay09.mods.balm.common.BalmBlockEntity;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;

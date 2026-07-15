@@ -1,9 +1,9 @@
-package dev.smolinacadena.appliedcooking.lootable;
+package sebastrn.appliedcooking.lootable;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import dev.smolinacadena.appliedcooking.AppliedCookingLootFunctions;
-import dev.smolinacadena.appliedcooking.blockentity.KitchenStationBlockEntity;
+import sebastrn.appliedcooking.AppliedCookingLootFunctions;
+import sebastrn.appliedcooking.blockentity.KitchenStationBlockEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.storage.loot.LootContext;

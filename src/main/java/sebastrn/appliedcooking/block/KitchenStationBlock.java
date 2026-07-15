@@ -1,8 +1,8 @@
-package dev.smolinacadena.appliedcooking.block;
+package sebastrn.appliedcooking.block;
 
-import dev.smolinacadena.appliedcooking.AppliedCookingBlockEntities;
-import dev.smolinacadena.appliedcooking.AppliedCookingBlocks;
-import dev.smolinacadena.appliedcooking.blockentity.KitchenStationBlockEntity;
+import sebastrn.appliedcooking.AppliedCookingBlockEntities;
+import sebastrn.appliedcooking.AppliedCookingBlocks;
+import sebastrn.appliedcooking.blockentity.KitchenStationBlockEntity;
 import net.blay09.mods.cookingforblockheads.block.BlockKitchen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;

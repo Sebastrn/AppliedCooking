@@ -1,9 +1,9 @@
-package dev.smolinacadena.appliedcooking.compat.theoneprobe;
+package sebastrn.appliedcooking.compat.theoneprobe;
 
-import dev.smolinacadena.appliedcooking.AppliedCooking;
-import dev.smolinacadena.appliedcooking.block.KitchenStationBlock;
-import dev.smolinacadena.appliedcooking.blockentity.KitchenStationBlockEntity;
-import dev.smolinacadena.appliedcooking.compat.Compat;
+import sebastrn.appliedcooking.AppliedCooking;
+import sebastrn.appliedcooking.block.KitchenStationBlock;
+import sebastrn.appliedcooking.blockentity.KitchenStationBlockEntity;
+import sebastrn.appliedcooking.compat.Compat;
 import mcjty.theoneprobe.api.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;

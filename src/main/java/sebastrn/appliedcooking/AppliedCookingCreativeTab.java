@@ -1,4 +1,4 @@
-package dev.smolinacadena.appliedcooking;
+package sebastrn.appliedcooking;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;

@@ -1,6 +1,6 @@
-package dev.smolinacadena.appliedcooking;
+package sebastrn.appliedcooking;
 
-import dev.smolinacadena.appliedcooking.lootable.KitchenStationBlockLootFunction;
+import sebastrn.appliedcooking.lootable.KitchenStationBlockLootFunction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;

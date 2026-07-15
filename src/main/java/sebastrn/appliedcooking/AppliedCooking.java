@@ -1,9 +1,9 @@
-package dev.smolinacadena.appliedcooking;
+package sebastrn.appliedcooking;
 
-import dev.smolinacadena.appliedcooking.compat.Compat;
-import dev.smolinacadena.appliedcooking.compat.theoneprobe.TheOneProbeAddon;
-import dev.smolinacadena.appliedcooking.setup.ClientSetup;
-import dev.smolinacadena.appliedcooking.setup.CommonSetup;
+import sebastrn.appliedcooking.compat.Compat;
+import sebastrn.appliedcooking.compat.theoneprobe.TheOneProbeAddon;
+import sebastrn.appliedcooking.setup.ClientSetup;
+import sebastrn.appliedcooking.setup.CommonSetup;
 import net.blay09.mods.balm.api.Balm;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;

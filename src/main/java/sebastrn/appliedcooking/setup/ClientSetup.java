@@ -1,6 +1,6 @@
-package dev.smolinacadena.appliedcooking.setup;
+package sebastrn.appliedcooking.setup;
 
-import dev.smolinacadena.appliedcooking.AppliedCooking;
+import sebastrn.appliedcooking.AppliedCooking;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.ModelEvent.BakingCompleted;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
