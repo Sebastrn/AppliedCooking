@@ -23,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import sebastrn.appliedcooking.AppliedCooking;
 import sebastrn.appliedcooking.AppliedCookingBlockEntities;
 import sebastrn.appliedcooking.api.cookingforblockheads.capability.MEKitchenItemProvider;
 import sebastrn.appliedcooking.block.KitchenStationBlock;
@@ -35,8 +36,14 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
     /** Re-resolve the AE2 link at most this often (ticks). The link is a live handle, so sub-second refresh is wasteful. */
     private static final int NETWORK_REFRESH_INTERVAL = 20;
 
-    /** Power drawn from the linked network every tick while connected (AE/t). When the network can't pay, the station goes offline. */
-    public static final double IDLE_POWER_DRAIN = 5.0;
+    /**
+     * Power drawn from the linked network every tick while connected (AE/t). When the network can't pay, the station
+     * goes offline. Server-configurable (see {@code ServerConfig}); read through this accessor rather than cached, so
+     * a config reload takes effect without a restart.
+     */
+    public static double idlePowerDrain() {
+        return AppliedCooking.SERVER_CONFIG.getKitchenStation().getIdlePowerDrain();
+    }
 
     private final MEKitchenItemProvider itemProvider = new MEKitchenItemProvider(this);
     private GlobalPos accessPointPos = null;
@@ -119,7 +126,7 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
 
     /**
      * True only while the station is linked to an active access point on a grid that can pay the
-     * {@link #IDLE_POWER_DRAIN idle power cost}. {@link #grid} is set only when all of that holds, so this is simply
+     * {@link #idlePowerDrain() idle power cost}. {@link #grid} is set only when all of that holds, so this is simply
      * "do we have a live grid". The CONNECTED block model, the Jade/TOP tooltips, and {@link #getNetworkStorage()} all
      * key off it — a linked-but-unpowered station counts as disconnected.
      */
@@ -199,17 +206,24 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
     }
 
     /**
-     * Charge {@code grid} {@link #IDLE_POWER_DRAIN} for this tick, but only if it can pay in full — we don't drain the
-     * last scraps for a service we then won't provide.
+     * Charge {@code grid} the configured {@link #idlePowerDrain() idle power cost} for this tick, but only if it can
+     * pay in full — we don't drain the last scraps for a service we then won't provide.
      *
      * @return true if the network paid the full idle cost.
      */
     private boolean drainIdlePower(IGrid grid) {
+        // Read once: the config is reloadable, and simulating against one value then modulating against another
+        // could drain an amount we never checked.
+        double drain = idlePowerDrain();
+        if (drain <= 0) {
+            return true;
+        }
+
         IEnergyService energy = grid.getEnergyService();
-        if (energy.extractAEPower(IDLE_POWER_DRAIN, Actionable.SIMULATE, PowerMultiplier.CONFIG) < IDLE_POWER_DRAIN) {
+        if (energy.extractAEPower(drain, Actionable.SIMULATE, PowerMultiplier.CONFIG) < drain) {
             return false;
         }
-        energy.extractAEPower(IDLE_POWER_DRAIN, Actionable.MODULATE, PowerMultiplier.CONFIG);
+        energy.extractAEPower(drain, Actionable.MODULATE, PowerMultiplier.CONFIG);
         return true;
     }
 }
