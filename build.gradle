@@ -153,7 +153,7 @@ modrinth {
     token = providers.gradleProperty('MODRINTH_TOKEN').orElse(providers.environmentVariable('MODRINTH_TOKEN'))
     projectId = modrinth_id
     versionNumber = mod_version
-    versionName = "${mod_name} ${mod_version}"
+    versionName = tasks.named('jar').flatMap { it.archiveFileName }
     versionType = 'release'
     uploadFile = tasks.named('jar')
     gameVersions = ['1.20.4']
@@ -177,10 +177,11 @@ tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurs
     apiToken = findProperty('CURSEFORGE_TOKEN') ?: System.getenv('CURSEFORGE_TOKEN')
 
     def mainFile = upload(curseforge_id, tasks.named('jar'))
-    mainFile.displayName = "${mod_name} ${mod_version}"
+    // displayName left unset on purpose -> CurseForge shows the jar's file name (appliedcooking-<version>.jar).
     mainFile.releaseType = 'release'
     mainFile.addGameVersion '1.20.4'
     mainFile.addModLoader 'NeoForge'
+    mainFile.addEnvironment 'Client', 'Server'
     mainFile.changelogType = 'markdown'
     mainFile.changelog = changelogText
     // CurseForge project slugs (adjust if a publish fails on an unknown project):
