@@ -2,6 +2,17 @@
 
 All notable changes to **Applied Cooking** are listed here.
 
+## 5.1.0
+
+### Added
+- **The Station's power draw is now configurable.** It was fixed at 5 AE/t; it's now a server config option
+  (`kitchenStation.idlePowerDrain`), still 5 AE/t by default, and set it to 0 to make the Station free to run.
+  Changing it takes effect on a config reload, and Jade/The One Probe report whatever value is actually in use.
+
+### Fixed
+- An empty bucket left over from cooking (milk, water) could be **destroyed** if your ME network had nowhere to put
+  it back — full, or partitioned so nothing accepted it. It's now dropped at the Station instead of vanishing.
+
 ## 5.0.0
 
 First **NeoForge 1.20.4** release, ported from Forge 1.20.1.
