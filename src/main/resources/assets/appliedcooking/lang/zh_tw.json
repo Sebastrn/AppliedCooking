@@ -1,0 +1,30 @@
+{
+  "itemGroup.appliedcooking": "Applied Cooking",
+  "block.appliedcooking.kitchen_station": "ME廚房終端站",
+  "tooltip.appliedcooking:kitchen_station.description": "連接至Applied Energistics 2網路的終端站節點",
+  "config.jade.plugin_appliedcooking.kitchen_station": "ME廚房終端站",
+  "jade.appliedcooking:kitchen_station": "已連接至%s，位於%s",
+  "jade.appliedcooking:online": "裝置在線",
+  "jade.appliedcooking:offline": "裝置離線",
+  "jade.appliedcooking:power_drain": "正消耗%s AE/t",
+
+  "jei.appliedcooking.kitchen_station.1": "ME廚房終端站讓你的Cooking for Blockheads烹飪桌能夠直接使用Applied Energistics 2網路中的物品——以及水和牛奶之類的流體——進行烹飪。",
+  "jei.appliedcooking.kitchen_station.2": "要綁定它，請開啟已通電網路上的ME無線存取點，將終端站放入其無線終端槽中，然後再取出。綁定資訊儲存在方塊上，只要存取點所在區塊保持載入，即使跨維度也能運作。",
+  "jei.appliedcooking.kitchen_station.3": "將綁定好的終端站放入你的廚房，緊鄰烹飪桌，或透過廚櫃相連。連接時其螢幕會發出紫色光芒，運作時會從網路中消耗少量電力。",
+
+  "item.appliedcooking.guide": "Applied Cooking指南",
+  "appliedcooking.guide.landing": "歡迎！$(br2)$(2)Applied Cooking$()將你的$(6)Cooking for Blockheads$()廚房與$(5)Applied Energistics 2$()相連，讓你直接使用ME網路儲存進行烹飪。",
+  "category.appliedcooking.name": "Applied Cooking",
+  "category.appliedcooking.description": "一個讓你能夠在$(6)Cooking for Blockheads$()廚房多方塊結構中直接使用$(5)Applied Energistics 2$()網路儲存物品的模組！$(br2)向Minecraft新增了一個新方塊。",
+  "entry.appliedcooking.kitchenstation.name": "ME廚房終端站",
+  "entry.appliedcooking.kitchenstation.intro": "$(l)ME廚房終端站$()是連接$(6)Cooking for Blockheads$()與$(5)Applied Energistics 2$()所需的唯一方塊。$(br2)放入廚房後，它會將你整個$(5)ME網路$()的儲存提供給烹飪桌——每一件儲存的物品都成為食材。它甚至能從網路儲存中抽取水和牛奶之類的$(o)流體$()。$(br2)製作它、綁定它，然後放進廚房——方法如下。",
+  "entry.appliedcooking.kitchenstation.craft": "按圖所示製作$(l)ME廚房終端站$()。$(br2)剛製作出來時它還沒有綁定任何東西——下一步會將它綁定到你的$(5)AE2$()網路，好讓它知道從哪裡抽取物品。",
+  "entry.appliedcooking.kitchenstation.link.title": "綁定",
+  "entry.appliedcooking.kitchenstation.link": "你需要在$(5)ME無線存取點$()上綁定終端站——也就是為無線終端提供服務的那個方塊。$(br2)$(l)右鍵點擊$()一個已通電的存取點將其開啟，把終端站放入其終端槽，它便會$(2)綁定$()完成並返回——再取出即可。$(br2)綁定資訊儲存在方塊本身，因此無論多遠，終端站都能連接到網路——即使身處另一個維度。",
+  "entry.appliedcooking.kitchenstation.placement.title": "在廚房中",
+  "entry.appliedcooking.kitchenstation.placement": "一個廚房佈局範例——點擊眼睛圖示可在世界中預覽。",
+  "entry.appliedcooking.kitchenstation.states.title": "讀懂螢幕",
+  "entry.appliedcooking.kitchenstation.states": "終端站的螢幕能讓你一眼看出它的狀態。$(br2)$(5)紫色$()表示它已$(2)綁定並通電$()——烹飪桌現在可以使用你整個$(5)ME網路$()中的一切進行烹飪，包括水和牛奶，只需消耗少量電力。$(br2)$(4)黑色$()表示它尚未連接。請檢查它是否已綁定到存取點、網路是否有富餘電力，以及存取點所在區塊是否保持載入。",
+  "entry.appliedcooking.kitchenstation.connected.title": "已連接",
+  "entry.appliedcooking.kitchenstation.disconnected.title": "已斷開"
+}

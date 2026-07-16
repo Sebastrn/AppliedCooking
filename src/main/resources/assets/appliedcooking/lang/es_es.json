@@ -1,0 +1,30 @@
+{
+  "itemGroup.appliedcooking": "Applied Cooking",
+  "block.appliedcooking.kitchen_station": "ME Estación de Cocina",
+  "tooltip.appliedcooking:kitchen_station.description": "Nodo de estación que se conecta a redes de Applied Energistics 2",
+  "config.jade.plugin_appliedcooking.kitchen_station": "ME Estación de Cocina",
+  "jade.appliedcooking:kitchen_station": "Conectada a %s en %s",
+  "jade.appliedcooking:online": "Dispositivo en línea",
+  "jade.appliedcooking:offline": "Dispositivo desconectado",
+  "jade.appliedcooking:power_drain": "Consumiendo %s AE/t",
+
+  "jei.appliedcooking.kitchen_station.1": "La ME Estación de Cocina permite que tu mesa de cocina de Cooking for Blockheads cocine con objetos —y fluidos como agua y leche— directamente desde tu red de Applied Energistics 2.",
+  "jei.appliedcooking.kitchen_station.2": "Para vincularla, abre un ME Punto de Acceso Inalámbrico en tu red con energía, coloca la estación en su ranura de terminal inalámbrica y vuelve a sacarla. El vínculo se guarda en el bloque y funciona incluso entre dimensiones, siempre que el Punto de Acceso siga con su chunk cargado.",
+  "jei.appliedcooking.kitchen_station.3": "Coloca la estación vinculada en tu cocina, junto a la mesa de cocina o conectada mediante encimeras. Su pantalla brilla en morado cuando está conectada, y consume un poco de energía de la red mientras funciona.",
+
+  "item.appliedcooking.guide": "Guía de Applied Cooking",
+  "appliedcooking.guide.landing": "¡Bienvenido!$(br2)$(2)Applied Cooking$() conecta tu cocina de $(6)Cooking for Blockheads$() con $(5)Applied Energistics 2$(), permitiéndote cocinar directamente desde el inventario de tu red ME.",
+  "category.appliedcooking.name": "Applied Cooking",
+  "category.appliedcooking.description": "¡Un mod que te permite usar objetos del inventario de tu red de $(5)Applied Energistics 2$() directamente en el multibloque de cocina de $(6)Cooking for Blockheads$()!$(br2)Se añade un bloque nuevo a Minecraft.",
+  "entry.appliedcooking.kitchenstation.name": "ME Estación de Cocina",
+  "entry.appliedcooking.kitchenstation.intro": "La $(l)ME Estación de Cocina$() es el único bloque que necesitas para unir $(6)Cooking for Blockheads$() con $(5)Applied Energistics 2$().$(br2)Colocada en tu cocina, ofrece todo el inventario de tu $(5)red ME$() a la mesa de cocina: cada objeto almacenado se convierte en un ingrediente. Incluso saca $(o)fluidos$() como agua y leche del almacenamiento de la red.$(br2)Fabrícala, vincúlala y colócala en tu cocina; así se hace.",
+  "entry.appliedcooking.kitchenstation.craft": "Fabrica la $(l)ME Estación de Cocina$() como se muestra.$(br2)Recién salida de la mesa de fabricación aún no está vinculada a nada; el siguiente paso la conecta a tu red de $(5)AE2$() para que sepa de dónde sacar los objetos.",
+  "entry.appliedcooking.kitchenstation.link.title": "Vincularla",
+  "entry.appliedcooking.kitchenstation.link": "Vinculas la estación en un $(5)ME Punto de Acceso Inalámbrico$(): el mismo bloque que sirve a las terminales inalámbricas.$(br2)$(l)Haz clic derecho$() en un Punto de Acceso con energía para abrirlo, coloca la estación en su ranura de terminal y volverá $(2)vinculada$(); sácala de nuevo.$(br2)El vínculo se guarda en el propio bloque, así que la estación alcanza la red desde cualquier distancia, incluso desde otra dimensión.",
+  "entry.appliedcooking.kitchenstation.placement.title": "En la Cocina",
+  "entry.appliedcooking.kitchenstation.placement": "Un ejemplo de distribución de cocina; toca el ojo para previsualizarla en el mundo.",
+  "entry.appliedcooking.kitchenstation.states.title": "Leer la Pantalla",
+  "entry.appliedcooking.kitchenstation.states": "La pantalla de la estación muestra su estado de un vistazo.$(br2)$(5)Morado$() significa que está $(2)vinculada y con energía$(): la mesa de cocina ya puede cocinar con todo lo que hay en tu $(5)red ME$(), agua y leche incluidas, a cambio de un poco de energía.$(br2)$(4)Negro$() significa que no está conectada. Comprueba que esté vinculada a un Punto de Acceso, que la red tenga energía de sobra y que el chunk del Punto de Acceso siga cargado.",
+  "entry.appliedcooking.kitchenstation.connected.title": "Conectada",
+  "entry.appliedcooking.kitchenstation.disconnected.title": "Desconectada"
+}

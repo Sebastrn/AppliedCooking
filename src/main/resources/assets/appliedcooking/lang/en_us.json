@@ -22,9 +22,9 @@
   "entry.appliedcooking.kitchenstation.link.title": "Linking It",
   "entry.appliedcooking.kitchenstation.link": "You link the Station at an $(5)ME Wireless Access Point$() — the same block that serves wireless terminals.$(br2)$(l)Right-click$() a powered Access Point to open it, drop the Station into its wireless-terminal slot, and it comes back $(2)linked$() — take it out again.$(br2)The link is saved on the block itself, so the Station keeps reaching the network from any distance — even another dimension.",
   "entry.appliedcooking.kitchenstation.placement.title": "In The Kitchen",
-  "entry.appliedcooking.kitchenstation.placement": "Place the Station beside your $(6)Cooking for Blockheads$() Cooking Table, on a connector or counter. Tap the eye to preview it.",
+  "entry.appliedcooking.kitchenstation.placement": "An example kitchen layout — tap the eye to preview it in the world.",
+  "entry.appliedcooking.kitchenstation.states.title": "Reading the Screen",
+  "entry.appliedcooking.kitchenstation.states": "The Station's screen shows its status at a glance.$(br2)$(5)Purple$() means it's $(2)linked and powered$() — the Cooking Table can now cook with everything in your $(5)ME network$(), water and milk included, for a little power.$(br2)$(4)Black$() means it isn't connected. Check that it's linked to an Access Point, that the network has power to spare, and that the Access Point's chunk stays loaded.",
   "entry.appliedcooking.kitchenstation.connected.title": "Connected",
-  "entry.appliedcooking.kitchenstation.connected": "$(2)Linked and powered$(), the screen glows $(5)purple$() and you can cook from your $(5)ME network$().",
-  "entry.appliedcooking.kitchenstation.disconnected.title": "Disconnected",
-  "entry.appliedcooking.kitchenstation.disconnected": "A $(4)black screen$() means it isn't connected — not $(2)linked$(), no power, or unloaded."
+  "entry.appliedcooking.kitchenstation.disconnected.title": "Disconnected"
 }

@@ -43,20 +43,23 @@
       "text": "entry.appliedcooking.kitchenstation.placement"
     },
     {
+      "type": "patchouli:text",
+      "title": "entry.appliedcooking.kitchenstation.states.title",
+      "text": "entry.appliedcooking.kitchenstation.states"
+    },
+    {
       "type": "patchouli:image",
       "title": "entry.appliedcooking.kitchenstation.connected.title",
       "images": [
         "appliedcooking:textures/gui/entries/kitchenstation-connected.png"
-      ],
-      "text": "entry.appliedcooking.kitchenstation.connected"
+      ]
     },
     {
       "type": "patchouli:image",
       "title": "entry.appliedcooking.kitchenstation.disconnected.title",
       "images": [
         "appliedcooking:textures/gui/entries/kitchenstation-disconnected.png"
-      ],
-      "text": "entry.appliedcooking.kitchenstation.disconnected"
+      ]
     }
   ],
   "extra_recipe_mappings": {

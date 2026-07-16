@@ -1,0 +1,30 @@
+{
+  "itemGroup.appliedcooking": "Applied Cooking",
+  "block.appliedcooking.kitchen_station": "ME-Küchenstation",
+  "tooltip.appliedcooking:kitchen_station.description": "Stationsknoten, der sich mit Applied-Energistics-2-Netzwerken verbindet",
+  "config.jade.plugin_appliedcooking.kitchen_station": "ME-Küchenstation",
+  "jade.appliedcooking:kitchen_station": "Verbunden mit %s bei %s",
+  "jade.appliedcooking:online": "Gerät online",
+  "jade.appliedcooking:offline": "Gerät offline",
+  "jade.appliedcooking:power_drain": "Verbraucht %s AE/t",
+
+  "jei.appliedcooking.kitchen_station.1": "Mit der ME-Küchenstation kann dein Cooking-for-Blockheads-Kochtisch direkt aus deinem Applied-Energistics-2-Netzwerk kochen — mit Gegenständen und Flüssigkeiten wie Wasser und Milch.",
+  "jei.appliedcooking.kitchen_station.2": "Zum Verknüpfen öffnest du einen Drahtlosen ME-Zugangspunkt in deinem mit Energie versorgten Netzwerk, legst die Station in den Terminal-Slot und nimmst sie wieder heraus. Die Verknüpfung wird im Block gespeichert und funktioniert sogar dimensionsübergreifend, solange der Zugangspunkt geladen bleibt.",
+  "jei.appliedcooking.kitchen_station.3": "Platziere die verknüpfte Station in deiner Küche, neben dem Kochtisch oder über Küchentheken verbunden. Ihr Bildschirm leuchtet violett, wenn sie verbunden ist, und sie verbraucht etwas Energie aus dem Netzwerk.",
+
+  "item.appliedcooking.guide": "Applied-Cooking-Handbuch",
+  "appliedcooking.guide.landing": "Willkommen!$(br2)$(2)Applied Cooking$() verbindet deine $(6)Cooking for Blockheads$()-Küche mit $(5)Applied Energistics 2$(), sodass du direkt aus deinem ME-Netzwerk kochen kannst.",
+  "category.appliedcooking.name": "Applied Cooking",
+  "category.appliedcooking.description": "Eine Mod, mit der du Gegenstände aus deinem $(5)Applied Energistics 2$()-Netzwerk direkt in deinem $(6)Cooking for Blockheads$()-Küchenmultiblock verwenden kannst!$(br2)Ein neuer Block kommt zu Minecraft hinzu.",
+  "entry.appliedcooking.kitchenstation.name": "ME-Küchenstation",
+  "entry.appliedcooking.kitchenstation.intro": "Die $(l)ME-Küchenstation$() ist der einzige Block, den du brauchst, um $(6)Cooking for Blockheads$() mit $(5)Applied Energistics 2$() zu verbinden.$(br2)In deiner Küche platziert, stellt sie dem Kochtisch dein gesamtes $(5)ME-Netzwerk$() zur Verfügung — jeder gelagerte Gegenstand wird zur Zutat. Sie holt sogar $(o)Flüssigkeiten$() wie Wasser und Milch aus dem Netzwerkspeicher.$(br2)Herstellen, verknüpfen und in die Küche stellen — so geht's.",
+  "entry.appliedcooking.kitchenstation.craft": "Stelle die $(l)ME-Küchenstation$() wie gezeigt her.$(br2)Frisch hergestellt ist sie noch mit nichts verbunden — im nächsten Schritt verknüpfst du sie mit deinem $(5)AE2$()-Netzwerk, damit sie weiß, woher sie ziehen soll.",
+  "entry.appliedcooking.kitchenstation.link.title": "Verknüpfen",
+  "entry.appliedcooking.kitchenstation.link": "Du verknüpfst die Station an einem $(5)Drahtlosen ME-Zugangspunkt$() — demselben Block, der auch Drahtlose Zugangskonsolen versorgt.$(br2)$(l)Rechtsklicke$() einen mit Energie versorgten Zugangspunkt, um ihn zu öffnen, lege die Station in den Terminal-Slot, und sie kommt $(2)verknüpft$() zurück — nimm sie wieder heraus.$(br2)Die Verknüpfung wird im Block selbst gespeichert, sodass die Station das Netzwerk aus jeder Entfernung erreicht — sogar aus einer anderen Dimension.",
+  "entry.appliedcooking.kitchenstation.placement.title": "In der Küche",
+  "entry.appliedcooking.kitchenstation.placement": "Ein Beispiel-Küchenlayout — tippe auf das Auge für die Vorschau in der Welt.",
+  "entry.appliedcooking.kitchenstation.states.title": "Der Bildschirm",
+  "entry.appliedcooking.kitchenstation.states": "Der Bildschirm der Station zeigt ihren Status auf einen Blick.$(br2)$(5)Violett$() bedeutet $(2)verknüpft und mit Energie versorgt$() — der Kochtisch kann jetzt mit allem aus deinem $(5)ME-Netzwerk$() kochen, Wasser und Milch inbegriffen, für ein wenig Energie.$(br2)$(4)Schwarz$() bedeutet, dass keine Verbindung besteht. Prüfe, ob sie mit einem Zugangspunkt verknüpft ist, ob das Netzwerk genug Energie hat und ob der Chunk des Zugangspunkts geladen bleibt.",
+  "entry.appliedcooking.kitchenstation.connected.title": "Verbunden",
+  "entry.appliedcooking.kitchenstation.disconnected.title": "Getrennt"
+}

@@ -1,0 +1,30 @@
+{
+  "itemGroup.appliedcooking": "Applied Cooking",
+  "block.appliedcooking.kitchen_station": "МЭ кухонная станция",
+  "tooltip.appliedcooking:kitchen_station.description": "Узел-станция, подключающийся к сетям Applied Energistics 2",
+  "config.jade.plugin_appliedcooking.kitchen_station": "МЭ кухонная станция",
+  "jade.appliedcooking:kitchen_station": "Подключена к %s в %s",
+  "jade.appliedcooking:online": "Устройство активно",
+  "jade.appliedcooking:offline": "Устройство неактивно",
+  "jade.appliedcooking:power_drain": "Потребляет %s AE/t",
+
+  "jei.appliedcooking.kitchen_station.1": "МЭ кухонная станция позволяет вашему кухонному столу из Cooking for Blockheads готовить, используя предметы — и жидкости, такие как вода и молоко — прямо из вашей сети Applied Energistics 2.",
+  "jei.appliedcooking.kitchen_station.2": "Чтобы привязать её, откройте МЭ беспроводную точку доступа в запитанной сети, поместите станцию в слот беспроводного терминала и заберите обратно. Привязка сохраняется в блоке и работает даже между измерениями, пока чанк с точкой доступа загружен.",
+  "jei.appliedcooking.kitchen_station.3": "Разместите привязанную станцию на кухне, рядом с кухонным столом или подключив через кухонные стойки. При подключении её экран светится фиолетовым, а во время работы она потребляет немного энергии из сети.",
+
+  "item.appliedcooking.guide": "Руководство Applied Cooking",
+  "appliedcooking.guide.landing": "Добро пожаловать!$(br2)$(2)Applied Cooking$() соединяет вашу кухню $(6)Cooking for Blockheads$() с $(5)Applied Energistics 2$(), позволяя готовить прямо из хранилища вашей МЭ-сети.",
+  "category.appliedcooking.name": "Applied Cooking",
+  "category.appliedcooking.description": "Мод, позволяющий использовать предметы из хранилища вашей сети $(5)Applied Energistics 2$() прямо в кухонном мультиблоке $(6)Cooking for Blockheads$()!$(br2)В Minecraft добавляется один новый блок.",
+  "entry.appliedcooking.kitchenstation.name": "МЭ кухонная станция",
+  "entry.appliedcooking.kitchenstation.intro": "$(l)МЭ кухонная станция$() — единственный блок, который нужен, чтобы связать $(6)Cooking for Blockheads$() с $(5)Applied Energistics 2$().$(br2)Размещённая на кухне, она предоставляет кухонному столу всё хранилище вашей $(5)МЭ-сети$() — каждый хранимый предмет становится ингредиентом. Она даже берёт $(o)жидкости$(), такие как вода и молоко, из хранилища сети.$(br2)Создайте её, привяжите и поставьте на кухне — вот как.",
+  "entry.appliedcooking.kitchenstation.craft": "Создайте $(l)МЭ кухонную станцию$() как показано.$(br2)Только что созданная, она ещё ни с чем не связана — на следующем шаге вы привяжете её к вашей сети $(5)AE2$(), чтобы она знала, откуда брать предметы.",
+  "entry.appliedcooking.kitchenstation.link.title": "Привязка",
+  "entry.appliedcooking.kitchenstation.link": "Станция привязывается к $(5)МЭ беспроводной точке доступа$() — тому же блоку, что обслуживает беспроводные терминалы.$(br2)$(l)Щёлкните правой кнопкой$() по запитанной точке доступа, чтобы открыть её, поместите станцию в слот терминала, и она вернётся $(2)привязанной$() — заберите её обратно.$(br2)Привязка сохраняется в самом блоке, поэтому станция достигает сети с любого расстояния — даже из другого измерения.",
+  "entry.appliedcooking.kitchenstation.placement.title": "На Кухне",
+  "entry.appliedcooking.kitchenstation.placement": "Пример расположения кухни — нажмите на глаз для предпросмотра в мире.",
+  "entry.appliedcooking.kitchenstation.states.title": "Экран",
+  "entry.appliedcooking.kitchenstation.states": "Экран станции показывает её состояние с первого взгляда.$(br2)$(5)Фиолетовый$() означает, что она $(2)привязана и запитана$() — кухонный стол теперь может готовить из всего, что есть в вашей $(5)МЭ-сети$(), включая воду и молоко, за небольшую плату энергией.$(br2)$(4)Чёрный$() означает, что она не подключена. Проверьте, привязана ли она к точке доступа, хватает ли энергии в сети и загружен ли чанк с точкой доступа.",
+  "entry.appliedcooking.kitchenstation.connected.title": "Подключена",
+  "entry.appliedcooking.kitchenstation.disconnected.title": "Отключена"
+}
