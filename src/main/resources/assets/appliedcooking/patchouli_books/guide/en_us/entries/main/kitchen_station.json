@@ -5,28 +5,58 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "entry.appliedcooking.kitchenstation.page0"
+      "text": "entry.appliedcooking.kitchenstation.intro"
     },
     {
       "type": "patchouli:crafting",
       "recipe": "appliedcooking:kitchen_station",
-      "text": "entry.appliedcooking.kitchenstation.page1"
+      "text": "entry.appliedcooking.kitchenstation.craft"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "entry.appliedcooking.kitchenstation.link.title",
+      "text": "entry.appliedcooking.kitchenstation.link"
+    },
+    {
+      "type": "patchouli:multiblock",
+      "name": "entry.appliedcooking.kitchenstation.placement.title",
+      "multiblock": {
+        "pattern": [
+          [
+            " S ",
+            "   ",
+            "   "
+          ],
+          [
+            " O ",
+            " 0 ",
+            " T "
+          ]
+        ],
+        "mapping": {
+          "S": "appliedcooking:kitchen_station[connected=true,facing=south]",
+          "O": "cookingforblockheads:connector[facing=north]",
+          "0": "cookingforblockheads:counter[facing=south]",
+          "T": "cookingforblockheads:cooking_table[facing=south]"
+        }
+      },
+      "text": "entry.appliedcooking.kitchenstation.placement"
     },
     {
       "type": "patchouli:image",
-      "title": "entry.appliedcooking.kitchenstation.page2.title",
-      "images": [
-        "appliedcooking:textures/gui/entries/kitchenstation-disconnected.png"
-      ],
-      "text": "entry.appliedcooking.kitchenstation.page2"
-    },
-    {
-      "type": "patchouli:image",
-      "title": "entry.appliedcooking.kitchenstation.page3.title",
+      "title": "entry.appliedcooking.kitchenstation.connected.title",
       "images": [
         "appliedcooking:textures/gui/entries/kitchenstation-connected.png"
       ],
-      "text": "entry.appliedcooking.kitchenstation.page3"
+      "text": "entry.appliedcooking.kitchenstation.connected"
+    },
+    {
+      "type": "patchouli:image",
+      "title": "entry.appliedcooking.kitchenstation.disconnected.title",
+      "images": [
+        "appliedcooking:textures/gui/entries/kitchenstation-disconnected.png"
+      ],
+      "text": "entry.appliedcooking.kitchenstation.disconnected"
     }
   ],
   "extra_recipe_mappings": {

@@ -80,19 +80,20 @@ dependencies {
     implementation "net.blay09.mods:balm-neoforge:${balm_version}"
     implementation "net.blay09.mods:cookingforblockheads-neoforge:${cfb_version}"
 
-    // Optional HUD integrations — compiled against and loaded in the dev client so the integrations
-    // can be tested. The mod still runs without them: the TOP addon is guarded by Balm.isModLoaded,
-    // and the Jade plugin classes are only loaded by Jade's @WailaPlugin scan when Jade is present.
+    // Optional integrations — compiled against and loaded in the dev client so they can be tested. The mod
+    // still runs without them: the TOP addon is guarded by Balm.isModLoaded, and the Jade @WailaPlugin / JEI
+    // @JeiPlugin classes are only loaded by each mod's own plugin scan when that mod is present.
     implementation "mcjty.theoneprobe:theoneprobe:${top_version}"
     implementation "maven.modrinth:jade:${jade_version}"
+    implementation "mezz.jei:jei-1.20.4-neoforge:${jei_version}"
 
     // Patchouli — optional, powers the in-game guide book. Resources only (no code dependency),
     // so it is only needed at runtime; pulled into the dev client here.
     runtimeOnly "vazkii.patchouli:Patchouli:${patchouli_version}"
 
-    // Dev-only test mods — loaded in the dev client to make debugging easier. Not shipped and not
-    // compiled against. FTB Library pulls Architectury (11.1.17) transitively via its POM.
-    runtimeOnly "mezz.jei:jei-1.20.4-neoforge:${jei_version}"
+    // Dev-only test mods — loaded in the dev client to make debugging easier. Not shipped.
+    // (JEI moved up to the optional integrations above now that we ship a JEI plugin.)
+    // FTB Library pulls Architectury (11.1.17) transitively via its POM.
     runtimeOnly "dev.ftb.mods:ftb-library-neoforge:${ftb_library_version}"
 
     // Pam's HarvestCraft 2 — piles of extra food recipes to exercise the kitchen. Food Core is the
