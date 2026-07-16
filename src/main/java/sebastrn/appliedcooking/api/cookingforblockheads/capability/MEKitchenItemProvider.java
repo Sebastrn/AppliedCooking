@@ -11,10 +11,13 @@ import net.blay09.mods.cookingforblockheads.api.CacheHint;
 import net.blay09.mods.cookingforblockheads.api.IngredientToken;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.tag.ModItemTags;
+import net.minecraft.core.BlockPos;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.Containers;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import sebastrn.appliedcooking.blockentity.KitchenStationBlockEntity;
@@ -256,6 +259,19 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
         return null;
     }
 
+    /**
+     * Drop {@code stack} at the Kitchen Station. Only used when the network refuses a crafting remainder, so the item
+     * ends up on the floor rather than being voided.
+     */
+    private void dropAtStation(ItemStack stack) {
+        Level level = blockEntity.getLevel();
+        if (level == null || level.isClientSide || stack.isEmpty()) {
+            return;
+        }
+        BlockPos pos = blockEntity.getBlockPos();
+        Containers.dropItemStack(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, stack);
+    }
+
     /** Total fluid (mB) already reserved for {@code fluidKey} by the fluid tokens issued this operation. */
     private long reservedFluid(AEFluidKey fluidKey, Collection<IngredientToken> ingredientTokens) {
         long reserved = 0;
@@ -301,8 +317,15 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
             ItemStack remainder = Balm.getHooks().getCraftingRemainingItem(consumed);
             if (!remainder.isEmpty()) {
                 AEItemKey remainderKey = AEItemKey.of(remainder);
-                if (remainderKey != null) {
-                    storage.insert(remainderKey, remainder.getCount(), Actionable.MODULATE, source());
+                long inserted = remainderKey != null
+                        ? storage.insert(remainderKey, remainder.getCount(), Actionable.MODULATE, source())
+                        : 0;
+                if (inserted < remainder.getCount()) {
+                    // The network wouldn't take it back — full, or partitioned so nothing accepts it. Drop the
+                    // leftover at the station instead of silently destroying the player's bucket.
+                    ItemStack leftover = remainder.copy();
+                    leftover.shrink((int) inserted);
+                    dropAtStation(leftover);
                 }
             }
             return consumed;
