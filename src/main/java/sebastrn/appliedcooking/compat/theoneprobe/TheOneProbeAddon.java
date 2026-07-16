@@ -49,6 +49,7 @@ public class TheOneProbeAddon {
                     if (!kitchenStationBlockEntity.getAccessPointPos().isEmpty()) {
                         info.mcText(Component.translatable("jade.appliedcooking:online").withStyle(ChatFormatting.GRAY));
                         info.mcText(Component.translatable("jade.appliedcooking:kitchen_station", Component.translatable("block.ae2.wireless_access_point"), kitchenStationBlockEntity.getAccessPointPos()).withStyle(ChatFormatting.GRAY));
+                        info.mcText(Component.translatable("jade.appliedcooking:power_drain", String.valueOf(KitchenStationBlockEntity.IDLE_POWER_DRAIN)).withStyle(ChatFormatting.GRAY));
                     } else {
                         info.mcText(Component.translatable("jade.appliedcooking:offline").withStyle(ChatFormatting.GRAY));
                     }

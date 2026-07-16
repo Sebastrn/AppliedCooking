@@ -6,6 +6,7 @@
   "jade.appliedcooking:kitchen_station": "Connected to %s at %s",
   "jade.appliedcooking:online": "Device Online",
   "jade.appliedcooking:offline": "Device Offline",
+  "jade.appliedcooking:power_drain": "Draining %s AE/t",
 
   "item.appliedcooking.guide": "Applied Cooking Guide",
   "appliedcooking.guide.landing": "Welcome!$(br2)$(2)Applied Cooking$() connects your $(6)Cooking for Blockheads$() kitchen with $(5)Applied Energistics 2$(), letting you cook straight from your ME network inventory.",

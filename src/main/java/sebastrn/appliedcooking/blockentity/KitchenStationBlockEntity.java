@@ -1,7 +1,10 @@
 package sebastrn.appliedcooking.blockentity;
 
+import appeng.api.config.Actionable;
+import appeng.api.config.PowerMultiplier;
 import appeng.api.implementations.blockentities.IWirelessAccessPoint;
 import appeng.api.networking.IGrid;
+import appeng.api.networking.energy.IEnergyService;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.storage.MEStorage;
 import appeng.util.Platform;
@@ -32,12 +35,17 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
     /** Re-resolve the AE2 link at most this often (ticks). The link is a live handle, so sub-second refresh is wasteful. */
     private static final int NETWORK_REFRESH_INTERVAL = 20;
 
+    /** Power drawn from the linked network every tick while connected (AE/t). When the network can't pay, the station goes offline. */
+    public static final double IDLE_POWER_DRAIN = 5.0;
+
     private final MEKitchenItemProvider itemProvider = new MEKitchenItemProvider(this);
     private GlobalPos accessPointPos = null;
-    private IActionHost actionHost = null;
+    /** The linked wireless access point; re-found periodically (an expensive cross-dimension block-entity lookup). */
+    private IWirelessAccessPoint accessPoint = null;
+    /** Live grid derived from {@link #accessPoint} each tick; non-null only while connected, active, and paying power. */
     private IGrid grid = null;
     private MEStorage meStorage = null;
-    /** Ticks since the last {@link #setNetworkProperties()}; starts at the interval so the first tick after load resolves. */
+    /** Ticks since the last {@link #resolveAccessPoint()}; starts at the interval so the first tick after load resolves. */
     private int ticksSinceNetworkRefresh = NETWORK_REFRESH_INTERVAL;
 
     public KitchenStationBlockEntity(BlockPos pos, BlockState state) {
@@ -105,14 +113,15 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
     }
 
     public MEStorage getNetworkStorage() {
-        return meStorage;
+        // Gate on the full connected state (link + power) so the provider serves nothing while the station is unpowered.
+        return isConnected() ? meStorage : null;
     }
 
     /**
-     * True only while the station is linked to an access point that is currently active and on a network — i.e.
-     * items can actually flow. This is the signal both the CONNECTED block model and the Jade/TOP tooltips use;
-     * a linked-but-unpowered access point counts as disconnected (its block entity still exists, but {@code grid}
-     * is null). Not merely "the access point block exists".
+     * True only while the station is linked to an active access point on a grid that can pay the
+     * {@link #IDLE_POWER_DRAIN idle power cost}. {@link #grid} is set only when all of that holds, so this is simply
+     * "do we have a live grid". The CONNECTED block model, the Jade/TOP tooltips, and {@link #getNetworkStorage()} all
+     * key off it — a linked-but-unpowered station counts as disconnected.
      */
     public boolean isConnected() {
         return grid != null;
@@ -126,19 +135,20 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
     }
 
     public IActionHost getActionHost() {
-        return actionHost;
+        return accessPoint;
     }
 
+    /** Full resolve (access point + live connection). Used on placement; the tick loop splits these to throttle the expensive half. */
     public void setNetworkProperties() {
-        actionHost = null;
-        grid = null;
-        meStorage = null;
+        resolveAccessPoint();
+        refreshConnection();
+    }
 
-        if (!(level instanceof ServerLevel serverLevel)) {
-            return;
-        }
+    /** Re-find the linked wireless access point — a cross-dimension block-entity lookup, so the caller throttles this. */
+    private void resolveAccessPoint() {
+        accessPoint = null;
 
-        if (accessPointPos == null) {
+        if (!(level instanceof ServerLevel serverLevel) || accessPointPos == null) {
             return;
         }
 
@@ -147,18 +157,32 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
             return;
         }
 
-        var accessPointBlockEntity = Platform.getTickingBlockEntity(linkedLevel, accessPointPos.pos());
-        if (!(accessPointBlockEntity instanceof IWirelessAccessPoint accessPoint)) {
+        if (Platform.getTickingBlockEntity(linkedLevel, accessPointPos.pos()) instanceof IWirelessAccessPoint found) {
+            accessPoint = found;
+        }
+    }
+
+    /**
+     * Re-derive the live grid/storage from the cached access point (cheap) and pay this tick's idle power. Run every
+     * tick so the connection state and power draw stay current between the throttled {@link #resolveAccessPoint()}
+     * calls. {@link #grid} ends up non-null only when the access point is active, on a grid, and that grid paid up —
+     * so an unpowered network cleanly reads as disconnected.
+     */
+    private void refreshConnection() {
+        grid = null;
+        meStorage = null;
+
+        if (accessPoint == null || !accessPoint.isActive()) {
             return;
         }
 
-        actionHost = accessPoint;
-        if (accessPoint.isActive()) {
-            grid = accessPoint.getGrid();
-            if (grid != null) {
-                meStorage = grid.getStorageService().getInventory();
-            }
+        IGrid liveGrid = accessPoint.getGrid();
+        if (liveGrid == null || !drainIdlePower(liveGrid)) {
+            return;
         }
+
+        grid = liveGrid;
+        meStorage = liveGrid.getStorageService().getInventory();
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, KitchenStationBlockEntity blockEntity) {
@@ -166,11 +190,26 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
     }
 
     public void serverTick() {
-        if (++ticksSinceNetworkRefresh < NETWORK_REFRESH_INTERVAL) {
-            return;
+        if (++ticksSinceNetworkRefresh >= NETWORK_REFRESH_INTERVAL) {
+            ticksSinceNetworkRefresh = 0;
+            resolveAccessPoint();
         }
-        ticksSinceNetworkRefresh = 0;
-        setNetworkProperties();
+        refreshConnection();
         updateConnectedState(isConnected());
+    }
+
+    /**
+     * Charge {@code grid} {@link #IDLE_POWER_DRAIN} for this tick, but only if it can pay in full — we don't drain the
+     * last scraps for a service we then won't provide.
+     *
+     * @return true if the network paid the full idle cost.
+     */
+    private boolean drainIdlePower(IGrid grid) {
+        IEnergyService energy = grid.getEnergyService();
+        if (energy.extractAEPower(IDLE_POWER_DRAIN, Actionable.SIMULATE, PowerMultiplier.CONFIG) < IDLE_POWER_DRAIN) {
+            return false;
+        }
+        energy.extractAEPower(IDLE_POWER_DRAIN, Actionable.MODULATE, PowerMultiplier.CONFIG);
+        return true;
     }
 }

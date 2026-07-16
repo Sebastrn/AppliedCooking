@@ -20,6 +20,7 @@ public class KitchenStationComponentProvider implements IBlockComponentProvider,
         if (accessor.getServerData().contains("accessPointPos") && !accessor.getServerData().getString("accessPointPos").isEmpty()) {
             tooltip.add(Component.translatable("jade.appliedcooking:online"));
             tooltip.add(Component.translatable("jade.appliedcooking:kitchen_station", Component.translatable("block.ae2.wireless_access_point"), accessor.getServerData().getString("accessPointPos")));
+            tooltip.add(Component.translatable("jade.appliedcooking:power_drain", String.valueOf(KitchenStationBlockEntity.IDLE_POWER_DRAIN)));
         } else {
             tooltip.add(Component.translatable("jade.appliedcooking:offline"));
         }
