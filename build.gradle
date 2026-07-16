@@ -107,14 +107,20 @@ dependencies {
 
     // Power-generation / tech test mods — a network power source to exercise the Kitchen Station's power draw
     // (e.g. Mekanism Generators or SolarFlux panels feeding an AE2 Energy Acceptor). The Mekanism suite is
-    // base + generators + tools + additions (each module needs the base). HammerLib is SolarFlux Reborn's
-    // required dependency (Modrinth maven doesn't pull it transitively).
+    // base + generators + tools + additions (each module needs the base).
     runtimeOnly "maven.modrinth:mekanism:${mekanism_version}"
     runtimeOnly "maven.modrinth:mekanism-generators:${mekanism_generators_version}"
     runtimeOnly "maven.modrinth:mekanism-tools:${mekanism_tools_version}"
     runtimeOnly "maven.modrinth:mekanism-additions:${mekanism_additions_version}"
-    runtimeOnly "maven.modrinth:solar-flux-reborn:${solarflux_version}"
-    runtimeOnly "maven.modrinth:hammer-lib:${hammerlib_version}"
+
+    // SolarFlux Reborn (+ HammerLib, its required dep — the Modrinth maven doesn't pull it transitively) are scoped
+    // to the CLIENT run only. HammerLib aborts a dedicated server on startup with
+    //   IllegalArgumentException: class org.zeith.hammerlib.proxy.HLCommonProxy has no @SubscribeEvent methods,
+    //   but register was called anyway
+    // which broke `runServer` entirely. MDG gives each run its own classpath, so the client still gets solar panels
+    // while the server stays loadable; Mekanism Generators covers power testing on both.
+    clientAdditionalRuntimeClasspath "maven.modrinth:solar-flux-reborn:${solarflux_version}"
+    clientAdditionalRuntimeClasspath "maven.modrinth:hammer-lib:${hammerlib_version}"
 }
 
 tasks.named('processResources', ProcessResources).configure {
