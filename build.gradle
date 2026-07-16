@@ -101,6 +101,13 @@ dependencies {
     runtimeOnly "maven.modrinth:pams-harvestcraft-2-crops:${harvestcraft_crops_version}"
     runtimeOnly "maven.modrinth:pams-harvestcraft-2-trees:${harvestcraft_trees_version}"
     runtimeOnly "maven.modrinth:pams-harvestcraft-2-food-extended:${harvestcraft_foodextended_version}"
+
+    // Power-generation test mods — a network power source to exercise the Kitchen Station's power draw
+    // (e.g. SolarFlux panels feeding an AE2 Energy Acceptor). HammerLib is SolarFlux Reborn's required
+    // dependency (Modrinth maven doesn't pull it transitively). Mekanism is standalone.
+    runtimeOnly "maven.modrinth:mekanism:${mekanism_version}"
+    runtimeOnly "maven.modrinth:solar-flux-reborn:${solarflux_version}"
+    runtimeOnly "maven.modrinth:hammer-lib:${hammerlib_version}"
 }
 
 tasks.named('processResources', ProcessResources).configure {
