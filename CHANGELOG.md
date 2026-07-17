@@ -2,6 +2,16 @@
 
 All notable changes to **Applied Cooking** are listed here.
 
+## 7.0.0
+
+Updated to **Minecraft 26.1.2** on NeoForge, now running on **Java 25**. Everything from 6.0.0 carries over: ME
+items and fluids in the Cooking Table, the configurable power draw, Jade, JEI, and the guide book.
+
+### Changed
+- **Requires Java 25** — that is what Minecraft 26.1.2 runs on.
+- **The One Probe support is temporarily removed**: there is no build of The One Probe for 26.1 yet. Jade still
+  gives the same in-world tooltip, and The One Probe support returns once a 26.1 build ships.
+
 ## 6.0.0
 
 Updated to **Minecraft 1.21.1** on NeoForge. Everything from 5.1.0 carries over: ME items and fluids in the
