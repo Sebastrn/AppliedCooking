@@ -1,6 +1,6 @@
 package sebastrn.appliedcooking.lootable;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class KitchenStationBlockLootFunction extends LootItemConditionalFunction {
 
-    public static final Codec<KitchenStationBlockLootFunction> CODEC = RecordCodecBuilder.create(
+    public static final MapCodec<KitchenStationBlockLootFunction> CODEC = RecordCodecBuilder.mapCodec(
             instance -> commonFields(instance).apply(instance, KitchenStationBlockLootFunction::new));
 
     protected KitchenStationBlockLootFunction(List<LootItemCondition> conditions) {
@@ -35,7 +35,7 @@ public class KitchenStationBlockLootFunction extends LootItemConditionalFunction
     }
 
     @Override
-    public LootItemFunctionType getType() {
+    public LootItemFunctionType<KitchenStationBlockLootFunction> getType() {
         return AppliedCookingLootFunctions.KITCHEN_STATION.get();
     }
 }

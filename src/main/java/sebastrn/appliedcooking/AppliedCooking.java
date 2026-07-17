@@ -4,7 +4,7 @@ import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.neoforge.provider.NeoForgeBalmProviders;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
@@ -20,8 +20,8 @@ public final class AppliedCooking {
     public static final String ID = "appliedcooking";
     public static final ServerConfig SERVER_CONFIG = new ServerConfig();
 
-    public AppliedCooking(IEventBus modEventBus) {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SERVER_CONFIG.getSpec());
+    public AppliedCooking(IEventBus modEventBus, ModContainer modContainer) {
+        modContainer.registerConfig(ModConfig.Type.SERVER, SERVER_CONFIG.getSpec());
 
         AppliedCookingBlocks.register(modEventBus);
         AppliedCookingItems.register(modEventBus);

@@ -9,10 +9,10 @@ import sebastrn.appliedcooking.lootable.KitchenStationBlockLootFunction;
 
 public final class AppliedCookingLootFunctions {
 
-    private static final DeferredRegister<LootItemFunctionType> LOOT_ITEM_FUNCTIONS = DeferredRegister.create(Registries.LOOT_FUNCTION_TYPE, AppliedCooking.ID);
+    private static final DeferredRegister<LootItemFunctionType<?>> LOOT_ITEM_FUNCTIONS = DeferredRegister.create(Registries.LOOT_FUNCTION_TYPE, AppliedCooking.ID);
 
-    public static final DeferredHolder<LootItemFunctionType, LootItemFunctionType> KITCHEN_STATION =
-            LOOT_ITEM_FUNCTIONS.register("kitchen_station", () -> new LootItemFunctionType(KitchenStationBlockLootFunction.CODEC));
+    public static final DeferredHolder<LootItemFunctionType<?>, LootItemFunctionType<KitchenStationBlockLootFunction>> KITCHEN_STATION =
+            LOOT_ITEM_FUNCTIONS.register("kitchen_station", () -> new LootItemFunctionType<>(KitchenStationBlockLootFunction.CODEC));
 
     private AppliedCookingLootFunctions() {
     }

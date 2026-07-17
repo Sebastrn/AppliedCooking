@@ -2,6 +2,7 @@ package sebastrn.appliedcooking.blockentity;
 
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
+import appeng.api.ids.AEComponents;
 import appeng.api.implementations.blockentities.IWirelessAccessPoint;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.energy.IEnergyService;
@@ -15,9 +16,9 @@ import net.blay09.mods.balm.common.BalmBlockEntity;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -27,11 +28,16 @@ import sebastrn.appliedcooking.AppliedCooking;
 import sebastrn.appliedcooking.AppliedCookingBlockEntities;
 import sebastrn.appliedcooking.api.cookingforblockheads.capability.MEKitchenItemProvider;
 import sebastrn.appliedcooking.block.KitchenStationBlock;
-import sebastrn.appliedcooking.item.KitchenStationBlockItem;
 
 import java.util.List;
 
 public class KitchenStationBlockEntity extends BalmBlockEntity {
+
+    /**
+     * Key for the linked access point in the block entity's own NBT. The *item* carries the same link in AE2's
+     * {@link AEComponents#WIRELESS_LINK_TARGET} data component instead — block entities still save to NBT.
+     */
+    private static final String TAG_ACCESS_POINT_POS = "accessPointPos";
 
     /** Re-resolve the AE2 link at most this often (ticks). The link is a live handle, so sub-second refresh is wasteful. */
     private static final int NETWORK_REFRESH_INTERVAL = 20;
@@ -74,15 +80,9 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
     }
 
     public void applyDataFromItemToBlockEntity(ItemStack stack) {
-        var tag = stack.getTag();
-        if (tag != null && tag.contains(KitchenStationBlockItem.TAG_ACCESS_POINT_POS, Tag.TAG_COMPOUND)) {
-            accessPointPos = GlobalPos.CODEC.decode(NbtOps.INSTANCE, tag.get(KitchenStationBlockItem.TAG_ACCESS_POINT_POS))
-                    .result()
-                    .map(Pair::getFirst)
-                    .orElse(null);
+        accessPointPos = stack.get(AEComponents.WIRELESS_LINK_TARGET);
+        if (accessPointPos != null) {
             setNetworkProperties();
-        } else {
-            accessPointPos = null;
         }
 
         setChanged();
@@ -90,29 +90,27 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
 
     public void applyDataFromBlockEntityToItem(ItemStack stack) {
         if (accessPointPos != null) {
-            GlobalPos.CODEC.encodeStart(NbtOps.INSTANCE, accessPointPos)
-                    .result()
-                    .ifPresent(tagValue -> stack.getOrCreateTag().put(KitchenStationBlockItem.TAG_ACCESS_POINT_POS, tagValue));
+            stack.set(AEComponents.WIRELESS_LINK_TARGET, accessPointPos);
         }
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
 
         if (accessPointPos != null) {
             GlobalPos.CODEC.encodeStart(NbtOps.INSTANCE, accessPointPos)
                     .result()
-                    .ifPresent(tagValue -> tag.put(KitchenStationBlockItem.TAG_ACCESS_POINT_POS, tagValue));
+                    .ifPresent(tagValue -> tag.put(TAG_ACCESS_POINT_POS, tagValue));
         }
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
 
-        if (tag.contains(KitchenStationBlockItem.TAG_ACCESS_POINT_POS)) {
-            accessPointPos = GlobalPos.CODEC.decode(NbtOps.INSTANCE, tag.get(KitchenStationBlockItem.TAG_ACCESS_POINT_POS))
+        if (tag.contains(TAG_ACCESS_POINT_POS)) {
+            accessPointPos = GlobalPos.CODEC.decode(NbtOps.INSTANCE, tag.get(TAG_ACCESS_POINT_POS))
                     .result()
                     .map(Pair::getFirst)
                     .orElse(null);

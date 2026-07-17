@@ -13,7 +13,7 @@ import snownee.jade.api.config.IPluginConfig;
 
 public class KitchenStationComponentProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
 
-    public static final ResourceLocation KITCHEN_STATION_UID = new ResourceLocation(AppliedCooking.ID, "kitchen_station");
+    public static final ResourceLocation KITCHEN_STATION_UID = ResourceLocation.fromNamespaceAndPath(AppliedCooking.ID, "kitchen_station");
 
     @Override
     public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {

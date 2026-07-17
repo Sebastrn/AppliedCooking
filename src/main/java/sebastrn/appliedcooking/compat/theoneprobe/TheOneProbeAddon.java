@@ -38,7 +38,7 @@ public class TheOneProbeAddon {
     public static class ProbeInfoProvider implements IProbeInfoProvider {
         @Override
         public ResourceLocation getID() {
-            return new ResourceLocation(AppliedCooking.ID, AppliedCooking.ID);
+            return ResourceLocation.fromNamespaceAndPath(AppliedCooking.ID, AppliedCooking.ID);
         }
 
         @Override
