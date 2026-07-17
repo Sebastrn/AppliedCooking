@@ -1,5 +1,5 @@
 {
-  "type": "patchouli:shapeless_book_recipe",
+  "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
       "item": "minecraft:book"
@@ -8,5 +8,11 @@
       "item": "minecraft:red_wool"
     }
   ],
-  "book": "appliedcooking:guide"
+  "result": {
+    "components": {
+      "patchouli:book": "appliedcooking:guide"
+    },
+    "count": 1,
+    "id": "patchouli:guide_book"
+  }
 }
