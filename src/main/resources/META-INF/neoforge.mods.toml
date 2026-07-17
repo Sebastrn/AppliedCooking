@@ -26,21 +26,21 @@ side = "BOTH"
 [[dependencies.appliedcooking]]
 modId = "ae2"
 type = "required"
-versionRange = "[17,)"
+versionRange = "[19,)"
 ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.appliedcooking]]
 modId = "cookingforblockheads"
 type = "required"
-versionRange = "[18,)"
+versionRange = "[21.1,)"
 ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.appliedcooking]]
 modId = "balm"
 type = "required"
-versionRange = "[9,)"
+versionRange = "[21,)"
 ordering = "AFTER"
 side = "BOTH"
 
