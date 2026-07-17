@@ -66,8 +66,11 @@ neoForge {
         server {
             server()
         }
+        // 26.1's NeoForge split the single 'data' run type into clientData/serverData; data() no longer exists, which
+        // fails IDE Gradle sync (sync configures every run). We ship no datagen providers, so one clientData run is
+        // enough to keep the run valid. Matches AE2's own 26.1.2 setup.
         data {
-            data()
+            clientData()
         }
     }
 
