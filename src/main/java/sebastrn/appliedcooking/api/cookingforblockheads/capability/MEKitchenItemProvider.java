@@ -11,13 +11,10 @@ import net.blay09.mods.cookingforblockheads.api.CacheHint;
 import net.blay09.mods.cookingforblockheads.api.IngredientToken;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.tag.ModItemTags;
-import net.minecraft.core.BlockPos;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.Containers;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import sebastrn.appliedcooking.blockentity.KitchenStationBlockEntity;
@@ -42,11 +39,17 @@ import java.util.function.Predicate;
  *     below can't, and makes <b>milk reliable</b> by never depending on the milk fluid's {@code getBucket()}.</li>
  *     <li><b>Fluid (network-driven fallback)</b> — for any <em>other</em> fluid stored in the network (lava, modded
  *     fluids) we make its bucket item and ask the recipe whether that satisfies the ingredient. If so we synthesize
- *     the bucket from the fluid: since CFB's crafting handler produces no recipe remainders, the container is
- *     virtual — {@code consume()} spends 1000mB and hands back the bucket; {@code restore()} refunds it. This keeps
- *     the feature fluid-agnostic for any fluid whose {@code getBucket()} the recipe accepts.</li>
+ *     the bucket from the fluid: the container is virtual, so {@code consume()} spends 1000mB and hands back the
+ *     bucket. This keeps the feature fluid-agnostic for any fluid whose {@code getBucket()} the recipe accepts.</li>
  * </ul>
  * The item path is always tried first, so real stored items are preferred over synthesized ones.
+ * <p>
+ * <b>Crafting remainders belong to CFB, not to us.</b> Its crafting handler assembles the recipe and then offers
+ * each remainder back through {@link IngredientToken#restore}, once per crafting-grid slot — passing {@code EMPTY}
+ * for the slots that left no remainder. So {@code consume()} must not return remainders itself, and
+ * {@code restore()} must key off the stack it is handed rather than assume it means "undo". CFB did neither of
+ * these at 1.20.4 (its handler ignored remainders entirely), which is why this class used to do both; doing them
+ * now would refund everything twice.
  * <p>
  * Performance: CFB calls {@link #findIngredient} once per (recipe × ingredient × provider) — thousands of times
  * per kitchen scan. To keep large networks from stalling, the network's available-stacks snapshot is built at
@@ -259,19 +262,6 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
         return null;
     }
 
-    /**
-     * Drop {@code stack} at the Kitchen Station. Only used when the network refuses a crafting remainder, so the item
-     * ends up on the floor rather than being voided.
-     */
-    private void dropAtStation(ItemStack stack) {
-        Level level = blockEntity.getLevel();
-        if (level == null || level.isClientSide || stack.isEmpty()) {
-            return;
-        }
-        BlockPos pos = blockEntity.getBlockPos();
-        Containers.dropItemStack(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, stack);
-    }
-
     /** Total fluid (mB) already reserved for {@code fluidKey} by the fluid tokens issued this operation. */
     private long reservedFluid(AEFluidKey fluidKey, Collection<IngredientToken> ingredientTokens) {
         long reserved = 0;
@@ -311,24 +301,9 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
                 return ItemStack.EMPTY;
             }
             invalidateSnapshot();
-            ItemStack consumed = key.toStack((int) extracted);
-
-            // Return crafting remainders (e.g. empty buckets) to the network.
-            ItemStack remainder = Balm.getHooks().getCraftingRemainingItem(consumed);
-            if (!remainder.isEmpty()) {
-                AEItemKey remainderKey = AEItemKey.of(remainder);
-                long inserted = remainderKey != null
-                        ? storage.insert(remainderKey, remainder.getCount(), Actionable.MODULATE, source())
-                        : 0;
-                if (inserted < remainder.getCount()) {
-                    // The network wouldn't take it back — full, or partitioned so nothing accepts it. Drop the
-                    // leftover at the station instead of silently destroying the player's bucket.
-                    ItemStack leftover = remainder.copy();
-                    leftover.shrink((int) inserted);
-                    dropAtStation(leftover);
-                }
-            }
-            return consumed;
+            // Crafting remainders are NOT handled here: CFB hands each one back through restore(). Returning
+            // them here as well would insert every remainder twice — see the class note on restore().
+            return key.toStack((int) extracted);
         }
 
         @Override
@@ -400,12 +375,28 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
 
         @Override
         public ItemStack restore(ItemStack itemStack) {
+            // CFB calls restore() once per crafting-grid slot, passing EMPTY wherever the recipe left no
+            // remainder, so an unconditional refund here would hand the fluid straight back and the ingredient
+            // would never be spent at all.
+            if (itemStack.isEmpty()) {
+                return ItemStack.EMPTY;
+            }
+
             MEStorage storage = getNetworkStorage();
-            if (storage != null) {
-                // Undo the fluid that consume() spent.
+            if (storage == null) {
+                return itemStack;
+            }
+
+            if (ItemStack.isSameItemSameComponents(itemStack, resultItem)) {
+                // The item consume() handed out is coming back untouched (e.g. the oven was full), so undo the drain.
                 storage.insert(fluidKey, amountPerItem, Actionable.MODULATE, source());
                 invalidateSnapshot();
+                return ItemStack.EMPTY;
             }
+
+            // Anything else is the recipe's remainder for the container we synthesized — the empty bucket left
+            // behind by a water bucket we made out of stored fluid. That container never existed, so putting it
+            // in the network would mint a bucket from nothing. Swallow it; the fluid stays spent, as it should.
             return ItemStack.EMPTY;
         }
     }

@@ -30,10 +30,13 @@ versionRange = "[19,)"
 ordering = "AFTER"
 side = "BOTH"
 
+# 21.1.7 is where CFB's crafting handler started returning recipe remainders through IngredientToken.restore().
+# Our provider relies on that: it does not return remainders itself, because doing so on top of CFB's would insert
+# every one of them twice. On 21.1.6 and older neither side would return them and they would be voided instead.
 [[dependencies.appliedcooking]]
 modId = "cookingforblockheads"
 type = "required"
-versionRange = "[21.1,)"
+versionRange = "[21.1.7,)"
 ordering = "AFTER"
 side = "BOTH"
 
