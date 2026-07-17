@@ -151,9 +151,43 @@ tasks.withType(JavaCompile).configureEach {
 // matching environment variables — NEVER commit them. Project ids live in gradle.properties.
 // Tip: `modrinth { debugMode = true }` (or `--stacktrace`) to dry-run Modrinth without uploading.
 
-def changelogText = rootProject.file('CHANGELOG.md').exists()
-        ? rootProject.file('CHANGELOG.md').getText('UTF-8')
-        : 'See the project page for the changelog.'
+// Publish only the section for the version being released. Modrinth and CurseForge render a changelog per file, so
+// uploading the whole CHANGELOG.md would repeat every past release on every version's page and grow forever. The full
+// history stays in CHANGELOG.md in the repo. Preview what will be sent with: ./gradlew printChangelog
+def changelogFor(File file, String version) {
+    if (!file.exists()) {
+        return 'See the project page for the changelog.'
+    }
+    def wanted = ~('^##\\s+' + java.util.regex.Pattern.quote(version) + '\\s*$')
+    def collected = []
+    def inSection = false
+    for (String line : file.readLines('UTF-8')) {
+        if (line.startsWith('## ')) {
+            if (inSection) {
+                break // reached the next version — stop
+            }
+            inSection = wanted.matcher(line.trim()).matches()
+            continue // never include the heading itself; the platform already shows the version
+        }
+        if (inSection) {
+            collected << line
+        }
+    }
+    def text = collected.join('\n').trim()
+    return text ?: 'See the project page for the changelog.'
+}
+
+def changelogText = changelogFor(rootProject.file('CHANGELOG.md'), mod_version.toString())
+
+tasks.register('printChangelog') {
+    group = 'publishing'
+    description = 'Prints the changelog section that would be published for the current version.'
+    doLast {
+        println "--- changelog to publish for ${mod_version} ---"
+        println changelogText
+        println '--- end ---'
+    }
+}
 
 modrinth {
     token = providers.gradleProperty('MODRINTH_TOKEN').orElse(providers.environmentVariable('MODRINTH_TOKEN'))
