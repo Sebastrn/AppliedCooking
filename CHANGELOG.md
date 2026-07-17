@@ -2,6 +2,20 @@
 
 All notable changes to **Applied Cooking** are listed here.
 
+## 6.0.0
+
+Updated to **Minecraft 1.21.1** on NeoForge. Everything from 5.1.0 carries over: ME items and fluids in the
+Cooking Table, the configurable power draw, Jade/The One Probe, JEI, and the guide book.
+
+### Changed
+- **Requires Cooking for Blockheads 21.1.7 or newer.** From that version on, Cooking for Blockheads returns
+  leftover containers itself, and Applied Cooking now leaves that to it.
+- Leftover containers — the empty bucket from a milk or water recipe — now come back through Cooking for
+  Blockheads, which returns them to you. In 5.1.0 the Station dropped them on the floor when the network had
+  nowhere to put them; it no longer needs to.
+- A Kitchen Station **linked in an older version loses its link** and needs re-linking at the Wireless Access
+  Point. Minecraft 1.21 replaced item NBT with data components, and the link moved with it.
+
 ## 5.1.0
 
 ### Added
