@@ -6,30 +6,14 @@
     "gfh"
   ],
   "key": {
-    "a": {
-      "item": "cookingforblockheads:toaster"
-    },
-    "b": {
-      "item": "ae2:chest"
-    },
-    "c": {
-      "item": "cookingforblockheads:milk_jar"
-    },
-    "d": {
-      "item": "ae2:fluix_glass_cable"
-    },
-    "e": {
-      "item": "ae2:cell_component_16k"
-    },
-    "f": {
-      "item": "ae2:engineering_processor"
-    },
-    "g": {
-      "item": "cookingforblockheads:crafting_book"
-    },
-    "h": {
-      "item": "cookingforblockheads:no_filter_edition"
-    }
+    "a": "cookingforblockheads:toaster",
+    "b": "ae2:me_chest",
+    "c": "cookingforblockheads:milk_jar",
+    "d": "ae2:fluix_glass_cable",
+    "e": "ae2:cell_component_16k",
+    "f": "ae2:engineering_processor",
+    "g": "cookingforblockheads:crafting_book",
+    "h": "cookingforblockheads:no_filter_edition"
   },
   "result": {
     "id": "appliedcooking:kitchen_station",

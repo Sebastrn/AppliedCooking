@@ -1,12 +1,8 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "minecraft:book"
-    },
-    {
-      "item": "minecraft:green_wool"
-    }
+    "minecraft:book",
+    "minecraft:green_wool"
   ],
   "result": {
     "components": {
