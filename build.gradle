@@ -18,7 +18,7 @@ base {
     archivesName = mod_id
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
 repositories {
     mavenCentral()
@@ -32,17 +32,18 @@ repositories {
         name = 'TwelveIterations (Balm)'
         url = 'https://maven.twelveiterations.com/repository/maven-public/'
     }
+    // The One Probe has no 26.1 build yet, so its integration (and this maven) is commented out for 26.1.2.
+    // maven {
+    //     name = 'k-4u (The One Probe)'
+    //     url = 'https://maven.k-4u.nl'
+    // }
     maven {
-        name = 'k-4u (The One Probe)'
-        url = 'https://maven.k-4u.nl'
-    }
-    maven {
-        name = 'Modrinth (Cooking for Blockheads, Jade)'
+        name = 'Modrinth (Jade, Patchouli)'
         url = 'https://api.modrinth.com/maven'
         content { includeGroup 'maven.modrinth' }
     }
     maven {
-        name = 'BlameJared (Patchouli, JEI)'
+        name = 'BlameJared (JEI)'
         url = 'https://maven.blamejared.com'
     }
     maven {
@@ -78,50 +79,45 @@ neoForge {
 }
 
 dependencies {
-    // Core integrations (compile + dev runtime)
+    // Core integrations (compile + dev runtime). CFB now publishes a clean 26.x build to the TwelveIterations
+    // maven (net.blay09.mods:cookingforblockheads-neoforge), so the 1.21.1 Modrinth-id pin is gone.
     implementation "org.appliedenergistics:appliedenergistics2:${ae2_version}"
     implementation "net.blay09.mods:balm-neoforge:${balm_version}"
-    implementation "maven.modrinth:cooking-for-blockheads:${cfb_version}"
+    implementation "net.blay09.mods:cookingforblockheads-neoforge:${cfb_version}"
 
     // Optional integrations — compiled against and loaded in the dev client so they can be tested. The mod
-    // still runs without them: the TOP addon is guarded by Balm.isModLoaded, and the Jade @WailaPlugin / JEI
-    // @JeiPlugin classes are only loaded by each mod's own plugin scan when that mod is present.
-    implementation "mcjty.theoneprobe:theoneprobe:${top_version}"
+    // still runs without them: the Jade @WailaPlugin / JEI @JeiPlugin classes are only loaded by each mod's own
+    // plugin scan when that mod is present.
+    // The One Probe is COMMENTED OUT for 26.1.2 — it has no 26.1 build (k-4u maven ends at 1.21_neo). The addon
+    // in compat/theoneprobe is likewise disabled. Re-enable both when McJty ships a 26.1 TOP.
+    // implementation "mcjty.theoneprobe:theoneprobe:${top_version}"
     implementation "maven.modrinth:jade:${jade_version}"
-    implementation "mezz.jei:jei-1.21.1-neoforge:${jei_version}"
+    implementation "mezz.jei:jei-26.1.2-neoforge:${jei_version}"
 
-    // Patchouli — optional, powers the in-game guide book. Resources only (no code dependency),
-    // so it is only needed at runtime; pulled into the dev client here.
-    runtimeOnly "vazkii.patchouli:Patchouli:${patchouli_version}"
+    // Patchouli — optional, powers the in-game guide book. Resources only (no code dependency), so it is only
+    // needed at runtime. BlameJared has no 26.1 build, so it comes from the Modrinth maven (pinned by version id).
+    runtimeOnly "maven.modrinth:patchouli:${patchouli_version}"
 
     // Dev-only test mods — loaded in the dev client to make debugging easier. Not shipped.
-    // (JEI moved up to the optional integrations above now that we ship a JEI plugin.)
+    // ⚠️ ALL COMMENTED OUT for 26.1.2: the version ids above are still 1.21.1 builds and several of these mods may
+    // not be ported to 26.1.2 yet — an unresolved/unported test mod would block runClient/runServer. Re-pin each to
+    // a 26.1.2 build and un-comment when a run actually needs it (Mekanism/SolarFlux = power draw, HarvestCraft =
+    // recipes). None is shipped and none is on the compile classpath, so this does not affect compileJava.
     // FTB Library pulls Architectury (11.1.17) transitively via its POM.
-    runtimeOnly "dev.ftb.mods:ftb-library-neoforge:${ftb_library_version}"
-
-    // Pam's HarvestCraft 2 — piles of extra food recipes to exercise the kitchen. Food Core is the
-    // base; Crops/Trees/Food Extended build on it. (Croptopia has no NeoForge 1.20.4 build, so it's omitted.)
-    runtimeOnly "maven.modrinth:pams-harvestcraft-2-food-core:${harvestcraft_foodcore_version}"
-    runtimeOnly "maven.modrinth:pams-harvestcraft-2-crops:${harvestcraft_crops_version}"
-    runtimeOnly "maven.modrinth:pams-harvestcraft-2-trees:${harvestcraft_trees_version}"
-    runtimeOnly "maven.modrinth:pams-harvestcraft-2-food-extended:${harvestcraft_foodextended_version}"
-
-    // Power-generation / tech test mods — a network power source to exercise the Kitchen Station's power draw
-    // (e.g. Mekanism Generators or SolarFlux panels feeding an AE2 Energy Acceptor). The Mekanism suite is
-    // base + generators + tools + additions (each module needs the base).
-    runtimeOnly "maven.modrinth:mekanism:${mekanism_version}"
-    runtimeOnly "maven.modrinth:mekanism-generators:${mekanism_generators_version}"
-    runtimeOnly "maven.modrinth:mekanism-tools:${mekanism_tools_version}"
-    runtimeOnly "maven.modrinth:mekanism-additions:${mekanism_additions_version}"
-
-    // SolarFlux Reborn (+ HammerLib, its required dep — the Modrinth maven doesn't pull it transitively) are scoped
-    // to the CLIENT run only. HammerLib aborts a dedicated server on startup with
-    //   IllegalArgumentException: class org.zeith.hammerlib.proxy.HLCommonProxy has no @SubscribeEvent methods,
-    //   but register was called anyway
-    // which broke `runServer` entirely. MDG gives each run its own classpath, so the client still gets solar panels
-    // while the server stays loadable; Mekanism Generators covers power testing on both.
-    clientAdditionalRuntimeClasspath "maven.modrinth:solar-flux-reborn:${solarflux_version}"
-    clientAdditionalRuntimeClasspath "maven.modrinth:hammer-lib:${hammerlib_version}"
+    // runtimeOnly "dev.ftb.mods:ftb-library-neoforge:${ftb_library_version}"
+    //
+    // runtimeOnly "maven.modrinth:pams-harvestcraft-2-food-core:${harvestcraft_foodcore_version}"
+    // runtimeOnly "maven.modrinth:pams-harvestcraft-2-crops:${harvestcraft_crops_version}"
+    // runtimeOnly "maven.modrinth:pams-harvestcraft-2-trees:${harvestcraft_trees_version}"
+    // runtimeOnly "maven.modrinth:pams-harvestcraft-2-food-extended:${harvestcraft_foodextended_version}"
+    //
+    // runtimeOnly "maven.modrinth:mekanism:${mekanism_version}"
+    // runtimeOnly "maven.modrinth:mekanism-generators:${mekanism_generators_version}"
+    // runtimeOnly "maven.modrinth:mekanism-tools:${mekanism_tools_version}"
+    // runtimeOnly "maven.modrinth:mekanism-additions:${mekanism_additions_version}"
+    //
+    // clientAdditionalRuntimeClasspath "maven.modrinth:solar-flux-reborn:${solarflux_version}"
+    // clientAdditionalRuntimeClasspath "maven.modrinth:hammer-lib:${hammerlib_version}"
 }
 
 tasks.named('processResources', ProcessResources).configure {
@@ -197,7 +193,7 @@ modrinth {
     versionName = mod_version
     versionType = 'release'
     uploadFile = tasks.named('jar')
-    gameVersions = ['1.21.1']
+    gameVersions = ['26.1.2']
     loaders = ['neoforge']
     changelog = changelogText
     // Modrinth project slugs (adjust if a publish fails on an unknown project):
@@ -207,7 +203,7 @@ modrinth {
         required.project 'balm'
         optional.project 'patchouli'
         optional.project 'jade'
-        optional.project 'the-one-probe'
+        // optional.project 'the-one-probe'  // no 26.1 build yet — re-add when TOP ships for 26.1
         optional.project 'jei'
     }
 }
@@ -220,12 +216,13 @@ tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurs
     def mainFile = upload(curseforge_id, tasks.named('jar'))
     // displayName left unset on purpose -> CurseForge shows the jar's file name (appliedcooking-<version>.jar).
     mainFile.releaseType = 'release'
-    mainFile.addGameVersion '1.21.1'
+    mainFile.addGameVersion '26.1.2'
     mainFile.addModLoader 'NeoForge'
     mainFile.addEnvironment 'Client', 'Server'
     mainFile.changelogType = 'markdown'
     mainFile.changelog = changelogText
     // CurseForge project slugs (adjust if a publish fails on an unknown project):
     mainFile.addRequirement 'applied-energistics-2', 'cooking-for-blockheads', 'balm'
-    mainFile.addOptional 'patchouli', 'jade', 'the-one-probe', 'jei'
+    // 'the-one-probe' dropped for 26.1.2 (no 26.1 build yet) — re-add when TOP ships for 26.1.
+    mainFile.addOptional 'patchouli', 'jade', 'jei'
 }

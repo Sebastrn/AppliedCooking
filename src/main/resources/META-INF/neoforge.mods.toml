@@ -26,24 +26,24 @@ side = "BOTH"
 [[dependencies.appliedcooking]]
 modId = "ae2"
 type = "required"
-versionRange = "[19,)"
+versionRange = "[26,)"
 ordering = "AFTER"
 side = "BOTH"
 
-# 21.1.7 is where CFB's crafting handler started returning recipe remainders through IngredientToken.restore().
-# Our provider relies on that: it does not return remainders itself, because doing so on top of CFB's would insert
-# every one of them twice. On 21.1.6 and older neither side would return them and they would be voided instead.
+# CFB's crafting handler returns recipe remainders through IngredientToken.restore() (since 21.1.7, and standard
+# throughout the 26.1.x line). Our provider relies on that: it does not return remainders itself, because doing so
+# on top of CFB's would insert every one of them twice.
 [[dependencies.appliedcooking]]
 modId = "cookingforblockheads"
 type = "required"
-versionRange = "[21.1.7,)"
+versionRange = "[26,)"
 ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.appliedcooking]]
 modId = "balm"
 type = "required"
-versionRange = "[21,)"
+versionRange = "[26,)"
 ordering = "AFTER"
 side = "BOTH"
 
@@ -54,8 +54,8 @@ versionRange = "*"
 ordering = "AFTER"
 side = "BOTH"
 
-# Soft integrations — discovered by each mod's own plugin system (Jade @WailaPlugin, JEI @JeiPlugin)
-# or via IMC guarded by Balm.isModLoaded (TOP). Declared optional only for documentation + load order.
+# Soft integrations — discovered by each mod's own plugin system (Jade @WailaPlugin, JEI @JeiPlugin).
+# Declared optional only for documentation + load order.
 [[dependencies.appliedcooking]]
 modId = "jade"
 type = "optional"
@@ -63,12 +63,13 @@ versionRange = "*"
 ordering = "AFTER"
 side = "BOTH"
 
-[[dependencies.appliedcooking]]
-modId = "theoneprobe"
-type = "optional"
-versionRange = "*"
-ordering = "AFTER"
-side = "BOTH"
+# The One Probe has no 26.1 build — integration commented out for 26.1.2 (re-add this block when TOP ships for 26.1).
+# [[dependencies.appliedcooking]]
+# modId = "theoneprobe"
+# type = "optional"
+# versionRange = "*"
+# ordering = "AFTER"
+# side = "BOTH"
 
 [[dependencies.appliedcooking]]
 modId = "jei"
