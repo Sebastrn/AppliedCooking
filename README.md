@@ -30,6 +30,7 @@ One branch per Minecraft version.
 
 | Branch   | Minecraft | Loader   |
 |----------|-----------|----------|
+| `1.21.1` | 1.21.1    | NeoForge |
 | `1.20.4` | 1.20.4    | NeoForge |
 | `1.20.x` | 1.20.1    | Forge    |
 | `1.19.x` | 1.19.x    | Forge    |

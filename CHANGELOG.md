@@ -8,6 +8,7 @@ Updated to **Minecraft 1.21.1** on NeoForge. Everything from 5.1.0 carries over:
 Cooking Table, the configurable power draw, Jade/The One Probe, JEI, and the guide book.
 
 ### Changed
+- **The guide book is now crafted with green wool** instead of red, to match the book's own colour.
 - **Requires Cooking for Blockheads 21.1.7 or newer.** From that version on, Cooking for Blockheads returns
   leftover containers itself, and Applied Cooking now leaves that to it.
 - Leftover containers — the empty bucket from a milk or water recipe — now come back through Cooking for
