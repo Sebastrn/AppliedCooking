@@ -1,17 +1,20 @@
 package sebastrn.appliedcooking.compat.jade;
 
-import sebastrn.appliedcooking.AppliedCooking;
-import sebastrn.appliedcooking.blockentity.KitchenStationBlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import sebastrn.appliedcooking.AppliedCooking;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
-import snownee.jade.api.IServerDataProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 
-public class KitchenStationComponentProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
+/**
+ * The client-side tooltip half. Jade 1.21.6+ forbids one class implementing both {@link IBlockComponentProvider} and
+ * {@code IServerDataProvider} ("Data providers cannot implement IComponentProvider … Use a separate client provider"),
+ * so the server half lives in {@link KitchenStationServerDataProvider}. Both share the same UID.
+ */
+public class KitchenStationComponentProvider implements IBlockComponentProvider {
 
     public static final Identifier KITCHEN_STATION_UID = Identifier.fromNamespaceAndPath(AppliedCooking.ID, "kitchen_station");
 
@@ -31,17 +34,7 @@ public class KitchenStationComponentProvider implements IBlockComponentProvider,
     }
 
     @Override
-    public void appendServerData(CompoundTag data, BlockAccessor accessor) {
-        KitchenStationBlockEntity kitchenStation = (KitchenStationBlockEntity) accessor.getBlockEntity();
-        data.putString("accessPointPos", kitchenStation.getAccessPointPos());
-        // Send the drain rather than reading the config client-side: it's a server config, so the client's copy is
-        // only correct once synced, and on a server the authoritative value is the one we're actually charging.
-        data.putDouble("powerDrain", KitchenStationBlockEntity.idlePowerDrain());
-    }
-
-    @Override
     public Identifier getUid() {
         return KITCHEN_STATION_UID;
     }
-
 }

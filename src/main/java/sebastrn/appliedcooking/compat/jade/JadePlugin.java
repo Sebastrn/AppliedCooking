@@ -13,7 +13,7 @@ public class JadePlugin implements IWailaPlugin {
 
     @Override
     public void register(IWailaCommonRegistration registration) {
-        registration.registerBlockDataProvider(new KitchenStationComponentProvider(), KitchenStationBlockEntity.class);
+        registration.registerBlockDataProvider(new KitchenStationServerDataProvider(), KitchenStationBlockEntity.class);
     }
 
     @Override
