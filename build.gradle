@@ -15,7 +15,7 @@ base {
     archivesName = mod_id
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 repositories {
     mavenCentral()
@@ -23,12 +23,10 @@ repositories {
         name = 'NeoForged'
         url = 'https://maven.neoforged.net/releases'
     }
+    // Applied Energistics 2 (+ its GuideME dependency) publish to Maven Central as of 1.21.1 —
+    // group org.appliedenergistics. The old modmaven.dev host has no 1.21.1 build, so it's gone.
     maven {
-        name = 'modmaven (Applied Energistics 2)'
-        url = 'https://modmaven.dev'
-    }
-    maven {
-        name = 'TwelveIterations (Balm, Cooking for Blockheads)'
+        name = 'TwelveIterations (Balm)'
         url = 'https://maven.twelveiterations.com/repository/maven-public/'
     }
     maven {
@@ -36,7 +34,7 @@ repositories {
         url = 'https://maven.k-4u.nl'
     }
     maven {
-        name = 'Modrinth (Jade)'
+        name = 'Modrinth (Cooking for Blockheads, Jade)'
         url = 'https://api.modrinth.com/maven'
         content { includeGroup 'maven.modrinth' }
     }
@@ -78,16 +76,16 @@ neoForge {
 
 dependencies {
     // Core integrations (compile + dev runtime)
-    implementation "appeng:appliedenergistics2-neoforge:${ae2_version}"
+    implementation "org.appliedenergistics:appliedenergistics2:${ae2_version}"
     implementation "net.blay09.mods:balm-neoforge:${balm_version}"
-    implementation "net.blay09.mods:cookingforblockheads-neoforge:${cfb_version}"
+    implementation "maven.modrinth:cooking-for-blockheads:${cfb_version}"
 
     // Optional integrations — compiled against and loaded in the dev client so they can be tested. The mod
     // still runs without them: the TOP addon is guarded by Balm.isModLoaded, and the Jade @WailaPlugin / JEI
     // @JeiPlugin classes are only loaded by each mod's own plugin scan when that mod is present.
     implementation "mcjty.theoneprobe:theoneprobe:${top_version}"
     implementation "maven.modrinth:jade:${jade_version}"
-    implementation "mezz.jei:jei-1.20.4-neoforge:${jei_version}"
+    implementation "mezz.jei:jei-1.21.1-neoforge:${jei_version}"
 
     // Patchouli — optional, powers the in-game guide book. Resources only (no code dependency),
     // so it is only needed at runtime; pulled into the dev client here.
@@ -196,7 +194,7 @@ modrinth {
     versionName = mod_version
     versionType = 'release'
     uploadFile = tasks.named('jar')
-    gameVersions = ['1.20.4']
+    gameVersions = ['1.21.1']
     loaders = ['neoforge']
     changelog = changelogText
     // Modrinth project slugs (adjust if a publish fails on an unknown project):
@@ -219,7 +217,7 @@ tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurs
     def mainFile = upload(curseforge_id, tasks.named('jar'))
     // displayName left unset on purpose -> CurseForge shows the jar's file name (appliedcooking-<version>.jar).
     mainFile.releaseType = 'release'
-    mainFile.addGameVersion '1.20.4'
+    mainFile.addGameVersion '1.21.1'
     mainFile.addModLoader 'NeoForge'
     mainFile.addEnvironment 'Client', 'Server'
     mainFile.changelogType = 'markdown'
