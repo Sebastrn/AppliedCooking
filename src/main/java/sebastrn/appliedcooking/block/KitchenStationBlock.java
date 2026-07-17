@@ -72,13 +72,13 @@ public class KitchenStationBlock extends BaseKitchenBlock {
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
 
-        if (!level.isClientSide && level.getBlockEntity(pos) instanceof KitchenStationBlockEntity kitchenStation) {
+        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof KitchenStationBlockEntity kitchenStation) {
             kitchenStation.applyDataFromItemToBlockEntity(stack);
         }
     }
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide ? null : createTickerHelper(type, AppliedCookingBlockEntities.KITCHEN_STATION.get(), KitchenStationBlockEntity::serverTick);
+        return level.isClientSide() ? null : createTickerHelper(type, AppliedCookingBlockEntities.KITCHEN_STATION.get(), KitchenStationBlockEntity::serverTick);
     }
 }

@@ -6,10 +6,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import sebastrn.appliedcooking.AppliedCookingLootFunctions;
 import sebastrn.appliedcooking.blockentity.KitchenStationBlockEntity;
 
 import java.util.List;
@@ -25,7 +23,7 @@ public class KitchenStationBlockLootFunction extends LootItemConditionalFunction
 
     @Override
     protected ItemStack run(ItemStack stack, LootContext lootContext) {
-        BlockEntity blockEntity = lootContext.getParamOrNull(LootContextParams.BLOCK_ENTITY);
+        BlockEntity blockEntity = lootContext.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
 
         if (blockEntity instanceof KitchenStationBlockEntity kitchenStation) {
             kitchenStation.applyDataFromBlockEntityToItem(stack);
@@ -34,8 +32,9 @@ public class KitchenStationBlockLootFunction extends LootItemConditionalFunction
         return stack;
     }
 
+    // 26.1: LootItemFunction declares codec() (returning the registered MapCodec) in place of the old getType().
     @Override
-    public LootItemFunctionType<KitchenStationBlockLootFunction> getType() {
-        return AppliedCookingLootFunctions.KITCHEN_STATION.get();
+    public MapCodec<? extends LootItemConditionalFunction> codec() {
+        return CODEC;
     }
 }

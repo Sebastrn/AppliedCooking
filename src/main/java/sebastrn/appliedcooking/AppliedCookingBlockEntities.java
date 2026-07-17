@@ -11,8 +11,9 @@ public final class AppliedCookingBlockEntities {
 
     public static final DeferredRegister<BlockEntityType<?>> REGISTRY = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, AppliedCooking.ID);
 
+    // 26.1 removed BlockEntityType.Builder; construct the type directly (factory + valid blocks vararg).
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<KitchenStationBlockEntity>> KITCHEN_STATION =
-            REGISTRY.register("kitchen_station", () -> BlockEntityType.Builder.of(KitchenStationBlockEntity::new, AppliedCookingBlocks.KITCHEN_STATION.get()).build(null));
+            REGISTRY.register("kitchen_station", () -> new BlockEntityType<>(KitchenStationBlockEntity::new, AppliedCookingBlocks.KITCHEN_STATION.get()));
 
     private AppliedCookingBlockEntities() {
     }

@@ -5,7 +5,7 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import sebastrn.appliedcooking.AppliedCooking;
 import sebastrn.appliedcooking.AppliedCookingItems;
@@ -18,10 +18,10 @@ import sebastrn.appliedcooking.AppliedCookingItems;
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
 
-    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(AppliedCooking.ID, "jei");
+    private static final Identifier UID = Identifier.fromNamespaceAndPath(AppliedCooking.ID, "jei");
 
     @Override
-    public ResourceLocation getPluginUid() {
+    public Identifier getPluginUid() {
         return UID;
     }
 

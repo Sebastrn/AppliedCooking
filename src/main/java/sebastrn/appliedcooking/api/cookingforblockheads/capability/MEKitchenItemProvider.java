@@ -6,7 +6,7 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.KeyCounter;
 import appeng.api.storage.MEStorage;
 import appeng.me.helpers.MachineSource;
-import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.Balm;
 import net.blay09.mods.cookingforblockheads.api.CacheHint;
 import net.blay09.mods.cookingforblockheads.api.IngredientToken;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
@@ -43,6 +43,13 @@ import java.util.function.Predicate;
  *     bucket. This keeps the feature fluid-agnostic for any fluid whose {@code getBucket()} the recipe accepts.</li>
  * </ul>
  * The item path is always tried first, so real stored items are preferred over synthesized ones.
+ * <p>
+ * <b>Greedy mode.</b> CFB's {@code findIngredient} takes a {@code greedy} flag (added in the 26.1 API): when set,
+ * a returned token reserves the <em>whole</em> available amount instead of a single item, and reports it through
+ * {@link IngredientToken#reservedCount()}. CFB uses this only in {@code CraftingContext.countAvailable} to total
+ * "how many can I craft" in one pass; the actual craft calls with {@code greedy == false}, so {@code consume()}
+ * still spends exactly one item per call either way. Reservation accounting therefore sums {@code reservedCount()}
+ * rather than counting one per token, so a greedy token correctly excludes the full amount it laid claim to.
  * <p>
  * <b>Crafting remainders belong to CFB, not to us.</b> Its crafting handler assembles the recipe and then offers
  * each remainder back through {@link IngredientToken#restore}, once per crafting-grid slot — passing {@code EMPTY}
@@ -117,7 +124,7 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
     }
 
     @Override
-    public IngredientToken findIngredient(Ingredient ingredient, Collection<IngredientToken> ingredientTokens, CacheHint cacheHint) {
+    public IngredientToken findIngredient(Ingredient ingredient, Collection<IngredientToken> ingredientTokens, CacheHint cacheHint, boolean greedy) {
         KeyCounter stacks = snapshot();
         if (stacks == null) {
             return null;
@@ -126,23 +133,30 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
         // Item cache-hint fast path.
         if (cacheHint instanceof MEIngredientToken hint) {
             long available = stacks.get(hint.key);
-            if (available > 0 && ingredient.test(hint.key.toStack()) && hasUsesLeft(hint.key, available, ingredientTokens)) {
-                return new MEIngredientToken(hint.key);
+            if (available > 0 && ingredient.test(hint.key.toStack())) {
+                long left = usesLeft(hint.key, available, ingredientTokens);
+                if (left > 0) {
+                    return new MEIngredientToken(hint.key, itemCount(left, greedy));
+                }
             }
         }
 
         // Item path: look the recipe's accepted items up by key instead of scanning the whole network. This
         // matches by exact key, so an NBT-variant item stored under a different key wouldn't be found — a fine
         // trade-off for cooking ingredients (which are plain) in exchange for scaling to huge networks.
-        ItemStack[] items = ingredient.getItems();
+        // 26.1 dropped Ingredient.getItems(); items() yields the accepted item holders, one plain stack each.
+        List<ItemStack> items = ingredient.items().map(holder -> new ItemStack(holder.value())).toList();
         for (ItemStack accepted : items) {
             AEItemKey key = AEItemKey.of(accepted);
             if (key == null) {
                 continue;
             }
             long available = stacks.get(key);
-            if (available > 0 && hasUsesLeft(key, available, ingredientTokens)) {
-                return new MEIngredientToken(key);
+            if (available > 0) {
+                long left = usesLeft(key, available, ingredientTokens);
+                if (left > 0) {
+                    return new MEIngredientToken(key, itemCount(left, greedy));
+                }
             }
         }
 
@@ -151,21 +165,21 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
         // a cheap key lookup fails fast when the fluid isn't stored, they satisfy modded water/milk item
         // variants (bottles, freshwateritem, …) that the bucket-only loop can't, and milk is reliable this way
         // (we never depend on the milk fluid's getBucket()). Other fluids (lava, modded) fall through to the loop.
-        IngredientToken water = findTaggedFluidIngredient(stacks, items, ModItemTags.WATER, Fluids.WATER, ingredientTokens);
+        IngredientToken water = findTaggedFluidIngredient(stacks, items, ModItemTags.WATER, Fluids.WATER, ingredientTokens, greedy);
         if (water != null) {
             return water;
         }
-        IngredientToken milk = findTaggedFluidIngredient(stacks, items, ModItemTags.MILK, Balm.getRegistries().getMilkFluid(), ingredientTokens);
+        IngredientToken milk = findTaggedFluidIngredient(stacks, items, ModItemTags.MILK, Balm.modSupport().milkFluid().get(), ingredientTokens, greedy);
         if (milk != null) {
             return milk;
         }
 
         // Fluid path: satisfy the ingredient from any other fluid stored in the network.
-        return findFluidIngredient(stacks, ingredient::test, ingredientTokens);
+        return findFluidIngredient(stacks, ingredient::test, ingredientTokens, greedy);
     }
 
     @Override
-    public IngredientToken findIngredient(ItemStack itemStack, Collection<IngredientToken> ingredientTokens, CacheHint cacheHint) {
+    public IngredientToken findIngredient(ItemStack itemStack, Collection<IngredientToken> ingredientTokens, CacheHint cacheHint, boolean greedy) {
         KeyCounter stacks = snapshot();
         if (stacks == null) {
             return null;
@@ -175,24 +189,27 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
         AEItemKey wanted = AEItemKey.of(itemStack);
         if (wanted != null) {
             long available = stacks.get(wanted);
-            if (available > 0 && hasUsesLeft(wanted, available, ingredientTokens)) {
-                return new MEIngredientToken(wanted);
+            if (available > 0) {
+                long left = usesLeft(wanted, available, ingredientTokens);
+                if (left > 0) {
+                    return new MEIngredientToken(wanted, itemCount(left, greedy));
+                }
             }
         }
 
         // Fluid fast-paths (see the Ingredient overload): water/milk by tag before the network-driven loop.
-        ItemStack[] candidates = {itemStack};
-        IngredientToken water = findTaggedFluidIngredient(stacks, candidates, ModItemTags.WATER, Fluids.WATER, ingredientTokens);
+        List<ItemStack> candidates = List.of(itemStack);
+        IngredientToken water = findTaggedFluidIngredient(stacks, candidates, ModItemTags.WATER, Fluids.WATER, ingredientTokens, greedy);
         if (water != null) {
             return water;
         }
-        IngredientToken milk = findTaggedFluidIngredient(stacks, candidates, ModItemTags.MILK, Balm.getRegistries().getMilkFluid(), ingredientTokens);
+        IngredientToken milk = findTaggedFluidIngredient(stacks, candidates, ModItemTags.MILK, Balm.modSupport().milkFluid().get(), ingredientTokens, greedy);
         if (milk != null) {
             return milk;
         }
 
         // Fluid fallback.
-        return findFluidIngredient(stacks, candidate -> ItemStack.isSameItem(candidate, itemStack), ingredientTokens);
+        return findFluidIngredient(stacks, candidate -> ItemStack.isSameItem(candidate, itemStack), ingredientTokens, greedy);
     }
 
     @Override
@@ -200,40 +217,46 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
         return ingredientToken instanceof CacheHint hint ? hint : CacheHint.NONE;
     }
 
+    /** How many items a freshly issued token should reserve: the whole remaining amount when greedy, else one. */
+    private static int itemCount(long usesLeft, boolean greedy) {
+        return greedy ? (int) Math.min(usesLeft, Integer.MAX_VALUE) : 1;
+    }
+
     /**
-     * @return true if, after accounting for the tokens already handed out for this key, at least one more item
-     * of the given key can still be provided from the network.
+     * @return how many more items of {@code key} can still be provided from the network after subtracting what the
+     * tokens already handed out for this key have reserved ({@link IngredientToken#reservedCount()} each — which is
+     * the full claimed amount for a greedy token, or 1 otherwise).
      */
-    private boolean hasUsesLeft(AEItemKey key, long available, Collection<IngredientToken> ingredientTokens) {
+    private long usesLeft(AEItemKey key, long available, Collection<IngredientToken> ingredientTokens) {
         long reserved = 0;
         for (IngredientToken token : ingredientTokens) {
             if (token instanceof MEIngredientToken meToken && key.equals(meToken.key)) {
-                reserved++;
+                reserved += meToken.reservedCount();
             }
         }
-        return available - reserved > 0;
+        return available - reserved;
     }
 
     /**
      * Water/milk fast-path: these fluids are requested by item tag (mirroring CFB's Sink / Milk Jar). If the
-     * network holds at least a bucket of {@code fluid} (after fluid tokens already issued this operation) and one
-     * of {@code candidates} carries {@code tag}, return a token that drains a bucket and yields that requested
-     * item. Yielding the requested item — not the fluid's own bucket — is what lets a modded water/milk variant
-     * (a water bottle, {@code pamhc2foodcore:freshmilkitem}, …) be satisfied. Returns null (leaving the fluid to
+     * network holds at least a bucket of {@code fluid} (after fluid already reserved this operation) and one of
+     * {@code candidates} carries {@code tag}, return a token that drains a bucket and yields that requested item.
+     * Yielding the requested item — not the fluid's own bucket — is what lets a modded water/milk variant (a water
+     * bottle, {@code pamhc2foodcore:freshmilkitem}, …) be satisfied. Returns null (leaving the fluid to
      * {@link #findFluidIngredient}) when the fluid is absent/unregistered or no candidate carries the tag.
      */
-    private IngredientToken findTaggedFluidIngredient(KeyCounter stacks, ItemStack[] candidates, TagKey<Item> tag, Fluid fluid, Collection<IngredientToken> ingredientTokens) {
+    private IngredientToken findTaggedFluidIngredient(KeyCounter stacks, List<ItemStack> candidates, TagKey<Item> tag, Fluid fluid, Collection<IngredientToken> ingredientTokens, boolean greedy) {
         if (fluid == null || fluid == Fluids.EMPTY) {
             return null;
         }
         AEFluidKey fluidKey = AEFluidKey.of(fluid);
-        long available = stacks.get(fluidKey);
-        if (available - reservedFluid(fluidKey, ingredientTokens) < AEFluidKey.AMOUNT_BUCKET) {
+        long unitsLeft = (stacks.get(fluidKey) - reservedFluid(fluidKey, ingredientTokens)) / AEFluidKey.AMOUNT_BUCKET;
+        if (unitsLeft < 1) {
             return null;
         }
         for (ItemStack candidate : candidates) {
             if (candidate.is(tag)) {
-                return new MEFluidIngredientToken(fluidKey, AEFluidKey.AMOUNT_BUCKET, candidate.copyWithCount(1));
+                return new MEFluidIngredientToken(fluidKey, AEFluidKey.AMOUNT_BUCKET, candidate.copyWithCount(1), itemCount(unitsLeft, greedy));
             }
         }
         return null;
@@ -241,22 +264,23 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
 
     /**
      * For each fluid stored in the network, build its bucket item and ask {@code matches} whether that satisfies
-     * the ingredient. If it does and the network holds at least a bucket (accounting for fluid tokens already
-     * issued), return a token that synthesizes the bucket from the network fluid. This is the fluid-agnostic
-     * fallback for lava and modded fluids; water and milk are handled first by {@link #findTaggedFluidIngredient}.
+     * the ingredient. If it does and the network holds at least a bucket (accounting for fluid already reserved),
+     * return a token that synthesizes the bucket from the network fluid. This is the fluid-agnostic fallback for
+     * lava and modded fluids; water and milk are handled first by {@link #findTaggedFluidIngredient}.
      */
-    private IngredientToken findFluidIngredient(KeyCounter stacks, Predicate<ItemStack> matches, Collection<IngredientToken> ingredientTokens) {
+    private IngredientToken findFluidIngredient(KeyCounter stacks, Predicate<ItemStack> matches, Collection<IngredientToken> ingredientTokens, boolean greedy) {
         for (AEFluidKey fluidKey : fluidKeys(stacks)) {
-            long available = stacks.get(fluidKey);
-            if (available < AEFluidKey.AMOUNT_BUCKET) {
+            long total = stacks.get(fluidKey);
+            if (total < AEFluidKey.AMOUNT_BUCKET) {
                 continue;
             }
             ItemStack bucket = new ItemStack(fluidKey.getFluid().getBucket());
             if (bucket.isEmpty() || !matches.test(bucket)) {
                 continue;
             }
-            if (available - reservedFluid(fluidKey, ingredientTokens) >= AEFluidKey.AMOUNT_BUCKET) {
-                return new MEFluidIngredientToken(fluidKey, AEFluidKey.AMOUNT_BUCKET, bucket);
+            long unitsLeft = (total - reservedFluid(fluidKey, ingredientTokens)) / AEFluidKey.AMOUNT_BUCKET;
+            if (unitsLeft >= 1) {
+                return new MEFluidIngredientToken(fluidKey, AEFluidKey.AMOUNT_BUCKET, bucket, itemCount(unitsLeft, greedy));
             }
         }
         return null;
@@ -267,7 +291,7 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
         long reserved = 0;
         for (IngredientToken token : ingredientTokens) {
             if (token instanceof MEFluidIngredientToken fluidToken && fluidKey.equals(fluidToken.fluidKey)) {
-                reserved += fluidToken.amountPerItem;
+                reserved += (long) fluidToken.amountPerItem * fluidToken.reservedCount();
             }
         }
         return reserved;
@@ -275,9 +299,12 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
 
     public class MEIngredientToken implements IngredientToken, CacheHint {
         private final AEItemKey key;
+        /** Items this token lays claim to for reservation accounting — the full amount when greedy, else 1. */
+        private final int count;
 
-        private MEIngredientToken(AEItemKey key) {
+        private MEIngredientToken(AEItemKey key, int count) {
             this.key = key;
+            this.count = count;
         }
 
         @Override
@@ -327,6 +354,11 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
             remainder.shrink((int) inserted);
             return remainder;
         }
+
+        @Override
+        public int reservedCount() {
+            return count;
+        }
     }
 
     /**
@@ -337,11 +369,14 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
         private final AEFluidKey fluidKey;
         private final int amountPerItem;
         private final ItemStack resultItem;
+        /** Result items this token lays claim to (each backed by {@link #amountPerItem} mB) — full amount when greedy, else 1. */
+        private final int count;
 
-        private MEFluidIngredientToken(AEFluidKey fluidKey, int amountPerItem, ItemStack resultItem) {
+        private MEFluidIngredientToken(AEFluidKey fluidKey, int amountPerItem, ItemStack resultItem, int count) {
             this.fluidKey = fluidKey;
             this.amountPerItem = amountPerItem;
             this.resultItem = resultItem;
+            this.count = count;
         }
 
         @Override
@@ -398,6 +433,11 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
             // behind by a water bucket we made out of stored fluid. That container never existed, so putting it
             // in the network would mint a bucket from nothing. Swallow it; the fluid stays spent, as it should.
             return ItemStack.EMPTY;
+        }
+
+        @Override
+        public int reservedCount() {
+            return count;
         }
     }
 }

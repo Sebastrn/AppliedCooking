@@ -9,29 +9,23 @@ import appeng.api.networking.energy.IEnergyService;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.storage.MEStorage;
 import appeng.util.Platform;
-import com.google.common.collect.Lists;
-import com.mojang.datafixers.util.Pair;
-import net.blay09.mods.balm.api.provider.BalmProvider;
-import net.blay09.mods.balm.common.BalmBlockEntity;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import sebastrn.appliedcooking.AppliedCooking;
 import sebastrn.appliedcooking.AppliedCookingBlockEntities;
 import sebastrn.appliedcooking.api.cookingforblockheads.capability.MEKitchenItemProvider;
 import sebastrn.appliedcooking.block.KitchenStationBlock;
 
-import java.util.List;
-
-public class KitchenStationBlockEntity extends BalmBlockEntity {
+public class KitchenStationBlockEntity extends BlockEntity implements KitchenItemProviderHolder {
 
     /**
      * Key for the linked access point in the block entity's own NBT. The *item* carries the same link in AE2's
@@ -65,9 +59,13 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
         super(AppliedCookingBlockEntities.KITCHEN_STATION.get(), pos, state);
     }
 
+    /**
+     * Exposes the Kitchen Station's item provider to CFB. CFB's {@code ModCapabilities.KITCHEN_ITEM_PROVIDER}
+     * capability is wired to this holder for our block-entity type in {@link AppliedCooking#registerCapabilities}.
+     */
     @Override
-    public List<BalmProvider<?>> getProviders() {
-        return Lists.newArrayList(new BalmProvider<>(KitchenItemProvider.class, itemProvider));
+    public KitchenItemProvider getKitchenItemProvider() {
+        return itemProvider;
     }
 
     /** CONNECTED drives the block model, so only rewrite the state (and re-save) when it actually flips. */
@@ -95,26 +93,18 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
 
-        if (accessPointPos != null) {
-            GlobalPos.CODEC.encodeStart(NbtOps.INSTANCE, accessPointPos)
-                    .result()
-                    .ifPresent(tagValue -> tag.put(TAG_ACCESS_POINT_POS, tagValue));
-        }
+        // storeNullable no-ops on null, so no explicit guard is needed. 26.1's ValueOutput takes the Codec directly.
+        output.storeNullable(TAG_ACCESS_POINT_POS, GlobalPos.CODEC, accessPointPos);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
 
-        if (tag.contains(TAG_ACCESS_POINT_POS)) {
-            accessPointPos = GlobalPos.CODEC.decode(NbtOps.INSTANCE, tag.get(TAG_ACCESS_POINT_POS))
-                    .result()
-                    .map(Pair::getFirst)
-                    .orElse(null);
-        }
+        accessPointPos = input.read(TAG_ACCESS_POINT_POS, GlobalPos.CODEC).orElse(null);
     }
 
     public MEStorage getNetworkStorage() {
