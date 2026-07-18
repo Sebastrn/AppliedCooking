@@ -2,6 +2,14 @@
 
 All notable changes to **Applied Cooking** are listed here.
 
+## 6.1.0
+
+Recipe-viewer support beyond JEI. No gameplay changes.
+
+### Added
+- **Roughly Enough Items and EMI support.** The ME Kitchen Station's info page that already appeared in JEI now shows
+  in REI and EMI too. Use whichever recipe viewer you like; all three are optional.
+
 ## 6.0.0
 
 Updated to **Minecraft 1.21.1** on NeoForge. Everything from 5.1.0 carries over: ME items and fluids in the
