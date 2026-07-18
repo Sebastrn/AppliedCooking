@@ -2,6 +2,14 @@
 
 All notable changes to **Applied Cooking** are listed here.
 
+## 5.3.0
+
+Recipe-viewer support beyond JEI. No gameplay changes.
+
+### Added
+- **Roughly Enough Items and EMI support.** The ME Kitchen Station's info page that already appeared in JEI now shows
+  in REI and EMI too. Use whichever recipe viewer you like; all three are optional.
+
 ## 5.2.0
 
 ### Added
