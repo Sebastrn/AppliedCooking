@@ -73,3 +73,17 @@ type = "optional"
 versionRange = "*"
 ordering = "AFTER"
 side = "BOTH"
+
+[[dependencies.appliedcooking]]
+modId = "roughlyenoughitems"
+type = "optional"
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.appliedcooking]]
+modId = "emi"
+type = "optional"
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"
