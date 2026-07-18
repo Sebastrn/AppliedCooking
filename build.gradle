@@ -20,6 +20,15 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
+configurations.configureEach {
+    resolutionStrategy {
+        // REI bundles a JEI-compat module that transitively pins JEI; MDG's consistent resolution would spread that
+        // pin across the classpath and collide with our JEI. We run one viewer at a time and don't want REI's compat,
+        // so JEI is excluded from REI (below) and our JEI version is forced here — a consumer force wins.
+        force "mezz.jei:jei-26.1.2-neoforge:${jei_version}"
+    }
+}
+
 repositories {
     mavenCentral()
     maven {
@@ -45,6 +54,10 @@ repositories {
     maven {
         name = 'BlameJared (JEI)'
         url = 'https://maven.blamejared.com'
+    }
+    maven {
+        name = 'shedaniel (Roughly Enough Items)'
+        url = 'https://maven.shedaniel.me/'
     }
     maven {
         name = 'FTB (dev test mods)'
@@ -81,6 +94,23 @@ neoForge {
     }
 }
 
+// Which recipe viewer runClient loads. Chosen by the runClientRei task or -Pviewer=jei|rei; defaults to jei. (EMI has
+// no 26.1 build, so it's not an option here.) Resolved at configuration time because it drives which viewer jar is
+// added to the runtime classpath below.
+def selectedViewer = {
+    def requested = gradle.startParameter.taskNames
+    if (requested.any { it.endsWith('runClientRei') }) return 'rei'
+    return (findProperty('viewer') ?: 'jei').toString().toLowerCase()
+}()
+
+// runClientRei: the client run with REI instead of JEI. It just drives runClient — the viewer selection above keys
+// off the task name. runClient on its own stays JEI.
+tasks.register('runClientRei') {
+    dependsOn 'runClient'
+    group = 'mod development'
+    description = 'Runs the game client with REI as the recipe viewer instead of JEI.'
+}
+
 dependencies {
     // Core integrations (compile + dev runtime). CFB now publishes a clean 26.x build to the TwelveIterations
     // maven (net.blay09.mods:cookingforblockheads-neoforge), so the 1.21.1 Modrinth-id pin is gone.
@@ -95,7 +125,25 @@ dependencies {
     // in compat/theoneprobe is likewise disabled. Re-enable both when McJty ships a 26.1 TOP.
     // implementation "mcjty.theoneprobe:theoneprobe:${top_version}"
     implementation "maven.modrinth:jade:${jade_version}"
-    implementation "mezz.jei:jei-26.1.2-neoforge:${jei_version}"
+
+    // Recipe viewers — JEI and REI (EMI has no 26.1 build). Each carries the same Kitchen Station info page
+    // (compat/{jei,rei}). Compile-only: each viewer finds its plugin by its own classpath scan (@JeiPlugin /
+    // @REIPluginClient), so neither is bundled. They can't coexist in one client, so exactly one is loaded per run via
+    // the toggle below. REI needs the full jar, not -api: the info-page entry point (BuiltinClientPlugin) is in REI's
+    // default-plugin module.
+    compileOnly "mezz.jei:jei-26.1.2-neoforge:${jei_version}"
+    compileOnly("me.shedaniel:RoughlyEnoughItems-neoforge:${rei_version}") { exclude group: 'mezz.jei' }
+
+    // Exactly one viewer's full runtime jar is loaded, per selectedViewer above (runClient / runClientRei, or
+    // -Pviewer=jei|rei). runtimeOnly, not clientAdditionalRuntimeClasspath: MDG's per-run additional classpath does not
+    // reliably load its mods, whereas runtimeClasspath mods always do. JEI/REI are client-side and no-op on a server.
+    switch (selectedViewer) {
+        case 'rei':
+            runtimeOnly("me.shedaniel:RoughlyEnoughItems-neoforge:${rei_version}") { exclude group: 'mezz.jei' }
+            break
+        default:
+            runtimeOnly "mezz.jei:jei-26.1.2-neoforge:${jei_version}"
+    }
 
     // Patchouli — optional, powers the in-game guide book. Resources only (no code dependency), so it is only
     // needed at runtime. BlameJared has no 26.1 build, so it comes from the Modrinth maven (pinned by version id).
