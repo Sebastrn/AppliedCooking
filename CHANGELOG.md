@@ -2,6 +2,14 @@
 
 All notable changes to **Applied Cooking** are listed here.
 
+## 7.1.0
+
+Recipe-viewer support beyond JEI. No gameplay changes.
+
+### Added
+- **Roughly Enough Items support.** The ME Kitchen Station's info page that already appeared in JEI now shows in REI
+  too. (EMI has no Minecraft 26.1 build yet, so it isn't included on this version.)
+
 ## 7.0.0
 
 Updated to **Minecraft 26.1.2** on NeoForge, now running on **Java 25**. Everything from 6.0.0 carries over: ME
