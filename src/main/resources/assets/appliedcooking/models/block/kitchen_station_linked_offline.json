@@ -3,9 +3,9 @@
 	"credit": "Applied Cooking - Kitchen Station",
 	"parent": "block/block",
 	"textures": {
-		"particle": "appliedcooking:block/kitchen_station_body_connected",
-		"body": "appliedcooking:block/kitchen_station_body_connected",
-		"screen": "appliedcooking:block/kitchen_station_screen_connected"
+		"particle": "appliedcooking:block/kitchen_station_body_linked_offline",
+		"body": "appliedcooking:block/kitchen_station_body_linked_offline",
+		"screen": "appliedcooking:block/kitchen_station_screen_linked_offline"
 	},
 	"elements": [
 		{

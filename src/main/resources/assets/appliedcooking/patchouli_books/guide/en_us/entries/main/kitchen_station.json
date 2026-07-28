@@ -34,7 +34,7 @@
           ]
         ],
         "mapping": {
-          "S": "appliedcooking:kitchen_station[connected=true,facing=south]",
+          "S": "appliedcooking:kitchen_station[link_state=online,facing=south]",
           "O": "cookingforblockheads:connector[facing=north]",
           "0": "cookingforblockheads:counter[facing=south]",
           "T": "cookingforblockheads:cooking_table[facing=south]"
@@ -56,9 +56,16 @@
     },
     {
       "type": "patchouli:image",
+      "title": "entry.appliedcooking.kitchenstation.linkedoffline.title",
+      "images": [
+        "appliedcooking:textures/gui/entries/kitchenstation-linked-offline.png"
+      ]
+    },
+    {
+      "type": "patchouli:image",
       "title": "entry.appliedcooking.kitchenstation.disconnected.title",
       "images": [
-        "appliedcooking:textures/gui/entries/kitchenstation-disconnected.png"
+        "appliedcooking:textures/gui/entries/kitchenstation-idle.png"
       ]
     }
   ],

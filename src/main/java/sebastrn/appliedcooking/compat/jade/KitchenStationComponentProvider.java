@@ -17,18 +17,29 @@ public class KitchenStationComponentProvider implements IBlockComponentProvider,
 
     @Override
     public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-        if (accessor.getServerData().contains("accessPointPos") && !accessor.getServerData().getString("accessPointPos").isEmpty()) {
-            tooltip.add(Component.translatable("jade.appliedcooking:online"));
-            tooltip.add(Component.translatable("jade.appliedcooking:kitchen_station", Component.translatable("block.ae2.wireless_access_point"), accessor.getServerData().getString("accessPointPos")));
-            tooltip.add(Component.translatable("jade.appliedcooking:power_drain", String.valueOf(accessor.getServerData().getDouble("powerDrain"))));
-        } else {
-            tooltip.add(Component.translatable("jade.appliedcooking:offline"));
+        CompoundTag data = accessor.getServerData();
+        String linkState = data.getString("linkState");
+        String accessPointPos = data.getString("accessPointPos");
+        switch (linkState) {
+            case "online" -> {
+                tooltip.add(Component.translatable("jade.appliedcooking:online"));
+                tooltip.add(Component.translatable("jade.appliedcooking:kitchen_station", Component.translatable("block.ae2.wireless_access_point"), accessPointPos));
+                tooltip.add(Component.translatable("jade.appliedcooking:power_drain", String.valueOf(data.getDouble("powerDrain"))));
+            }
+            case "linked_offline" -> {
+                tooltip.add(Component.translatable("jade.appliedcooking:linked_offline"));
+                if (!accessPointPos.isEmpty()) {
+                    tooltip.add(Component.translatable("jade.appliedcooking:kitchen_station", Component.translatable("block.ae2.wireless_access_point"), accessPointPos));
+                }
+            }
+            default -> tooltip.add(Component.translatable("jade.appliedcooking:offline"));
         }
     }
 
     @Override
     public void appendServerData(CompoundTag data, BlockAccessor accessor) {
         KitchenStationBlockEntity kitchenStation = (KitchenStationBlockEntity) accessor.getBlockEntity();
+        data.putString("linkState", kitchenStation.getLinkState().getSerializedName());
         data.putString("accessPointPos", kitchenStation.getAccessPointPos());
         // Send the drain rather than reading the config client-side: it's a server config, so the client's copy is
         // only correct once synced, and on a server the authoritative value is the one we're actually charging.
