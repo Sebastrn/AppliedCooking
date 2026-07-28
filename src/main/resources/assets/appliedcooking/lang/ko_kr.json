@@ -6,6 +6,7 @@
   "jade.appliedcooking:kitchen_station": "%s에 연결됨, 위치 %s",
   "jade.appliedcooking:online": "장치 작동 중",
   "jade.appliedcooking:offline": "장치 정지됨",
+  "jade.appliedcooking:linked_offline": "연동됨 (네트워크 연결 불가)",
   "jade.appliedcooking:power_drain": "%s AE/t 소모 중",
 
   "jei.appliedcooking.kitchen_station.1": "ME 주방 스테이션을 사용하면 Cooking for Blockheads의 요리 테이블에서 Applied Energistics 2 네트워크의 아이템은 물론 물이나 우유 같은 액체까지 바로 사용해 요리할 수 있습니다.",
@@ -17,14 +18,15 @@
   "category.appliedcooking.name": "Applied Cooking",
   "category.appliedcooking.description": "$(5)Applied Energistics 2$() 네트워크 저장고의 아이템을 $(6)Cooking for Blockheads$() 주방 멀티블록에서 바로 사용할 수 있게 해주는 모드입니다!$(br2)새 블록 하나가 Minecraft에 추가됩니다.",
   "entry.appliedcooking.kitchenstation.name": "ME 주방 스테이션",
-  "entry.appliedcooking.kitchenstation.intro": "$(l)ME 주방 스테이션$()은 $(6)Cooking for Blockheads$()와 $(5)Applied Energistics 2$()를 잇는 데 필요한 유일한 블록입니다.$(br2)주방에 놓으면 요리 테이블에 $(5)ME 네트워크$() 전체 저장고를 제공하여, 저장된 모든 아이템이 재료가 됩니다. 물이나 우유 같은 $(o)액체$()까지 네트워크 저장고에서 꺼내옵니다.$(br2)제작하고, 연결하고, 주방에 놓으세요 — 방법은 다음과 같습니다.",
-  "entry.appliedcooking.kitchenstation.craft": "$(l)ME 주방 스테이션$()을 그림처럼 제작하세요.$(br2)막 제작한 상태에서는 아직 아무것과도 연결되어 있지 않습니다 — 다음 단계에서 $(5)AE2$() 네트워크에 연결하여 어디서 아이템을 가져올지 알려줍니다.",
+  "entry.appliedcooking.kitchenstation.intro": "$(l)ME 주방 스테이션$()은 $(6)Cooking for Blockheads$()와 $(5)Applied Energistics 2$()를 잇는 데 필요한 유일한 블록입니다.$(br2)주방에 놓으면 요리 테이블에 $(5)ME 네트워크$() 전체 저장고를 제공하여, 저장된 모든 아이템이 재료가 됩니다. 물이나 우유 같은 $(o)액체$()까지 네트워크 저장고에서 꺼내옵니다.$(br2)제작하고, 연결하고, 주방에 놓으세요, 방법은 다음과 같습니다.",
+  "entry.appliedcooking.kitchenstation.craft": "$(l)ME 주방 스테이션$()을 그림처럼 제작하세요.$(br2)막 제작한 상태에서는 아직 아무것과도 연결되어 있지 않습니다, 다음 단계에서 $(5)AE2$() 네트워크에 연결하여 어디서 아이템을 가져올지 알려줍니다.",
   "entry.appliedcooking.kitchenstation.link.title": "연결하기",
-  "entry.appliedcooking.kitchenstation.link": "스테이션은 $(5)ME 무선 액세스 포인트$()에서 연결합니다 — 무선 터미널을 지원하는 바로 그 블록입니다.$(br2)전력이 공급되는 액세스 포인트를 $(l)우클릭$()해 열고, 스테이션을 터미널 슬롯에 넣으면 $(2)연결된$() 상태로 돌아옵니다 — 다시 꺼내세요.$(br2)연결 정보는 블록 자체에 저장되므로, 스테이션은 아무리 멀리 있어도 — 심지어 다른 차원에서도 — 네트워크에 접근합니다.",
+  "entry.appliedcooking.kitchenstation.link": "스테이션은 $(5)ME 무선 액세스 포인트$()에서 연결합니다, 무선 터미널을 지원하는 바로 그 블록입니다.$(br2)전력이 공급되는 액세스 포인트를 $(l)우클릭$()해 열고, 스테이션을 터미널 슬롯에 넣으면 $(2)연결된$() 상태로 돌아옵니다, 다시 꺼내세요.$(br2)연결 정보는 블록 자체에 저장되므로, 스테이션은 아무리 멀리 있어도, 심지어 다른 차원에서도, 네트워크에 접근합니다.",
   "entry.appliedcooking.kitchenstation.placement.title": "주방에서",
-  "entry.appliedcooking.kitchenstation.placement": "주방 배치 예시입니다 — 눈 아이콘을 누르면 월드에서 미리 볼 수 있습니다.",
+  "entry.appliedcooking.kitchenstation.placement": "주방 배치 예시입니다, 눈 아이콘을 누르면 월드에서 미리 볼 수 있습니다.",
   "entry.appliedcooking.kitchenstation.states.title": "화면 읽기",
-  "entry.appliedcooking.kitchenstation.states": "스테이션의 화면은 상태를 한눈에 보여줍니다.$(br2)$(5)보라색$()은 $(2)연결되고 전력이 공급된$() 상태로, 이제 요리 테이블이 $(5)ME 네트워크$()의 모든 것으로 — 물과 우유를 포함해 — 약간의 전력을 대가로 요리할 수 있습니다.$(br2)$(4)검은색$()은 연결되지 않았다는 뜻입니다. 액세스 포인트에 연결되어 있는지, 네트워크에 여유 전력이 있는지, 액세스 포인트의 청크가 로드된 상태인지 확인하세요.",
+  "entry.appliedcooking.kitchenstation.states": "스테이션의 화면은 상태를 한눈에 보여줍니다.$(br2)$(5)보라색$()은 $(2)연결되고 전력이 공급된$() 상태로, 이제 요리 테이블이 $(5)ME 네트워크$()의 모든 것으로, 물과 우유를 포함해, 약간의 전력을 대가로 요리할 수 있습니다.$(br2)$(c)빨간색$()은 $(o)연결되어 있지만 네트워크에 접근할 수 없는$() 상태입니다. 액세스 포인트는 저장되어 있지만 통신할 수 없으니, 네트워크에 여유 전력이 있는지와 액세스 포인트의 청크가 로드된 상태인지 확인하세요.$(br2)$(8)어두운 화면$()은 아직 $(o)연결되지$() 않았다는 뜻입니다. 전력이 공급되는 네트워크에서 무선 액세스 포인트를 열고 스테이션을 터미널 슬롯에 넣어 연결하세요.",
   "entry.appliedcooking.kitchenstation.connected.title": "연결됨",
+  "entry.appliedcooking.kitchenstation.linkedoffline.title": "연동됨, 네트워크 없음",
   "entry.appliedcooking.kitchenstation.disconnected.title": "연결 끊김"
 }

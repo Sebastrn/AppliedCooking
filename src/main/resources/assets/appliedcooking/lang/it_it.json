@@ -6,9 +6,10 @@
   "jade.appliedcooking:kitchen_station": "Collegata a %s presso %s",
   "jade.appliedcooking:online": "Dispositivo online",
   "jade.appliedcooking:offline": "Dispositivo offline",
+  "jade.appliedcooking:linked_offline": "Collegata (rete irraggiungibile)",
   "jade.appliedcooking:power_drain": "Consuma %s AE/t",
 
-  "jei.appliedcooking.kitchen_station.1": "La Stazione da Cucina ME consente al tuo tavolo da cucina di Cooking for Blockheads di cucinare con oggetti — e fluidi come acqua e latte — direttamente dalla tua rete di Applied Energistics 2.",
+  "jei.appliedcooking.kitchen_station.1": "La Stazione da Cucina ME consente al tuo tavolo da cucina di Cooking for Blockheads di cucinare con oggetti, e fluidi come acqua e latte, direttamente dalla tua rete di Applied Energistics 2.",
   "jei.appliedcooking.kitchen_station.2": "Per collegarla, apri un Punto d'accesso wireless ME sulla tua rete alimentata, inserisci la stazione nello slot del terminale wireless e riprendila. Il collegamento viene salvato sul blocco e funziona anche tra dimensioni, purché il chunk del Punto d'accesso resti caricato.",
   "jei.appliedcooking.kitchen_station.3": "Posiziona la stazione collegata nella tua cucina, accanto al tavolo da cucina o collegata tramite i banconi. Il suo schermo si illumina di viola quando è connessa, e consuma un po' di energia dalla rete mentre è in funzione.",
 
@@ -17,14 +18,15 @@
   "category.appliedcooking.name": "Applied Cooking",
   "category.appliedcooking.description": "Una mod che ti permette di usare gli oggetti dell'inventario della tua rete di $(5)Applied Energistics 2$() direttamente nel multiblocco cucina di $(6)Cooking for Blockheads$()!$(br2)Viene aggiunto un nuovo blocco a Minecraft.",
   "entry.appliedcooking.kitchenstation.name": "Stazione da Cucina ME",
-  "entry.appliedcooking.kitchenstation.intro": "La $(l)Stazione da Cucina ME$() è l'unico blocco che ti serve per collegare $(6)Cooking for Blockheads$() con $(5)Applied Energistics 2$().$(br2)Posizionata nella tua cucina, offre l'intero inventario della tua $(5)rete ME$() al tavolo da cucina: ogni oggetto conservato diventa un ingrediente. Preleva persino $(o)fluidi$() come acqua e latte dallo stoccaggio della rete.$(br2)Fabbricala, collegala e mettila in cucina — ecco come.",
+  "entry.appliedcooking.kitchenstation.intro": "La $(l)Stazione da Cucina ME$() è l'unico blocco che ti serve per collegare $(6)Cooking for Blockheads$() con $(5)Applied Energistics 2$().$(br2)Posizionata nella tua cucina, offre l'intero inventario della tua $(5)rete ME$() al tavolo da cucina: ogni oggetto conservato diventa un ingrediente. Preleva persino $(o)fluidi$() come acqua e latte dallo stoccaggio della rete.$(br2)Fabbricala, collegala e mettila in cucina, ecco come.",
   "entry.appliedcooking.kitchenstation.craft": "Fabbrica la $(l)Stazione da Cucina ME$() come mostrato.$(br2)Appena fabbricata non è ancora collegata a nulla: il passo successivo la collega alla tua rete $(5)AE2$() così che sappia da dove prelevare.",
   "entry.appliedcooking.kitchenstation.link.title": "Collegarla",
-  "entry.appliedcooking.kitchenstation.link": "Colleghi la stazione a un $(5)Punto d'accesso wireless ME$() — lo stesso blocco che serve i terminali wireless.$(br2)$(l)Fai clic destro$() su un Punto d'accesso alimentato per aprirlo, inserisci la stazione nello slot del terminale, e tornerà $(2)collegata$() — riprendila.$(br2)Il collegamento è salvato sul blocco stesso, così la stazione raggiunge la rete da qualsiasi distanza — anche da un'altra dimensione.",
+  "entry.appliedcooking.kitchenstation.link": "Colleghi la stazione a un $(5)Punto d'accesso wireless ME$(), lo stesso blocco che serve i terminali wireless.$(br2)$(l)Fai clic destro$() su un Punto d'accesso alimentato per aprirlo, inserisci la stazione nello slot del terminale, e tornerà $(2)collegata$(), riprendila.$(br2)Il collegamento è salvato sul blocco stesso, così la stazione raggiunge la rete da qualsiasi distanza, anche da un'altra dimensione.",
   "entry.appliedcooking.kitchenstation.placement.title": "In Cucina",
-  "entry.appliedcooking.kitchenstation.placement": "Un esempio di disposizione della cucina — tocca l'occhio per l'anteprima nel mondo.",
+  "entry.appliedcooking.kitchenstation.placement": "Un esempio di disposizione della cucina, tocca l'occhio per l'anteprima nel mondo.",
   "entry.appliedcooking.kitchenstation.states.title": "Leggere lo Schermo",
-  "entry.appliedcooking.kitchenstation.states": "Lo schermo della stazione mostra il suo stato a colpo d'occhio.$(br2)$(5)Viola$() significa che è $(2)collegata e alimentata$() — il tavolo da cucina può ora cucinare con tutto ciò che si trova nella tua $(5)rete ME$(), acqua e latte inclusi, in cambio di un po' di energia.$(br2)$(4)Nero$() significa che non è connessa. Controlla che sia collegata a un Punto d'accesso, che la rete abbia energia a sufficienza e che il chunk del Punto d'accesso resti caricato.",
+  "entry.appliedcooking.kitchenstation.states": "Lo schermo della stazione mostra il suo stato a colpo d'occhio.$(br2)$(5)Viola$() significa che è $(2)collegata e alimentata$(), il tavolo da cucina può ora cucinare con tutto ciò che si trova nella tua $(5)rete ME$(), acqua e latte inclusi, in cambio di un po' di energia.$(br2)$(c)Rosso$() significa che è $(o)collegata ma la rete è irraggiungibile$(). Ha un Punto d'accesso salvato ma non riesce a comunicare con esso, quindi controlla che la rete abbia energia a sufficienza e che il chunk del Punto d'accesso resti caricato.$(br2)$(8)Scuro$() significa che non è ancora $(o)collegata$(). Apri un Punto d'accesso wireless in una rete alimentata e inserisci la stazione nel suo slot del terminale per collegarla.",
   "entry.appliedcooking.kitchenstation.connected.title": "Connessa",
+  "entry.appliedcooking.kitchenstation.linkedoffline.title": "Collegata, nessuna rete",
   "entry.appliedcooking.kitchenstation.disconnected.title": "Disconnessa"
 }

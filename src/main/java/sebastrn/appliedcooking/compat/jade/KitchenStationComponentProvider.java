@@ -23,13 +23,21 @@ public class KitchenStationComponentProvider implements IBlockComponentProvider 
         // 26.1's CompoundTag getters return Optional; use the *Or accessors so we still get a plain value (the old
         // getString/getDouble would compile but stringify an Optional into the tooltip).
         CompoundTag data = accessor.getServerData();
+        String linkState = data.getStringOr("linkState", "unlinked");
         String accessPointPos = data.getStringOr("accessPointPos", "");
-        if (!accessPointPos.isEmpty()) {
-            tooltip.add(Component.translatable("jade.appliedcooking:online"));
-            tooltip.add(Component.translatable("jade.appliedcooking:kitchen_station", Component.translatable("block.ae2.wireless_access_point"), accessPointPos));
-            tooltip.add(Component.translatable("jade.appliedcooking:power_drain", String.valueOf(data.getDoubleOr("powerDrain", 0))));
-        } else {
-            tooltip.add(Component.translatable("jade.appliedcooking:offline"));
+        switch (linkState) {
+            case "online" -> {
+                tooltip.add(Component.translatable("jade.appliedcooking:online"));
+                tooltip.add(Component.translatable("jade.appliedcooking:kitchen_station", Component.translatable("block.ae2.wireless_access_point"), accessPointPos));
+                tooltip.add(Component.translatable("jade.appliedcooking:power_drain", String.valueOf(data.getDoubleOr("powerDrain", 0))));
+            }
+            case "linked_offline" -> {
+                tooltip.add(Component.translatable("jade.appliedcooking:linked_offline"));
+                if (!accessPointPos.isEmpty()) {
+                    tooltip.add(Component.translatable("jade.appliedcooking:kitchen_station", Component.translatable("block.ae2.wireless_access_point"), accessPointPos));
+                }
+            }
+            default -> tooltip.add(Component.translatable("jade.appliedcooking:offline"));
         }
     }
 

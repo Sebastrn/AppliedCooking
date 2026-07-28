@@ -6,9 +6,10 @@
   "jade.appliedcooking:kitchen_station": "已连接至%s，位于%s",
   "jade.appliedcooking:online": "设备在线",
   "jade.appliedcooking:offline": "设备离线",
+  "jade.appliedcooking:linked_offline": "已链接（网络无法连接）",
   "jade.appliedcooking:power_drain": "正消耗%s AE/t",
 
-  "jei.appliedcooking.kitchen_station.1": "ME厨房终端站让你的Cooking for Blockheads烹饪桌能够直接使用Applied Energistics 2网络中的物品——以及水和牛奶之类的流体——进行烹饪。",
+  "jei.appliedcooking.kitchen_station.1": "ME厨房终端站让你的Cooking for Blockheads烹饪桌能够直接使用Applied Energistics 2网络中的物品，以及水和牛奶之类的流体，进行烹饪。",
   "jei.appliedcooking.kitchen_station.2": "要绑定它，请打开已通电网络上的ME无线访问点，将终端站放入其无线终端槽中，然后再取出。绑定信息保存在方块上，只要访问点所在区块保持加载，即使跨维度也能工作。",
   "jei.appliedcooking.kitchen_station.3": "将绑定好的终端站放入你的厨房，紧邻烹饪桌，或通过厨柜相连。连接时其屏幕会发出紫色光芒，运行时会从网络中消耗少量电力。",
 
@@ -17,14 +18,15 @@
   "category.appliedcooking.name": "Applied Cooking",
   "category.appliedcooking.description": "一个让你能够在$(6)Cooking for Blockheads$()厨房多方块结构中直接使用$(5)Applied Energistics 2$()网络存储物品的模组！$(br2)向Minecraft添加了一个新方块。",
   "entry.appliedcooking.kitchenstation.name": "ME厨房终端站",
-  "entry.appliedcooking.kitchenstation.intro": "$(l)ME厨房终端站$()是连接$(6)Cooking for Blockheads$()与$(5)Applied Energistics 2$()所需的唯一方块。$(br2)放入厨房后，它会将你整个$(5)ME网络$()的存储提供给烹饪桌——每一件存储的物品都成为食材。它甚至能从网络存储中抽取水和牛奶之类的$(o)流体$()。$(br2)制作它、绑定它，然后放进厨房——方法如下。",
-  "entry.appliedcooking.kitchenstation.craft": "按图所示制作$(l)ME厨房终端站$()。$(br2)刚制作出来时它还没有绑定任何东西——下一步会将它绑定到你的$(5)AE2$()网络，好让它知道从哪里抽取物品。",
+  "entry.appliedcooking.kitchenstation.intro": "$(l)ME厨房终端站$()是连接$(6)Cooking for Blockheads$()与$(5)Applied Energistics 2$()所需的唯一方块。$(br2)放入厨房后，它会将你整个$(5)ME网络$()的存储提供给烹饪桌，每一件存储的物品都成为食材。它甚至能从网络存储中抽取水和牛奶之类的$(o)流体$()。$(br2)制作它、绑定它，然后放进厨房，方法如下。",
+  "entry.appliedcooking.kitchenstation.craft": "按图所示制作$(l)ME厨房终端站$()。$(br2)刚制作出来时它还没有绑定任何东西，下一步会将它绑定到你的$(5)AE2$()网络，好让它知道从哪里抽取物品。",
   "entry.appliedcooking.kitchenstation.link.title": "绑定",
-  "entry.appliedcooking.kitchenstation.link": "你需要在$(5)ME无线访问点$()上绑定终端站——也就是为无线终端提供服务的那个方块。$(br2)$(l)右键点击$()一个已通电的访问点将其打开，把终端站放入其终端槽，它便会$(2)绑定$()完成并返回——再取出即可。$(br2)绑定信息保存在方块本身，因此无论多远，终端站都能连接到网络——即使身处另一个维度。",
+  "entry.appliedcooking.kitchenstation.link": "你需要在$(5)ME无线访问点$()上绑定终端站，也就是为无线终端提供服务的那个方块。$(br2)$(l)右键点击$()一个已通电的访问点将其打开，把终端站放入其终端槽，它便会$(2)绑定$()完成并返回，再取出即可。$(br2)绑定信息保存在方块本身，因此无论多远，终端站都能连接到网络，即使身处另一个维度。",
   "entry.appliedcooking.kitchenstation.placement.title": "在厨房中",
-  "entry.appliedcooking.kitchenstation.placement": "一个厨房布局示例——点击眼睛图标可在世界中预览。",
+  "entry.appliedcooking.kitchenstation.placement": "一个厨房布局示例，点击眼睛图标可在世界中预览。",
   "entry.appliedcooking.kitchenstation.states.title": "读懂屏幕",
-  "entry.appliedcooking.kitchenstation.states": "终端站的屏幕能让你一眼看出它的状态。$(br2)$(5)紫色$()表示它已$(2)绑定并通电$()——烹饪桌现在可以使用你整个$(5)ME网络$()中的一切进行烹饪，包括水和牛奶，只需消耗少量电力。$(br2)$(4)黑色$()表示它尚未连接。请检查它是否已绑定到访问点、网络是否有富余电力，以及访问点所在区块是否保持加载。",
+  "entry.appliedcooking.kitchenstation.states": "终端站的屏幕能让你一眼看出它的状态。$(br2)$(5)紫色$()表示它已$(2)绑定并通电$()，烹饪桌现在可以使用你整个$(5)ME网络$()中的一切进行烹饪，包括水和牛奶，只需消耗少量电力。$(br2)$(c)红色$()表示它已$(o)绑定但无法连接到网络$()。它已保存访问点，却无法与其通信，因此请检查网络是否有富余电力，以及访问点所在区块是否保持加载。$(br2)$(8)暗色$()表示它尚未$(o)绑定$()。在已通电的网络上打开一个无线访问点，将终端站放入其终端槽即可完成绑定。",
   "entry.appliedcooking.kitchenstation.connected.title": "已连接",
+  "entry.appliedcooking.kitchenstation.linkedoffline.title": "已链接，无网络",
   "entry.appliedcooking.kitchenstation.disconnected.title": "已断开"
 }

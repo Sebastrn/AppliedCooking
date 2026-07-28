@@ -2,7 +2,8 @@ package sebastrn.appliedcooking.compat.theoneprobe;
 
 // ⚠️ DISABLED for 26.1.2 — The One Probe has no 26.1 build (McJty's k-4u maven ends at 1.21_neo), so its API is not
 // on the classpath and this class cannot compile. The whole body is block-commented below; re-enable it together
-// with the TOP dependency in build.gradle and the wiring in AppliedCooking when a 26.1 TOP ships. Kept verbatim.
+// with the TOP dependency in build.gradle and the wiring in AppliedCooking when a 26.1 TOP ships. Kept in sync with
+// the Jade providers: reads the tri-state getLinkState() (online / linked_offline / unlinked), not the old boolean.
 /*
 import sebastrn.appliedcooking.AppliedCooking;
 import sebastrn.appliedcooking.block.KitchenStationBlock;
@@ -50,12 +51,17 @@ public class TheOneProbeAddon {
             if (state.getBlock() instanceof KitchenStationBlock) {
                 var kitchenStationBlockEntity = tryGetTileEntity(level, data.getPos(), KitchenStationBlockEntity.class);
                 if (kitchenStationBlockEntity != null) {
-                    if (!kitchenStationBlockEntity.getAccessPointPos().isEmpty()) {
-                        info.mcText(Component.translatable("jade.appliedcooking:online").withStyle(ChatFormatting.GRAY));
-                        info.mcText(Component.translatable("jade.appliedcooking:kitchen_station", Component.translatable("block.ae2.wireless_access_point"), kitchenStationBlockEntity.getAccessPointPos()).withStyle(ChatFormatting.GRAY));
-                        info.mcText(Component.translatable("jade.appliedcooking:power_drain", String.valueOf(KitchenStationBlockEntity.idlePowerDrain())).withStyle(ChatFormatting.GRAY));
-                    } else {
-                        info.mcText(Component.translatable("jade.appliedcooking:offline").withStyle(ChatFormatting.GRAY));
+                    switch (kitchenStationBlockEntity.getLinkState()) {
+                        case ONLINE -> {
+                            info.mcText(Component.translatable("jade.appliedcooking:online").withStyle(ChatFormatting.GRAY));
+                            info.mcText(Component.translatable("jade.appliedcooking:kitchen_station", Component.translatable("block.ae2.wireless_access_point"), kitchenStationBlockEntity.getAccessPointPos()).withStyle(ChatFormatting.GRAY));
+                            info.mcText(Component.translatable("jade.appliedcooking:power_drain", String.valueOf(KitchenStationBlockEntity.idlePowerDrain())).withStyle(ChatFormatting.GRAY));
+                        }
+                        case LINKED_OFFLINE -> {
+                            info.mcText(Component.translatable("jade.appliedcooking:linked_offline").withStyle(ChatFormatting.GRAY));
+                            info.mcText(Component.translatable("jade.appliedcooking:kitchen_station", Component.translatable("block.ae2.wireless_access_point"), kitchenStationBlockEntity.getAccessPointPos()).withStyle(ChatFormatting.GRAY));
+                        }
+                        default -> info.mcText(Component.translatable("jade.appliedcooking:offline").withStyle(ChatFormatting.GRAY));
                     }
                 }
             }

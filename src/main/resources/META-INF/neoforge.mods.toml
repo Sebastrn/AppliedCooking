@@ -54,7 +54,7 @@ versionRange = "*"
 ordering = "AFTER"
 side = "BOTH"
 
-# Soft integrations — discovered by each mod's own plugin system (Jade @WailaPlugin, JEI @JeiPlugin).
+# Soft integrations, discovered by each mod's own plugin system (Jade @WailaPlugin, JEI @JeiPlugin).
 # Declared optional only for documentation + load order.
 [[dependencies.appliedcooking]]
 modId = "jade"
@@ -63,7 +63,7 @@ versionRange = "*"
 ordering = "AFTER"
 side = "BOTH"
 
-# The One Probe has no 26.1 build — integration commented out for 26.1.2 (re-add this block when TOP ships for 26.1).
+# The One Probe has no 26.1 build, so integration is commented out for 26.1.2 (re-add this block when TOP ships for 26.1).
 # [[dependencies.appliedcooking]]
 # modId = "theoneprobe"
 # type = "optional"

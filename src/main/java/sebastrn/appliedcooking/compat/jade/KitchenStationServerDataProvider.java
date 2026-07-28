@@ -15,6 +15,7 @@ public class KitchenStationServerDataProvider implements IServerDataProvider<Blo
     @Override
     public void appendServerData(CompoundTag data, BlockAccessor accessor) {
         KitchenStationBlockEntity kitchenStation = (KitchenStationBlockEntity) accessor.getBlockEntity();
+        data.putString("linkState", kitchenStation.getLinkState().getSerializedName());
         data.putString("accessPointPos", kitchenStation.getAccessPointPos());
         // Send the drain rather than reading the config client-side: it's a server config, so the client's copy is
         // only correct once synced, and on a server the authoritative value is the one we're actually charging.

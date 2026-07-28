@@ -24,6 +24,7 @@ import sebastrn.appliedcooking.AppliedCooking;
 import sebastrn.appliedcooking.AppliedCookingBlockEntities;
 import sebastrn.appliedcooking.api.cookingforblockheads.capability.MEKitchenItemProvider;
 import sebastrn.appliedcooking.block.KitchenStationBlock;
+import sebastrn.appliedcooking.block.KitchenStationBlock.LinkState;
 
 public class KitchenStationBlockEntity extends BlockEntity implements KitchenItemProviderHolder {
 
@@ -68,11 +69,12 @@ public class KitchenStationBlockEntity extends BlockEntity implements KitchenIte
         return itemProvider;
     }
 
-    /** CONNECTED drives the block model, so only rewrite the state (and re-save) when it actually flips. */
-    private void updateConnectedState(boolean connected) {
+    /** LINK_STATE drives the block model, so only rewrite the state (and re-save) when it actually changes. */
+    private void updateLinkState() {
         BlockState state = level.getBlockState(worldPosition);
-        if (state.getValue(KitchenStationBlock.CONNECTED) != connected) {
-            level.setBlockAndUpdate(worldPosition, state.setValue(KitchenStationBlock.CONNECTED, connected));
+        LinkState current = getLinkState();
+        if (state.getValue(KitchenStationBlock.LINK_STATE) != current) {
+            level.setBlockAndUpdate(worldPosition, state.setValue(KitchenStationBlock.LINK_STATE, current));
             setChanged();
         }
     }
@@ -115,15 +117,32 @@ public class KitchenStationBlockEntity extends BlockEntity implements KitchenIte
     /**
      * True only while the station is linked to an active access point on a grid that can pay the
      * {@link #idlePowerDrain() idle power cost}. {@link #grid} is set only when all of that holds, so this is simply
-     * "do we have a live grid". The CONNECTED block model, the Jade/TOP tooltips, and {@link #getNetworkStorage()} all
-     * key off it — a linked-but-unpowered station counts as disconnected.
+     * "do we have a live grid". {@link #getNetworkStorage()} keys off it, and it is what separates
+     * {@link LinkState#ONLINE} from {@link LinkState#LINKED_OFFLINE}: a linked-but-unpowered station is not connected.
      */
     public boolean isConnected() {
         return grid != null;
     }
 
+    /** True once an access point is saved (from linking at a Wireless Access Point), whether or not it is reachable. */
+    public boolean isLinked() {
+        return accessPointPos != null;
+    }
+
+    /**
+     * The three-way link state read by the blockstate model and the Jade/TOP tooltips. Derived, not stored:
+     * a live {@link #grid} means ONLINE, a saved-but-unreachable link means LINKED_OFFLINE, otherwise UNLINKED.
+     */
+    public LinkState getLinkState() {
+        if (isConnected()) {
+            return LinkState.ONLINE;
+        }
+        return isLinked() ? LinkState.LINKED_OFFLINE : LinkState.UNLINKED;
+    }
+
+    /** Formatted access-point coordinates, shown whenever the station is linked (online or offline); "" when unlinked. */
     public String getAccessPointPos() {
-        if (isConnected() && accessPointPos != null) {
+        if (accessPointPos != null) {
             return accessPointPos.pos().getX() + ", " + accessPointPos.pos().getY() + ", " + accessPointPos.pos().getZ();
         }
         return "";
@@ -190,7 +209,7 @@ public class KitchenStationBlockEntity extends BlockEntity implements KitchenIte
             resolveAccessPoint();
         }
         refreshConnection();
-        updateConnectedState(isConnected());
+        updateLinkState();
     }
 
     /**

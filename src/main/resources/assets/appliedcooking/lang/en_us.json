@@ -6,9 +6,10 @@
   "jade.appliedcooking:kitchen_station": "Connected to %s at %s",
   "jade.appliedcooking:online": "Device Online",
   "jade.appliedcooking:offline": "Device Offline",
+  "jade.appliedcooking:linked_offline": "Linked (Network Unreachable)",
   "jade.appliedcooking:power_drain": "Draining %s AE/t",
 
-  "jei.appliedcooking.kitchen_station.1": "The ME Kitchen Station lets your Cooking for Blockheads cooking table craft with items — and fluids like water and milk — straight from your Applied Energistics 2 network.",
+  "jei.appliedcooking.kitchen_station.1": "The ME Kitchen Station lets your Cooking for Blockheads cooking table craft with items (and fluids like water and milk) straight from your Applied Energistics 2 network.",
   "jei.appliedcooking.kitchen_station.2": "To link it, open an ME Wireless Access Point on your powered network, drop the station into its wireless-terminal slot, and take it back out. The link is saved on the block and works even across dimensions, as long as the Access Point stays chunk-loaded.",
   "jei.appliedcooking.kitchen_station.3": "Place the linked station in your kitchen, next to the cooking table or wired in through counters. Its screen glows purple when connected, and it draws a little power from the network while running.",
 
@@ -17,14 +18,15 @@
   "category.appliedcooking.name": "Applied Cooking",
   "category.appliedcooking.description": "A mod that allows you to use items from your $(5)Applied Energistics 2$() network inventory directly in your $(6)Cooking for Blockheads$() kitchen multi-block!$(br2)One new block is added to Minecraft.",
   "entry.appliedcooking.kitchenstation.name": "ME Kitchen Station",
-  "entry.appliedcooking.kitchenstation.intro": "The $(l)ME Kitchen Station$() is the one block you need to bridge $(6)Cooking for Blockheads$() with $(5)Applied Energistics 2$().$(br2)Placed in your kitchen, it hands your whole $(5)ME network$() inventory to the Cooking Table — every stored item becomes an ingredient. It even pulls $(o)fluids$() like water and milk from network storage.$(br2)Craft it, link it, and drop it into your kitchen — here's how.",
-  "entry.appliedcooking.kitchenstation.craft": "Craft the $(l)ME Kitchen Station$() as shown.$(br2)Straight out of the grid it isn't tied to anything yet — the next step links it to your $(5)AE2$() network so it knows where to pull from.",
+  "entry.appliedcooking.kitchenstation.intro": "The $(l)ME Kitchen Station$() is the one block you need to bridge $(6)Cooking for Blockheads$() with $(5)Applied Energistics 2$().$(br2)Placed in your kitchen, it hands your whole $(5)ME network$() inventory to the Cooking Table, so every stored item becomes an ingredient. It even pulls $(o)fluids$() like water and milk from network storage.$(br2)Craft it, link it, and drop it into your kitchen. Here's how.",
+  "entry.appliedcooking.kitchenstation.craft": "Craft the $(l)ME Kitchen Station$() as shown.$(br2)Straight out of the grid it isn't tied to anything yet. The next step links it to your $(5)AE2$() network so it knows where to pull from.",
   "entry.appliedcooking.kitchenstation.link.title": "Linking It",
-  "entry.appliedcooking.kitchenstation.link": "You link the Station at an $(5)ME Wireless Access Point$() — the same block that serves wireless terminals.$(br2)$(l)Right-click$() a powered Access Point to open it, drop the Station into its wireless-terminal slot, and it comes back $(2)linked$() — take it out again.$(br2)The link is saved on the block itself, so the Station keeps reaching the network from any distance — even another dimension.",
+  "entry.appliedcooking.kitchenstation.link": "You link the Station at an $(5)ME Wireless Access Point$(), the same block that serves wireless terminals.$(br2)$(l)Right-click$() a powered Access Point to open it, drop the Station into its wireless-terminal slot, and it comes back $(2)linked$(); take it out again.$(br2)The link is saved on the block itself, so the Station keeps reaching the network from any distance, even another dimension.",
   "entry.appliedcooking.kitchenstation.placement.title": "In The Kitchen",
-  "entry.appliedcooking.kitchenstation.placement": "An example kitchen layout — tap the eye to preview it in the world.",
+  "entry.appliedcooking.kitchenstation.placement": "An example kitchen layout. Tap the eye to preview it in the world.",
   "entry.appliedcooking.kitchenstation.states.title": "Reading the Screen",
-  "entry.appliedcooking.kitchenstation.states": "The Station's screen shows its status at a glance.$(br2)$(5)Purple$() means it's $(2)linked and powered$() — the Cooking Table can now cook with everything in your $(5)ME network$(), water and milk included, for a little power.$(br2)$(4)Black$() means it isn't connected. Check that it's linked to an Access Point, that the network has power to spare, and that the Access Point's chunk stays loaded.",
+  "entry.appliedcooking.kitchenstation.states": "The Station's screen shows its status at a glance.$(br2)$(5)Purple$() means it's $(2)linked and powered$(): the Cooking Table can cook with everything in your $(5)ME network$(), water and milk included, for a little power.$(br2)$(c)Red$() means it's $(o)linked but the network is out of reach$(). It has an Access Point saved but can't talk to it, so check the network has power to spare and that the Access Point's chunk stays loaded.$(br2)$(8)Dark$() means it isn't $(o)linked$() yet. Open a Wireless Access Point on a powered network and drop the Station into its terminal slot to link it.",
   "entry.appliedcooking.kitchenstation.connected.title": "Connected",
+  "entry.appliedcooking.kitchenstation.linkedoffline.title": "Linked, No Network",
   "entry.appliedcooking.kitchenstation.disconnected.title": "Disconnected"
 }
