@@ -2,6 +2,13 @@
 
 All notable changes to **Applied Cooking** are listed here.
 
+## 6.2.1
+
+### Fixed
+- **The Kitchen Station screen now glows.** The emissive display intended for 6.2.0 was missing from the model,
+  so the screen never lit up. It now renders bright: brightest when online, dimmer for the linked-but-unreachable
+  state, and off when unlinked.
+
 ## 6.2.0
 
 A visual overhaul of the ME Kitchen Station. No gameplay changes.
