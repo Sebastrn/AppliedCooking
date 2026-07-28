@@ -3,7 +3,7 @@
   "landing_text": "appliedcooking.guide.landing",
   "show_progress": false,
   "version": 1,
-  "book_texture": "appliedcooking:textures/gui/book_maroon.png",
+  "book_texture": "appliedcooking:textures/gui/book.png",
   "model": "appliedcooking:guidebook",
   "i18n": true,
   "index_icon": "appliedcooking:kitchen_station",

@@ -51,7 +51,7 @@ versionRange = "*"
 ordering = "AFTER"
 side = "BOTH"
 
-# Soft integrations — discovered by each mod's own plugin system (Jade @WailaPlugin, JEI @JeiPlugin)
+# Soft integrations, discovered by each mod's own plugin system (Jade @WailaPlugin, JEI @JeiPlugin)
 # or via IMC guarded by Balm.isModLoaded (TOP). Declared optional only for documentation + load order.
 [[dependencies.appliedcooking]]
 modId = "jade"

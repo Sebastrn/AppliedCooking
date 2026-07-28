@@ -6,9 +6,10 @@
   "jade.appliedcooking:kitchen_station": "Connectée à %s en %s",
   "jade.appliedcooking:online": "Appareil en ligne",
   "jade.appliedcooking:offline": "Appareil hors ligne",
+  "jade.appliedcooking:linked_offline": "Liée (réseau injoignable)",
   "jade.appliedcooking:power_drain": "Consomme %s AE/t",
 
-  "jei.appliedcooking.kitchen_station.1": "La Station de cuisine ME permet à votre table de cuisson Cooking for Blockheads de cuisiner avec des objets — et des fluides comme l'eau et le lait — directement depuis votre réseau Applied Energistics 2.",
+  "jei.appliedcooking.kitchen_station.1": "La Station de cuisine ME permet à votre table de cuisson Cooking for Blockheads de cuisiner avec des objets, et des fluides comme l'eau et le lait, directement depuis votre réseau Applied Energistics 2.",
   "jei.appliedcooking.kitchen_station.2": "Pour la lier, ouvrez un Point d'accès sans-fil ME sur votre réseau alimenté, déposez la station dans son emplacement de terminal sans-fil, puis reprenez-la. La liaison est enregistrée sur le bloc et fonctionne même entre les dimensions, tant que le chunk du Point d'accès reste chargé.",
   "jei.appliedcooking.kitchen_station.3": "Placez la station liée dans votre cuisine, à côté de la table de cuisson ou reliée par des plans de travail. Son écran devient violet lorsqu'elle est connectée, et elle consomme un peu d'énergie du réseau en fonctionnant.",
 
@@ -17,14 +18,15 @@
   "category.appliedcooking.name": "Applied Cooking",
   "category.appliedcooking.description": "Un mod qui vous permet d'utiliser les objets de l'inventaire de votre réseau $(5)Applied Energistics 2$() directement dans le multibloc de cuisine $(6)Cooking for Blockheads$() !$(br2)Un nouveau bloc est ajouté à Minecraft.",
   "entry.appliedcooking.kitchenstation.name": "Station de cuisine ME",
-  "entry.appliedcooking.kitchenstation.intro": "La $(l)Station de cuisine ME$() est le seul bloc dont vous avez besoin pour relier $(6)Cooking for Blockheads$() à $(5)Applied Energistics 2$().$(br2)Placée dans votre cuisine, elle offre tout l'inventaire de votre $(5)réseau ME$() à la table de cuisson — chaque objet stocké devient un ingrédient. Elle puise même des $(o)fluides$() comme l'eau et le lait dans le stockage du réseau.$(br2)Fabriquez-la, liez-la et posez-la dans votre cuisine — voici comment.",
-  "entry.appliedcooking.kitchenstation.craft": "Fabriquez la $(l)Station de cuisine ME$() comme indiqué.$(br2)Tout juste fabriquée, elle n'est encore liée à rien — l'étape suivante la relie à votre réseau $(5)AE2$() pour qu'elle sache où puiser.",
+  "entry.appliedcooking.kitchenstation.intro": "La $(l)Station de cuisine ME$() est le seul bloc dont vous avez besoin pour relier $(6)Cooking for Blockheads$() à $(5)Applied Energistics 2$().$(br2)Placée dans votre cuisine, elle offre tout l'inventaire de votre $(5)réseau ME$() à la table de cuisson, chaque objet stocké devient un ingrédient. Elle puise même des $(o)fluides$() comme l'eau et le lait dans le stockage du réseau.$(br2)Fabriquez-la, liez-la et posez-la dans votre cuisine, voici comment.",
+  "entry.appliedcooking.kitchenstation.craft": "Fabriquez la $(l)Station de cuisine ME$() comme indiqué.$(br2)Tout juste fabriquée, elle n'est encore liée à rien, l'étape suivante la relie à votre réseau $(5)AE2$() pour qu'elle sache où puiser.",
   "entry.appliedcooking.kitchenstation.link.title": "La lier",
-  "entry.appliedcooking.kitchenstation.link": "Vous liez la station à un $(5)Point d'accès sans-fil ME$() — le même bloc qui alimente les terminaux sans-fil.$(br2)$(l)Faites un clic droit$() sur un Point d'accès alimenté pour l'ouvrir, déposez la station dans son emplacement de terminal, et elle revient $(2)liée$() — reprenez-la.$(br2)La liaison est enregistrée sur le bloc lui-même, donc la station atteint le réseau depuis n'importe quelle distance — même depuis une autre dimension.",
+  "entry.appliedcooking.kitchenstation.link": "Vous liez la station à un $(5)Point d'accès sans-fil ME$(), le même bloc qui alimente les terminaux sans-fil.$(br2)$(l)Faites un clic droit$() sur un Point d'accès alimenté pour l'ouvrir, déposez la station dans son emplacement de terminal, et elle revient $(2)liée$(), reprenez-la.$(br2)La liaison est enregistrée sur le bloc lui-même, donc la station atteint le réseau depuis n'importe quelle distance, même depuis une autre dimension.",
   "entry.appliedcooking.kitchenstation.placement.title": "Dans la Cuisine",
-  "entry.appliedcooking.kitchenstation.placement": "Un exemple d'agencement de cuisine — touchez l'œil pour l'aperçu dans le monde.",
+  "entry.appliedcooking.kitchenstation.placement": "Un exemple d'agencement de cuisine, touchez l'œil pour l'aperçu dans le monde.",
   "entry.appliedcooking.kitchenstation.states.title": "Lire l'Écran",
-  "entry.appliedcooking.kitchenstation.states": "L'écran de la station indique son état en un coup d'œil.$(br2)$(5)Violet$() signifie qu'elle est $(2)liée et alimentée$() — la table de cuisson peut désormais cuisiner avec tout ce qui se trouve dans votre $(5)réseau ME$(), l'eau et le lait compris, moyennant un peu d'énergie.$(br2)$(4)Noir$() signifie qu'elle n'est pas connectée. Vérifiez qu'elle est liée à un Point d'accès, que le réseau dispose d'assez d'énergie et que le chunk du Point d'accès reste chargé.",
+  "entry.appliedcooking.kitchenstation.states": "L'écran de la station indique son état en un coup d'œil.$(br2)$(5)Violet$() signifie qu'elle est $(2)liée et alimentée$(), la table de cuisson peut désormais cuisiner avec tout ce qui se trouve dans votre $(5)réseau ME$(), l'eau et le lait compris, moyennant un peu d'énergie.$(br2)$(c)Rouge$() signifie qu'elle est $(o)liée mais que le réseau est hors de portée$(). Elle a un Point d'accès enregistré mais ne parvient pas à le joindre : vérifiez que le réseau dispose d'assez d'énergie et que le chunk du Point d'accès reste chargé.$(br2)$(8)Sombre$() signifie qu'elle n'est pas encore $(o)liée$(). Ouvrez un Point d'accès sans-fil sur un réseau alimenté et placez la station dans son emplacement de terminal pour la lier.",
   "entry.appliedcooking.kitchenstation.connected.title": "Connectée",
+  "entry.appliedcooking.kitchenstation.linkedoffline.title": "Liée, pas de réseau",
   "entry.appliedcooking.kitchenstation.disconnected.title": "Déconnectée"
 }

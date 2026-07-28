@@ -3,9 +3,9 @@
 	"credit": "Applied Cooking - Kitchen Station",
 	"parent": "block/block",
 	"textures": {
-		"particle": "appliedcooking:block/kitchen_station_body_connected",
-		"body": "appliedcooking:block/kitchen_station_body_connected",
-		"screen": "appliedcooking:block/kitchen_station_screen_connected"
+		"particle": "appliedcooking:block/kitchen_station_body_linked_offline",
+		"body": "appliedcooking:block/kitchen_station_body_linked_offline",
+		"screen": "appliedcooking:block/kitchen_station_screen_linked_offline"
 	},
 	"elements": [
 		{
@@ -52,7 +52,7 @@
 			"from": [2, 4, 3],
 			"to": [14, 6, 13],
 			"rotation": {"angle": -45, "axis": "x", "origin": [8, 4, 3]},
-			"neoforge_data": { "block_light": 15 },
+			"neoforge_data": { "block_light": 10 },
 			"faces": {
 				"north": {"uv": [0, 10, 12, 12], "texture": "#screen"},
 				"east": {"uv": [10, 14, 0, 16], "texture": "#screen"},

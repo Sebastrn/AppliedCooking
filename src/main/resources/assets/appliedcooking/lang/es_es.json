@@ -6,9 +6,10 @@
   "jade.appliedcooking:kitchen_station": "Conectada a %s en %s",
   "jade.appliedcooking:online": "Dispositivo en línea",
   "jade.appliedcooking:offline": "Dispositivo desconectado",
+  "jade.appliedcooking:linked_offline": "Vinculada (red inaccesible)",
   "jade.appliedcooking:power_drain": "Consumiendo %s AE/t",
 
-  "jei.appliedcooking.kitchen_station.1": "La ME Estación de Cocina permite que tu mesa de cocina de Cooking for Blockheads cocine con objetos —y fluidos como agua y leche— directamente desde tu red de Applied Energistics 2.",
+  "jei.appliedcooking.kitchen_station.1": "La ME Estación de Cocina permite que tu mesa de cocina de Cooking for Blockheads cocine con objetos y fluidos como agua y leche directamente desde tu red de Applied Energistics 2.",
   "jei.appliedcooking.kitchen_station.2": "Para vincularla, abre un ME Punto de Acceso Inalámbrico en tu red con energía, coloca la estación en su ranura de terminal inalámbrica y vuelve a sacarla. El vínculo se guarda en el bloque y funciona incluso entre dimensiones, siempre que el Punto de Acceso siga con su chunk cargado.",
   "jei.appliedcooking.kitchen_station.3": "Coloca la estación vinculada en tu cocina, junto a la mesa de cocina o conectada mediante encimeras. Su pantalla brilla en morado cuando está conectada, y consume un poco de energía de la red mientras funciona.",
 
@@ -24,7 +25,8 @@
   "entry.appliedcooking.kitchenstation.placement.title": "En la Cocina",
   "entry.appliedcooking.kitchenstation.placement": "Un ejemplo de distribución de cocina; toca el ojo para previsualizarla en el mundo.",
   "entry.appliedcooking.kitchenstation.states.title": "Leer la Pantalla",
-  "entry.appliedcooking.kitchenstation.states": "La pantalla de la estación muestra su estado de un vistazo.$(br2)$(5)Morado$() significa que está $(2)vinculada y con energía$(): la mesa de cocina ya puede cocinar con todo lo que hay en tu $(5)red ME$(), agua y leche incluidas, a cambio de un poco de energía.$(br2)$(4)Negro$() significa que no está conectada. Comprueba que esté vinculada a un Punto de Acceso, que la red tenga energía de sobra y que el chunk del Punto de Acceso siga cargado.",
+  "entry.appliedcooking.kitchenstation.states": "La pantalla de la estación muestra su estado de un vistazo.$(br2)$(5)Morado$() significa que está $(2)vinculada y con energía$(): la mesa de cocina ya puede cocinar con todo lo que hay en tu $(5)red ME$(), agua y leche incluidas, a cambio de un poco de energía.$(br2)$(c)Rojo$() significa que está $(o)vinculada pero la red está fuera de alcance$(). Tiene un Punto de Acceso guardado pero no puede comunicarse con él, así que comprueba que la red tenga energía de sobra y que el chunk del Punto de Acceso siga cargado.$(br2)$(8)Oscuro$() significa que aún no está $(o)vinculada$(). Abre un Punto de Acceso Inalámbrico en una red con energía y coloca la estación en su ranura de terminal para vincularla.",
   "entry.appliedcooking.kitchenstation.connected.title": "Conectada",
+  "entry.appliedcooking.kitchenstation.linkedoffline.title": "Vinculada, sin red",
   "entry.appliedcooking.kitchenstation.disconnected.title": "Desconectada"
 }

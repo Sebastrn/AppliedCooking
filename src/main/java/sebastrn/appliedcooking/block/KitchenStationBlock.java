@@ -3,6 +3,7 @@ package sebastrn.appliedcooking.block;
 import com.mojang.serialization.MapCodec;
 import net.blay09.mods.cookingforblockheads.block.BaseKitchenBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -14,7 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -25,15 +26,47 @@ public class KitchenStationBlock extends BaseKitchenBlock {
 
     public static final MapCodec<KitchenStationBlock> CODEC = simpleCodec(KitchenStationBlock::new);
 
-    private static final VoxelShape SHAPE_NORTH = Block.box(3, -1, 6, 13, 7.5, 13);
-    private static final VoxelShape SHAPE_SOUTH = Block.box(3, -1, 3, 13, 7.5, 10);
-    private static final VoxelShape SHAPE_EAST = Block.box(3, -1, 3, 10, 7.5, 13);
-    private static final VoxelShape SHAPE_WEST = Block.box(6, -1, 3, 13, 7.5, 13);
-    public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
+    // Single-box hitbox sized to the model's overall extent. SHAPE_NORTH is the raw model (facing=north, y=0 in the
+    // blockstate); the other three are it rotated about the block centre to match the blockstate's y-rotation, so the
+    // hitbox and model always turn together. The top (y=12.5) is the peak of the -45-degree screen; refit if the
+    // screen angle changes.
+    private static final VoxelShape SHAPE_NORTH = Block.box(1, 0, 1.5, 15, 12.5, 14);
+    private static final VoxelShape SHAPE_EAST = Block.box(2, 0, 1, 14.5, 12.5, 15);
+    private static final VoxelShape SHAPE_SOUTH = Block.box(1, 0, 2, 15, 12.5, 14.5);
+    private static final VoxelShape SHAPE_WEST = Block.box(1.5, 0, 1, 14, 12.5, 15);
+
+    /**
+     * The Kitchen Station's link/connection state, set by the block entity each tick and read by the blockstate
+     * models, the item, and the Jade/TOP tooltips. Three values so the model can show every case distinctly:
+     * <ul>
+     *   <li>{@link LinkState#UNLINKED} - no access point saved (dark screen).</li>
+     *   <li>{@link LinkState#LINKED_OFFLINE} - linked, but the network is unreachable/unpowered (red-amber screen).</li>
+     *   <li>{@link LinkState#ONLINE} - linked and drawing power from a live grid (purple screen).</li>
+     * </ul>
+     * Replaces the old {@code connected} boolean, which folded the linked-but-unreachable case into "disconnected".
+     */
+    public enum LinkState implements StringRepresentable {
+        UNLINKED("unlinked"),
+        LINKED_OFFLINE("linked_offline"),
+        ONLINE("online");
+
+        private final String name;
+
+        LinkState(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return name;
+        }
+    }
+
+    public static final EnumProperty<LinkState> LINK_STATE = EnumProperty.create("link_state", LinkState.class);
 
     public KitchenStationBlock(Properties properties) {
         super(properties);
-        registerDefaultState(getStateDefinition().any().setValue(CONNECTED, false));
+        registerDefaultState(getStateDefinition().any().setValue(LINK_STATE, LinkState.UNLINKED));
     }
 
     @Override
@@ -44,7 +77,7 @@ public class KitchenStationBlock extends BaseKitchenBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(CONNECTED);
+        builder.add(LINK_STATE);
     }
 
     @Override

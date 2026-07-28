@@ -6,9 +6,10 @@
   "jade.appliedcooking:kitchen_station": "Ansluten till %s vid %s",
   "jade.appliedcooking:online": "Enhet online",
   "jade.appliedcooking:offline": "Enhet offline",
+  "jade.appliedcooking:linked_offline": "Länkad (nätverket kan inte nås)",
   "jade.appliedcooking:power_drain": "Förbrukar %s AE/t",
 
-  "jei.appliedcooking.kitchen_station.1": "ME-köksstationen låter ditt köksbord från Cooking for Blockheads laga mat med föremål — och vätskor som vatten och mjölk — direkt från ditt Applied Energistics 2-nätverk.",
+  "jei.appliedcooking.kitchen_station.1": "ME-köksstationen låter ditt köksbord från Cooking for Blockheads laga mat med föremål, och vätskor som vatten och mjölk, direkt från ditt Applied Energistics 2-nätverk.",
   "jei.appliedcooking.kitchen_station.2": "För att länka den, öppna en Trådlös ME-åtkomstpunkt på ditt strömförsörjda nätverk, lägg stationen i dess trådlösa terminalplats och ta ut den igen. Länken sparas på blocket och fungerar även mellan dimensioner, så länge åtkomstpunktens chunk är laddad.",
   "jei.appliedcooking.kitchen_station.3": "Placera den länkade stationen i ditt kök, bredvid köksbordet eller ansluten via bänkskivor. Dess skärm lyser lila när den är ansluten, och den förbrukar lite ström från nätverket medan den körs.",
 
@@ -17,14 +18,15 @@
   "category.appliedcooking.name": "Applied Cooking",
   "category.appliedcooking.description": "En mod som låter dig använda föremål från ditt $(5)Applied Energistics 2$()-nätverkslager direkt i ditt $(6)Cooking for Blockheads$()-köksmultiblock!$(br2)Ett nytt block läggs till i Minecraft.",
   "entry.appliedcooking.kitchenstation.name": "ME-köksstation",
-  "entry.appliedcooking.kitchenstation.intro": "$(l)ME-köksstationen$() är det enda block du behöver för att koppla ihop $(6)Cooking for Blockheads$() med $(5)Applied Energistics 2$().$(br2)Placerad i ditt kök ger den köksbordet hela ditt $(5)ME-nätverks$()lager — varje lagrat föremål blir en ingrediens. Den hämtar till och med $(o)vätskor$() som vatten och mjölk från nätverkslagret.$(br2)Tillverka den, länka den och ställ den i köket — så här gör du.",
-  "entry.appliedcooking.kitchenstation.craft": "Tillverka $(l)ME-köksstationen$() enligt bilden.$(br2)Nytillverkad är den ännu inte länkad till något — nästa steg länkar den till ditt $(5)AE2$()-nätverk så att den vet var den ska hämta ifrån.",
+  "entry.appliedcooking.kitchenstation.intro": "$(l)ME-köksstationen$() är det enda block du behöver för att koppla ihop $(6)Cooking for Blockheads$() med $(5)Applied Energistics 2$().$(br2)Placerad i ditt kök ger den köksbordet hela ditt $(5)ME-nätverks$()lager, varje lagrat föremål blir en ingrediens. Den hämtar till och med $(o)vätskor$() som vatten och mjölk från nätverkslagret.$(br2)Tillverka den, länka den och ställ den i köket, så här gör du.",
+  "entry.appliedcooking.kitchenstation.craft": "Tillverka $(l)ME-köksstationen$() enligt bilden.$(br2)Nytillverkad är den ännu inte länkad till något, nästa steg länkar den till ditt $(5)AE2$()-nätverk så att den vet var den ska hämta ifrån.",
   "entry.appliedcooking.kitchenstation.link.title": "Länka den",
-  "entry.appliedcooking.kitchenstation.link": "Du länkar stationen vid en $(5)Trådlös ME-åtkomstpunkt$() — samma block som betjänar trådlösa terminaler.$(br2)$(l)Högerklicka$() på en strömförsörjd åtkomstpunkt för att öppna den, lägg stationen i dess terminalplats, så kommer den tillbaka $(2)länkad$() — ta ut den igen.$(br2)Länken sparas på själva blocket, så stationen når nätverket från valfritt avstånd — även från en annan dimension.",
+  "entry.appliedcooking.kitchenstation.link": "Du länkar stationen vid en $(5)Trådlös ME-åtkomstpunkt$(), samma block som betjänar trådlösa terminaler.$(br2)$(l)Högerklicka$() på en strömförsörjd åtkomstpunkt för att öppna den, lägg stationen i dess terminalplats, så kommer den tillbaka $(2)länkad$(), ta ut den igen.$(br2)Länken sparas på själva blocket, så stationen når nätverket från valfritt avstånd, även från en annan dimension.",
   "entry.appliedcooking.kitchenstation.placement.title": "I Köket",
-  "entry.appliedcooking.kitchenstation.placement": "Ett exempel på köksupplägg — tryck på ögat för att förhandsvisa det i världen.",
+  "entry.appliedcooking.kitchenstation.placement": "Ett exempel på köksupplägg, tryck på ögat för att förhandsvisa det i världen.",
   "entry.appliedcooking.kitchenstation.states.title": "Läsa Skärmen",
-  "entry.appliedcooking.kitchenstation.states": "Stationens skärm visar dess status med en blick.$(br2)$(5)Lila$() betyder att den är $(2)länkad och strömförsörjd$() — köksbordet kan nu laga mat med allt i ditt $(5)ME-nätverk$(), vatten och mjölk inkluderat, mot lite ström.$(br2)$(4)Svart$() betyder att den inte är ansluten. Kontrollera att den är länkad till en åtkomstpunkt, att nätverket har ström att avvara och att åtkomstpunktens chunk är laddad.",
+  "entry.appliedcooking.kitchenstation.states": "Stationens skärm visar dess status med en blick.$(br2)$(5)Lila$() betyder att den är $(2)länkad och strömförsörjd$(), köksbordet kan nu laga mat med allt i ditt $(5)ME-nätverk$(), vatten och mjölk inkluderat, mot lite ström.$(br2)$(c)Rött$() betyder att den är $(o)länkad men att nätverket inte går att nå$(). Den har en åtkomstpunkt sparad men kan inte nå den, så kontrollera att nätverket har ström att avvara och att åtkomstpunktens chunk är laddad.$(br2)$(8)Mörkt$() betyder att den ännu inte är $(o)länkad$(). Öppna en trådlös åtkomstpunkt i ett strömförsörjt nätverk och placera stationen i dess terminalfack för att länka den.",
   "entry.appliedcooking.kitchenstation.connected.title": "Ansluten",
+  "entry.appliedcooking.kitchenstation.linkedoffline.title": "Länkad, inget nätverk",
   "entry.appliedcooking.kitchenstation.disconnected.title": "Frånkopplad"
 }
