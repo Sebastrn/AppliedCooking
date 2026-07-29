@@ -41,7 +41,7 @@ public class KitchenStationBlock extends BaseKitchenBlock {
      * <ul>
      *   <li>{@link LinkState#UNLINKED} - no access point saved (dark screen).</li>
      *   <li>{@link LinkState#LINKED_OFFLINE} - linked, but the network is unreachable/unpowered (red-amber screen).</li>
-     *   <li>{@link LinkState#ONLINE} - linked and drawing power from a live grid (purple screen).</li>
+     *   <li>{@link LinkState#ONLINE} - linked and drawing power from a live grid (purple screen, full glow).</li>
      * </ul>
      * Replaces the old {@code connected} boolean, which folded the linked-but-unreachable case into "disconnected".
      */
