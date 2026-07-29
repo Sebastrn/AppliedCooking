@@ -38,7 +38,7 @@ public class KitchenStationBlock extends BaseKitchenBlock {
      * The Kitchen Station's link/connection state, set by the block entity each tick and read by the blockstate
      * models, the item, and the Jade/TOP tooltips. Three values so the model can show every case distinctly:
      * <ul>
-     *   <li>{@link LinkState#UNLINKED} - no access point saved (dark screen, dim standby glow).</li>
+     *   <li>{@link LinkState#UNLINKED} - no access point saved (dark screen).</li>
      *   <li>{@link LinkState#LINKED_OFFLINE} - linked, but the network is unreachable/unpowered (red-amber screen).</li>
      *   <li>{@link LinkState#ONLINE} - linked and drawing power from a live grid (purple screen, full glow).</li>
      * </ul>
