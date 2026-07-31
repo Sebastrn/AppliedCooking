@@ -19,9 +19,9 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 configurations.configureEach {
     resolutionStrategy {
-        // REI bundles a JEI-compat module that transitively pins an older JEI, and The One Probe also depends on JEI —
+        // REI bundles a JEI-compat module that transitively pins an older JEI, and The One Probe also depends on JEI, 
         // both would put a conflicting JEI on the classpath. We run one viewer at a time and don't want either's JEI,
-        // so JEI is excluded from both (below) and our JEI version is forced here — a consumer force wins.
+        // so JEI is excluded from both (below) and our JEI version is forced here, a consumer force wins.
         force "mezz.jei:jei-1.20.4-neoforge:${jei_version}"
     }
 }
@@ -103,7 +103,7 @@ def selectedViewer = {
     return (findProperty('viewer') ?: 'jei').toString().toLowerCase()
 }()
 
-// runClientRei / runClientEmi: the client run with that viewer instead of JEI. They just drive runClient — the viewer
+// runClientRei / runClientEmi: the client run with that viewer instead of JEI. They just drive runClient, the viewer
 // selection above keys off the task name. runClient on its own stays JEI.
 ['Rei': 'REI', 'Emi': 'EMI'].each { suffix, label ->
     tasks.register("runClient${suffix}") {
@@ -119,17 +119,17 @@ dependencies {
     implementation "net.blay09.mods:balm-neoforge:${balm_version}"
     implementation "net.blay09.mods:cookingforblockheads-neoforge:${cfb_version}"
 
-    // Optional integrations — compiled against and loaded in the dev client so they can be tested. The mod
+    // Optional integrations, compiled against and loaded in the dev client so they can be tested. The mod
     // still runs without them: the TOP addon is guarded by Balm.isModLoaded, and the Jade @WailaPlugin class is
     // only loaded by Jade's own plugin scan when that mod is present.
     //
     // The One Probe transitively depends on JEI, which would put JEI on the runtime classpath of every run (loading it
     // no matter which viewer we pick, and making EMI/REI defer to it). We don't use TOP's JEI integration, so exclude
-    // it — the viewer chosen below is then the only one present.
+    // it, the viewer chosen below is then the only one present.
     implementation("mcjty.theoneprobe:theoneprobe:${top_version}") { exclude group: 'mezz.jei' }
     implementation "maven.modrinth:jade:${jade_version}"
 
-    // Recipe viewers — JEI, REI, EMI — each carries the same Kitchen Station info page (compat/{jei,rei,emi}).
+    // Recipe viewers, JEI, REI, EMI, each carries the same Kitchen Station info page (compat/{jei,rei,emi}).
     // Compile-only: every viewer discovers its plugin by its own classpath scan (@JeiPlugin / @REIPluginClient /
     // @EmiEntrypoint), so none is bundled. They can't coexist in one client, so exactly one is loaded per run via
     // -Pviewer (below). REI needs the full jar, not -api: the info-page entry point (BuiltinClientPlugin) is in REI's
@@ -153,23 +153,23 @@ dependencies {
             runtimeOnly "mezz.jei:jei-1.20.4-neoforge:${jei_version}"
     }
 
-    // Patchouli — optional, powers the in-game guide book. Resources only (no code dependency),
+    // Patchouli, optional, powers the in-game guide book. Resources only (no code dependency),
     // so it is only needed at runtime; pulled into the dev client here.
     runtimeOnly "vazkii.patchouli:Patchouli:${patchouli_version}"
 
-    // Dev-only test mods — loaded in the dev client to make debugging easier. Not shipped.
+    // Dev-only test mods, loaded in the dev client to make debugging easier. Not shipped.
     // (JEI moved up to the optional integrations above now that we ship a JEI plugin.)
     // FTB Library pulls Architectury (11.1.17) transitively via its POM.
     runtimeOnly "dev.ftb.mods:ftb-library-neoforge:${ftb_library_version}"
 
-    // Pam's HarvestCraft 2 — piles of extra food recipes to exercise the kitchen. Food Core is the
+    // Pam's HarvestCraft 2, piles of extra food recipes to exercise the kitchen. Food Core is the
     // base; Crops/Trees/Food Extended build on it. (Croptopia has no NeoForge 1.20.4 build, so it's omitted.)
     runtimeOnly "maven.modrinth:pams-harvestcraft-2-food-core:${harvestcraft_foodcore_version}"
     runtimeOnly "maven.modrinth:pams-harvestcraft-2-crops:${harvestcraft_crops_version}"
     runtimeOnly "maven.modrinth:pams-harvestcraft-2-trees:${harvestcraft_trees_version}"
     runtimeOnly "maven.modrinth:pams-harvestcraft-2-food-extended:${harvestcraft_foodextended_version}"
 
-    // Power-generation / tech test mods — a network power source to exercise the Kitchen Station's power draw
+    // Power-generation / tech test mods, a network power source to exercise the Kitchen Station's power draw
     // (e.g. Mekanism Generators or SolarFlux panels feeding an AE2 Energy Acceptor). The Mekanism suite is
     // base + generators + tools + additions (each module needs the base).
     runtimeOnly "maven.modrinth:mekanism:${mekanism_version}"
@@ -177,7 +177,7 @@ dependencies {
     runtimeOnly "maven.modrinth:mekanism-tools:${mekanism_tools_version}"
     runtimeOnly "maven.modrinth:mekanism-additions:${mekanism_additions_version}"
 
-    // SolarFlux Reborn (+ HammerLib, its required dep — the Modrinth maven doesn't pull it transitively) are scoped
+    // SolarFlux Reborn (+ HammerLib, its required dep, the Modrinth maven doesn't pull it transitively) are scoped
     // to the CLIENT run only. HammerLib aborts a dedicated server on startup with
     //   IllegalArgumentException: class org.zeith.hammerlib.proxy.HLCommonProxy has no @SubscribeEvent methods,
     //   but register was called anyway
@@ -212,7 +212,7 @@ tasks.withType(JavaCompile).configureEach {
 //   ./gradlew publishCurseForge   -> CurseForge
 //   ./gradlew modrinth publishCurseForge   -> both
 // Tokens are read from ~/.gradle/gradle.properties (MODRINTH_TOKEN / CURSEFORGE_TOKEN) or the
-// matching environment variables — NEVER commit them. Project ids live in gradle.properties.
+// matching environment variables, NEVER commit them. Project ids live in gradle.properties.
 // Tip: `modrinth { debugMode = true }` (or `--stacktrace`) to dry-run Modrinth without uploading.
 
 // Publish only the section for the version being released. Modrinth and CurseForge render a changelog per file, so
@@ -228,7 +228,7 @@ def changelogFor(File file, String version) {
     for (String line : file.readLines('UTF-8')) {
         if (line.startsWith('## ')) {
             if (inSection) {
-                break // reached the next version — stop
+                break // reached the next version, stop
             }
             inSection = wanted.matcher(line.trim()).matches()
             continue // never include the heading itself; the platform already shows the version

@@ -37,7 +37,7 @@ public final class AppliedCooking {
 
     /**
      * Exposes the Kitchen Station's {@link KitchenItemProvider} to Cooking for Blockheads. On NeoForge the
-     * Balm {@code getProviders()} declaration alone is not enough — the block entity must be registered
+     * Balm {@code getProviders()} declaration alone is not enough, the block entity must be registered
      * against CFB's block capability here. The capability is obtained from Balm, where CFB registered it.
      */
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
@@ -54,7 +54,7 @@ public final class AppliedCooking {
 
     /**
      * Registers Cooking for Blockheads' <em>own</em> Oven against its <em>own</em> item provider capability, which
-     * CFB forgot to do here — every other complex block entity of theirs (sink, milk jar, fridge, cutting board) is
+     * CFB forgot to do here, every other complex block entity of theirs (sink, milk jar, fridge, cutting board) is
      * registered, and the Oven is registered for its energy capability two lines away, but never for this one. The
      * result is that the Oven's tool and output slots are invisible to the Cooking Table: a pot sitting in the Oven
      * does not count towards a recipe, though the same pot in an ME network does.

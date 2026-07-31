@@ -33,22 +33,22 @@ import java.util.function.Predicate;
  * <p>
  * Three ways to satisfy a wanted ingredient, tried in order:
  * <ul>
- *     <li><b>Item</b> — the network holds the matching item directly (extract/insert as normal).</li>
- *     <li><b>Water/milk fast-path</b> — these are the fluids CFB recipes actually request, and (mirroring CFB's
+ *     <li><b>Item</b>, the network holds the matching item directly (extract/insert as normal).</li>
+ *     <li><b>Water/milk fast-path</b>, these are the fluids CFB recipes actually request, and (mirroring CFB's
  *     own Sink / Milk Jar) they're identified by item <em>tag</em> ({@link ModItemTags#WATER}/{@link ModItemTags#MILK}):
  *     if a wanted item carries the tag and the network holds ≥1000mB of the fluid, we drain a bucket and yield the
  *     requested item. Looking the fluid up by key fails fast when it isn't stored (the common case), satisfies
- *     modded tagged variants — water bottles, {@code pamhc2foodcore:freshmilkitem}, … — that the bucket-only path
+ *     modded tagged variants, water bottles, {@code pamhc2foodcore:freshmilkitem}, …, that the bucket-only path
  *     below can't, and makes <b>milk reliable</b> by never depending on the milk fluid's {@code getBucket()}.</li>
- *     <li><b>Fluid (network-driven fallback)</b> — for any <em>other</em> fluid stored in the network (lava, modded
+ *     <li><b>Fluid (network-driven fallback)</b>, for any <em>other</em> fluid stored in the network (lava, modded
  *     fluids) we make its bucket item and ask the recipe whether that satisfies the ingredient. If so we synthesize
  *     the bucket from the fluid: since CFB's crafting handler produces no recipe remainders, the container is
- *     virtual — {@code consume()} spends 1000mB and hands back the bucket; {@code restore()} refunds it. This keeps
+ *     virtual, {@code consume()} spends 1000mB and hands back the bucket; {@code restore()} refunds it. This keeps
  *     the feature fluid-agnostic for any fluid whose {@code getBucket()} the recipe accepts.</li>
  * </ul>
  * The item path is always tried first, so real stored items are preferred over synthesized ones.
  * <p>
- * Performance: CFB calls {@link #findIngredient} once per (recipe × ingredient × provider) — thousands of times
+ * Performance: CFB calls {@link #findIngredient} once per (recipe × ingredient × provider), thousands of times
  * per kitchen scan. To keep large networks from stalling, the network's available-stacks snapshot is built at
  * most once per game tick and reused across the whole burst; items are looked up by key rather than by scanning
  * the network; and the snapshot is invalidated whenever we extract/insert so multiple crafts in a tick stay
@@ -129,7 +129,7 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
         }
 
         // Item path: look the recipe's accepted items up by key instead of scanning the whole network. This
-        // matches by exact key, so an NBT-variant item stored under a different key wouldn't be found — a fine
+        // matches by exact key, so an NBT-variant item stored under a different key wouldn't be found, a fine
         // trade-off for cooking ingredients (which are plain) in exchange for scaling to huge networks.
         ItemStack[] items = ingredient.getItems();
         for (ItemStack accepted : items) {
@@ -144,7 +144,7 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
         }
 
         // Fluid fast-paths: water and milk are requested by item tag and satisfied by draining that fluid.
-        // Checked before the network-driven loop below because they're the fluids CFB recipes actually use —
+        // Checked before the network-driven loop below because they're the fluids CFB recipes actually use, 
         // a cheap key lookup fails fast when the fluid isn't stored, they satisfy modded water/milk item
         // variants (bottles, freshwateritem, …) that the bucket-only loop can't, and milk is reliable this way
         // (we never depend on the milk fluid's getBucket()). Other fluids (lava, modded) fall through to the loop.
@@ -215,7 +215,7 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
      * Water/milk fast-path: these fluids are requested by item tag (mirroring CFB's Sink / Milk Jar). If the
      * network holds at least a bucket of {@code fluid} (after fluid tokens already issued this operation) and one
      * of {@code candidates} carries {@code tag}, return a token that drains a bucket and yields that requested
-     * item. Yielding the requested item — not the fluid's own bucket — is what lets a modded water/milk variant
+     * item. Yielding the requested item, not the fluid's own bucket, is what lets a modded water/milk variant
      * (a water bottle, {@code pamhc2foodcore:freshmilkitem}, …) be satisfied. Returns null (leaving the fluid to
      * {@link #findFluidIngredient}) when the fluid is absent/unregistered or no candidate carries the tag.
      */
@@ -321,7 +321,7 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
                         ? storage.insert(remainderKey, remainder.getCount(), Actionable.MODULATE, source())
                         : 0;
                 if (inserted < remainder.getCount()) {
-                    // The network wouldn't take it back — full, or partitioned so nothing accepts it. Drop the
+                    // The network wouldn't take it back, full, or partitioned so nothing accepts it. Drop the
                     // leftover at the station instead of silently destroying the player's bucket.
                     ItemStack leftover = remainder.copy();
                     leftover.shrink((int) inserted);
@@ -386,7 +386,7 @@ public class MEKitchenItemProvider implements KitchenItemProvider {
             }
             long extracted = storage.extract(fluidKey, amountPerItem, Actionable.MODULATE, source());
             if (extracted < amountPerItem) {
-                // Not enough available after all — put back whatever we drained and give up (no partial loss).
+                // Not enough available after all, put back whatever we drained and give up (no partial loss).
                 if (extracted > 0) {
                     storage.insert(fluidKey, extracted, Actionable.MODULATE, source());
                 }
