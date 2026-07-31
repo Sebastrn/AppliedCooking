@@ -36,7 +36,7 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
 
     /**
      * Key for the linked access point in the block entity's own NBT. The *item* carries the same link in AE2's
-     * {@link AEComponents#WIRELESS_LINK_TARGET} data component instead — block entities still save to NBT.
+     * {@link AEComponents#WIRELESS_LINK_TARGET} data component instead, block entities still save to NBT.
      */
     private static final String TAG_ACCESS_POINT_POS = "accessPointPos";
 
@@ -168,7 +168,7 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
         refreshConnection();
     }
 
-    /** Re-find the linked wireless access point — a cross-dimension block-entity lookup, so the caller throttles this. */
+    /** Re-find the linked wireless access point, a cross-dimension block-entity lookup, so the caller throttles this. */
     private void resolveAccessPoint() {
         accessPoint = null;
 
@@ -189,7 +189,7 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
     /**
      * Re-derive the live grid/storage from the cached access point (cheap) and pay this tick's idle power. Run every
      * tick so the connection state and power draw stay current between the throttled {@link #resolveAccessPoint()}
-     * calls. {@link #grid} ends up non-null only when the access point is active, on a grid, and that grid paid up —
+     * calls. {@link #grid} ends up non-null only when the access point is active, on a grid, and that grid paid up, 
      * so an unpowered network cleanly reads as disconnected.
      */
     private void refreshConnection() {
@@ -224,7 +224,7 @@ public class KitchenStationBlockEntity extends BalmBlockEntity {
 
     /**
      * Charge {@code grid} the configured {@link #idlePowerDrain() idle power cost} for this tick, but only if it can
-     * pay in full — we don't drain the last scraps for a service we then won't provide.
+     * pay in full, we don't drain the last scraps for a service we then won't provide.
      *
      * @return true if the network paid the full idle cost.
      */

@@ -7,7 +7,7 @@ plugins {
     id 'com.modrinth.minotaur' version '2.9.0'
     // CurseForgeGradle stays on 1.1.28: every release from 1.2.30 up needs a Java 25 JVM to even resolve, and
     // this toolchain is Java 21. Moving to 1.21.1 freed Minotaur (2.8.10 -> 2.9.0) but not this one. 1.1.28 has
-    // everything the publish block uses — addEnvironment/addModLoader/addGameVersion/addRequirement/addOptional.
+    // everything the publish block uses, addEnvironment/addModLoader/addGameVersion/addRequirement/addOptional.
     id 'net.darkhax.curseforgegradle' version '1.1.28'
 }
 
@@ -25,7 +25,7 @@ configurations.configureEach {
         // REI bundles a JEI-compat module that transitively *strictly*-pins an older JEI (19.25.0.325). ModDevGradle's
         // consistent resolution would spread that pin across every configuration (compile + all run classpaths) and
         // collide with our JEI (jei_version). We run REI JEI-free and don't want its compat, so REI's JEI dependency is
-        // excluded (below) and our JEI version is forced here — a consumer force overrides a transitive strict pin.
+        // excluded (below) and our JEI version is forced here, a consumer force overrides a transitive strict pin.
         force "mezz.jei:jei-1.21.1-neoforge:${jei_version}"
     }
 }
@@ -36,7 +36,7 @@ repositories {
         name = 'NeoForged'
         url = 'https://maven.neoforged.net/releases'
     }
-    // Applied Energistics 2 (+ its GuideME dependency) publish to Maven Central as of 1.21.1 —
+    // Applied Energistics 2 (+ its GuideME dependency) publish to Maven Central as of 1.21.1, 
     // group org.appliedenergistics. The old modmaven.dev host has no 1.21.1 build, so it's gone.
     maven {
         name = 'TwelveIterations (Balm)'
@@ -107,7 +107,7 @@ def selectedViewer = {
     return (findProperty('viewer') ?: 'jei').toString().toLowerCase()
 }()
 
-// runClientRei / runClientEmi: the client run with that viewer instead of JEI. They just drive runClient — the viewer
+// runClientRei / runClientEmi: the client run with that viewer instead of JEI. They just drive runClient, the viewer
 // selection above keys off the task name. runClient on its own stays JEI.
 ['Rei': 'REI', 'Emi': 'EMI'].each { suffix, label ->
     tasks.register("runClient${suffix}") {
@@ -123,20 +123,20 @@ dependencies {
     implementation "net.blay09.mods:balm-neoforge:${balm_version}"
     implementation "maven.modrinth:cooking-for-blockheads:${cfb_version}"
 
-    // Optional integrations — compiled against and loaded in the dev client so they can be tested. The mod
+    // Optional integrations, compiled against and loaded in the dev client so they can be tested. The mod
     // still runs without them: the TOP addon is guarded by Balm.isModLoaded, and the Jade @WailaPlugin class is
     // only loaded by Jade's own plugin scan when that mod is present.
     // The One Probe transitively depends on JEI (for its own optional JEI integration). That would put JEI on the
     // runtime classpath of EVERY run, so it loads no matter which viewer we pick and makes EMI/REI defer to it.
-    // We don't use TOP's JEI integration, so exclude it — the viewer chosen below is then the only one present.
+    // We don't use TOP's JEI integration, so exclude it, the viewer chosen below is then the only one present.
     implementation("mcjty.theoneprobe:theoneprobe:${top_version}") { exclude group: 'mezz.jei' }
     implementation "maven.modrinth:jade:${jade_version}"
 
-    // Recipe viewers — JEI, REI, EMI — each carries the same Kitchen Station info page (compat/{jei,rei,emi}).
+    // Recipe viewers, JEI, REI, EMI, each carries the same Kitchen Station info page (compat/{jei,rei,emi}).
     // Compile-only: every viewer discovers its plugin by its own classpath scan (@JeiPlugin / @REIPluginClient /
     // @EmiEntrypoint), so none is bundled. The three cannot share one client (EMI hides itself when JEI is present;
-    // REI+JEI double up), so their runtime jars are loaded per dedicated client run — runClient=JEI, runClientRei,
-    // runClientEmi — via the matching AdditionalRuntimeClasspath configurations below.
+    // REI+JEI double up), so their runtime jars are loaded per dedicated client run, runClient=JEI, runClientRei,
+    // runClientEmi, via the matching AdditionalRuntimeClasspath configurations below.
     //
     // REI needs the full jar, not -api: the info-page entry point (BuiltinClientPlugin) lives in REI's default-plugin
     // module, absent from -api. EMI's -api classifier carries EmiInfoRecipe, so it suffices.
@@ -162,23 +162,23 @@ dependencies {
             runtimeOnly "mezz.jei:jei-1.21.1-neoforge:${jei_version}"
     }
 
-    // Patchouli — optional, powers the in-game guide book. Resources only (no code dependency),
+    // Patchouli, optional, powers the in-game guide book. Resources only (no code dependency),
     // so it is only needed at runtime; pulled into the dev client here.
     runtimeOnly "vazkii.patchouli:Patchouli:${patchouli_version}"
 
-    // Dev-only test mods — loaded in the dev client to make debugging easier. Not shipped.
+    // Dev-only test mods, loaded in the dev client to make debugging easier. Not shipped.
     // (JEI moved up to the optional integrations above now that we ship a JEI plugin.)
     // FTB Library pulls Architectury (11.1.17) transitively via its POM.
     runtimeOnly "dev.ftb.mods:ftb-library-neoforge:${ftb_library_version}"
 
-    // Pam's HarvestCraft 2 — piles of extra food recipes to exercise the kitchen. Food Core is the
+    // Pam's HarvestCraft 2, piles of extra food recipes to exercise the kitchen. Food Core is the
     // base; Crops/Trees/Food Extended build on it. (Croptopia has no NeoForge 1.20.4 build, so it's omitted.)
     runtimeOnly "maven.modrinth:pams-harvestcraft-2-food-core:${harvestcraft_foodcore_version}"
     runtimeOnly "maven.modrinth:pams-harvestcraft-2-crops:${harvestcraft_crops_version}"
     runtimeOnly "maven.modrinth:pams-harvestcraft-2-trees:${harvestcraft_trees_version}"
     runtimeOnly "maven.modrinth:pams-harvestcraft-2-food-extended:${harvestcraft_foodextended_version}"
 
-    // Power-generation / tech test mods — a network power source to exercise the Kitchen Station's power draw
+    // Power-generation / tech test mods, a network power source to exercise the Kitchen Station's power draw
     // (e.g. Mekanism Generators or SolarFlux panels feeding an AE2 Energy Acceptor). The Mekanism suite is
     // base + generators + tools + additions (each module needs the base).
     runtimeOnly "maven.modrinth:mekanism:${mekanism_version}"
@@ -186,7 +186,7 @@ dependencies {
     runtimeOnly "maven.modrinth:mekanism-tools:${mekanism_tools_version}"
     runtimeOnly "maven.modrinth:mekanism-additions:${mekanism_additions_version}"
 
-    // SolarFlux Reborn (+ HammerLib, its required dep — the Modrinth maven doesn't pull it transitively) are scoped
+    // SolarFlux Reborn (+ HammerLib, its required dep, the Modrinth maven doesn't pull it transitively) are scoped
     // to the CLIENT run only. HammerLib aborts a dedicated server on startup with
     //   IllegalArgumentException: class org.zeith.hammerlib.proxy.HLCommonProxy has no @SubscribeEvent methods,
     //   but register was called anyway
@@ -221,7 +221,7 @@ tasks.withType(JavaCompile).configureEach {
 //   ./gradlew publishCurseForge   -> CurseForge
 //   ./gradlew modrinth publishCurseForge   -> both
 // Tokens are read from ~/.gradle/gradle.properties (MODRINTH_TOKEN / CURSEFORGE_TOKEN) or the
-// matching environment variables — NEVER commit them. Project ids live in gradle.properties.
+// matching environment variables, NEVER commit them. Project ids live in gradle.properties.
 // Tip: `modrinth { debugMode = true }` (or `--stacktrace`) to dry-run Modrinth without uploading.
 
 // Publish only the section for the version being released. Modrinth and CurseForge render a changelog per file, so
@@ -237,7 +237,7 @@ def changelogFor(File file, String version) {
     for (String line : file.readLines('UTF-8')) {
         if (line.startsWith('## ')) {
             if (inSection) {
-                break // reached the next version — stop
+                break // reached the next version, stop
             }
             inSection = wanted.matcher(line.trim()).matches()
             continue // never include the heading itself; the platform already shows the version

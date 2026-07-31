@@ -36,7 +36,7 @@ public final class AppliedCooking {
 
     /**
      * Exposes the Kitchen Station's {@link KitchenItemProvider} to Cooking for Blockheads. On NeoForge the
-     * Balm {@code getProviders()} declaration alone is not enough — the block entity must be registered
+     * Balm {@code getProviders()} declaration alone is not enough, the block entity must be registered
      * against CFB's block capability here. The capability is obtained from Balm, where CFB registered it.
      */
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
