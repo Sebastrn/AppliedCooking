@@ -14,7 +14,7 @@ import sebastrn.appliedcooking.AppliedCookingItems;
  * REI integration: the same "info" page the JEI plugin attaches to the ME Kitchen Station, so REI users get the how-to
  * where they look things up. Reuses the existing {@code jei.appliedcooking.*} text (the keys are viewer-agnostic).
  * Discovered only when REI is present (its {@code @REIPluginClient} scan never touches this class otherwise), so REI
- * stays optional. (EMI has no 26.1 build, so there is no EMI plugin on this branch — see the build script.)
+ * stays optional. (EMI has no 26.1 build, so there is no EMI plugin on this branch, see the build script.)
  */
 @REIPluginClient
 public class REIPlugin implements REIClientPlugin {

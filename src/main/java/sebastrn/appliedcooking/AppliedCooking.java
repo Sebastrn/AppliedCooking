@@ -39,7 +39,7 @@ public final class AppliedCooking {
      * old {@code BalmBlockEntity#getProviders()} route; CFB now registers its {@code kitchen_item_provider}
      * capability through Balm's capability system, backed by a plain NeoForge {@link BlockCapability}. Those are
      * singletons keyed by name+type+context, so re-creating CFB's exact capability here returns the very object
-     * CFB's multiblock scanner looks up — and does so independently of CFB's own static-init ordering.
+     * CFB's multiblock scanner looks up, and does so independently of CFB's own static-init ordering.
      */
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
         BlockCapability<KitchenItemProvider, Void> kitchenItemProvider = BlockCapability.create(
@@ -50,7 +50,7 @@ public final class AppliedCooking {
                 (blockEntity, context) -> blockEntity.getKitchenItemProvider());
     }
 
-    // The One Probe integration — disabled for 26.1.2 (no 26.1 TOP build). Re-enable together with the imports,
+    // The One Probe integration, disabled for 26.1.2 (no 26.1 TOP build). Re-enable together with the imports,
     // the addListener call above, and TheOneProbeAddon when McJty ships a 26.1 TOP.
     // private void enqueueIMC(InterModEnqueueEvent event) {
     //     if (Balm.isModLoaded(Compat.THEONEPROBE)) {

@@ -24,7 +24,7 @@ configurations.configureEach {
     resolutionStrategy {
         // REI bundles a JEI-compat module that transitively pins JEI; MDG's consistent resolution would spread that
         // pin across the classpath and collide with our JEI. We run one viewer at a time and don't want REI's compat,
-        // so JEI is excluded from REI (below) and our JEI version is forced here — a consumer force wins.
+        // so JEI is excluded from REI (below) and our JEI version is forced here, a consumer force wins.
         force "mezz.jei:jei-26.1.2-neoforge:${jei_version}"
     }
 }
@@ -35,7 +35,7 @@ repositories {
         name = 'NeoForged'
         url = 'https://maven.neoforged.net/releases'
     }
-    // Applied Energistics 2 (+ its GuideME dependency) publish to Maven Central as of 1.21.1 —
+    // Applied Energistics 2 (+ its GuideME dependency) publish to Maven Central as of 1.21.1, 
     // group org.appliedenergistics. The old modmaven.dev host has no 1.21.1 build, so it's gone.
     maven {
         name = 'TwelveIterations (Balm)'
@@ -103,7 +103,7 @@ def selectedViewer = {
     return (findProperty('viewer') ?: 'jei').toString().toLowerCase()
 }()
 
-// runClientRei: the client run with REI instead of JEI. It just drives runClient — the viewer selection above keys
+// runClientRei: the client run with REI instead of JEI. It just drives runClient, the viewer selection above keys
 // off the task name. runClient on its own stays JEI.
 tasks.register('runClientRei') {
     dependsOn 'runClient'
@@ -118,15 +118,15 @@ dependencies {
     implementation "net.blay09.mods:balm-neoforge:${balm_version}"
     implementation "net.blay09.mods:cookingforblockheads-neoforge:${cfb_version}"
 
-    // Optional integrations — compiled against and loaded in the dev client so they can be tested. The mod
+    // Optional integrations, compiled against and loaded in the dev client so they can be tested. The mod
     // still runs without them: the Jade @WailaPlugin / JEI @JeiPlugin classes are only loaded by each mod's own
     // plugin scan when that mod is present.
-    // The One Probe is COMMENTED OUT for 26.1.2 — it has no 26.1 build (k-4u maven ends at 1.21_neo). The addon
+    // The One Probe is COMMENTED OUT for 26.1.2, it has no 26.1 build (k-4u maven ends at 1.21_neo). The addon
     // in compat/theoneprobe is likewise disabled. Re-enable both when McJty ships a 26.1 TOP.
     // implementation "mcjty.theoneprobe:theoneprobe:${top_version}"
     implementation "maven.modrinth:jade:${jade_version}"
 
-    // Recipe viewers — JEI and REI (EMI has no 26.1 build). Each carries the same Kitchen Station info page
+    // Recipe viewers, JEI and REI (EMI has no 26.1 build). Each carries the same Kitchen Station info page
     // (compat/{jei,rei}). Compile-only: each viewer finds its plugin by its own classpath scan (@JeiPlugin /
     // @REIPluginClient), so neither is bundled. They can't coexist in one client, so exactly one is loaded per run via
     // the toggle below. REI needs the full jar, not -api: the info-page entry point (BuiltinClientPlugin) is in REI's
@@ -145,13 +145,13 @@ dependencies {
             runtimeOnly "mezz.jei:jei-26.1.2-neoforge:${jei_version}"
     }
 
-    // Patchouli — optional, powers the in-game guide book. Resources only (no code dependency), so it is only
+    // Patchouli, optional, powers the in-game guide book. Resources only (no code dependency), so it is only
     // needed at runtime. BlameJared has no 26.1 build, so it comes from the Modrinth maven (pinned by version id).
     runtimeOnly "maven.modrinth:patchouli:${patchouli_version}"
 
-    // Dev-only test mods — loaded in the dev client to make debugging easier. Not shipped.
+    // Dev-only test mods, loaded in the dev client to make debugging easier. Not shipped.
     // ⚠️ ALL COMMENTED OUT for 26.1.2: the version ids above are still 1.21.1 builds and several of these mods may
-    // not be ported to 26.1.2 yet — an unresolved/unported test mod would block runClient/runServer. Re-pin each to
+    // not be ported to 26.1.2 yet, an unresolved/unported test mod would block runClient/runServer. Re-pin each to
     // a 26.1.2 build and un-comment when a run actually needs it (Mekanism/SolarFlux = power draw, HarvestCraft =
     // recipes). None is shipped and none is on the compile classpath, so this does not affect compileJava.
     // FTB Library pulls Architectury (11.1.17) transitively via its POM.
@@ -196,7 +196,7 @@ tasks.withType(JavaCompile).configureEach {
 //   ./gradlew publishCurseForge   -> CurseForge
 //   ./gradlew modrinth publishCurseForge   -> both
 // Tokens are read from ~/.gradle/gradle.properties (MODRINTH_TOKEN / CURSEFORGE_TOKEN) or the
-// matching environment variables — NEVER commit them. Project ids live in gradle.properties.
+// matching environment variables, NEVER commit them. Project ids live in gradle.properties.
 // Tip: `modrinth { debugMode = true }` (or `--stacktrace`) to dry-run Modrinth without uploading.
 
 // Publish only the section for the version being released. Modrinth and CurseForge render a changelog per file, so
@@ -212,7 +212,7 @@ def changelogFor(File file, String version) {
     for (String line : file.readLines('UTF-8')) {
         if (line.startsWith('## ')) {
             if (inSection) {
-                break // reached the next version — stop
+                break // reached the next version, stop
             }
             inSection = wanted.matcher(line.trim()).matches()
             continue // never include the heading itself; the platform already shows the version
@@ -254,7 +254,7 @@ modrinth {
         required.project 'balm'
         optional.project 'patchouli'
         optional.project 'jade'
-        // optional.project 'the-one-probe'  // no 26.1 build yet — re-add when TOP ships for 26.1
+        // optional.project 'the-one-probe'  // no 26.1 build yet, re-add when TOP ships for 26.1
         optional.project 'jei'
     }
 }
@@ -274,6 +274,6 @@ tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurs
     mainFile.changelog = changelogText
     // CurseForge project slugs (adjust if a publish fails on an unknown project):
     mainFile.addRequirement 'applied-energistics-2', 'cooking-for-blockheads', 'balm'
-    // 'the-one-probe' dropped for 26.1.2 (no 26.1 build yet) — re-add when TOP ships for 26.1.
+    // 'the-one-probe' dropped for 26.1.2 (no 26.1 build yet), re-add when TOP ships for 26.1.
     mainFile.addOptional 'patchouli', 'jade', 'jei'
 }
